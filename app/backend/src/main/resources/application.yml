@@ -1,0 +1,44 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      resourceserver:
+        opaque-token:
+          introspection-uri: https://www.googleapis.com/
+          clientId: ${GOOGLE_CLIENT_ID}
+          clientSecret: ${GOOGLE_CLIENT_SECRET}
+      authorizationserver:
+        endpoint:
+          token-revocation-uri: https://oauth2.googleapis.com/revoke
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: ${DATABASE_USER}
+    password: ${DATABASE_USER_PASSWORD}
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.SQLServerDialect
+
+
+frontend:
+  url:
+    public: ${FRONTEND_PUBLIC_URL}
+backend:
+  admin-email: ${ADMIN_EMAIL}
+crypt:
+  password: ${ENCRYPTOR_PASSWORD}
+
+logging:
+  level:
+    org.zalando.logbook: trace
+    root: info
+
+logbook:
+  obfuscate:
+    json-body-fields: email,nome,name,token,refreshToken
+
+server:
+  port: ${PORT}

@@ -1,0 +1,45 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      resourceserver:
+        opaque-token:
+          introspection-uri: https://www.googleapis.com/
+          clientId: 321863252365-cdl30mbh1dha8bf0q72c68vkurnlh80v.apps.googleusercontent.com
+          clientSecret: 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
+      authorizationserver:
+        endpoint:
+          token-revocation-uri: https://oauth2.googleapis.com/revoke
+  datasource:
+    url: jdbc:h2:file:./data/h2db;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+
+frontend:
+  url:
+    public: http://localhost:3000
+
+backend:
+  admin-email: admin@gmail.com
+
+crypt:
+  password: ThisIsASecretKey
+
+logging:
+  level:
+    org.zalando.logbook: trace
+    root: info
+
+logbook:
+  obfuscate:
+    json-body-fields: email,nome,name,token,refreshToken
+
+server:
+  port: 8080

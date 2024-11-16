@@ -1,0 +1,76 @@
+.TopNavBar {
+  position: fixed;
+  height: 10%;
+  width: 100%;
+  top: 0;
+  z-index: 2;
+}
+
+.TopNavBarLogo {
+  /* background-color: yellow; */
+  position: absolute;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.TopNavBarLogo div * {
+  /* background-color: yellow; */
+  margin: 0;
+  color: rgb(217, 217, 217);
+  text-shadow: 1px 1px black;
+}
+
+.TopNavBarContent {
+  /* background-color: yellow; */
+  position: absolute;
+  right: 20px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.TopNavBarContent div {
+  /* background-color: red; */
+  margin: 0 10px;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  color: rgb(217, 217, 217);
+  text-shadow: 1px 1px black;
+}
+
+.TopNavBarContent div:hover {
+  color: #808080;
+}
+
+.TopNavBarContent h4:hover {
+  color: #808080;
+}
+
+.TopNavBarUserInfo {
+  height: calc(100% - 40px);
+  right: 20px;
+  display: inline-flex;
+  align-items: center;
+
+  cursor: wait;
+}
+
+.TopNavBarUserInfo img {
+  border-radius: 50%;
+}
+
+.TopNavBarUserInfo div {
+  margin-top: 15%;
+}
+
+.TopNavBarUserInfo h3,
+.TopNavBarUserInfo h4 {
+  margin-top: -10%; /* Adjust the margin value as desired */
+}
+
+.TopNavBarUserInfo h4 {
+  text-align: right;
+  cursor: pointer;
+}

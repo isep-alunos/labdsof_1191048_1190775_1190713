@@ -1,0 +1,135 @@
+/* EventWorkerPage.module.css */
+
+.EventWorkerPage {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 6%;
+}
+
+.EventWorkerPage h1 {
+  font-size: 2em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.EventWorkerPage h2 {
+  font-size: 1.5em;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.deleteButton {
+  background-color: red;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background-color: darkred;
+}
+
+.EventWorkerPage ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.EventWorkerPage li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.EventWorkerPage li span {
+  font-size: 1em;
+  color: #333;
+}
+
+.EventWorkerPage form {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.EventWorkerPage form div {
+  margin-bottom: 10px;
+}
+
+.EventWorkerPage form label {
+  display: block;
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.EventWorkerPage form input,
+.EventWorkerPage form select {
+  width: calc(100% - 22px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.EventWorkerPage .room-section {
+  margin-top: 20px;
+}
+
+.EventWorkerPage .roomEditor {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.EventWorkerPage .roomEditor span {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.EventWorkerPage .trashIcon {
+  color: red;
+  font-size: 1.2em;
+}
+
+.EventWorkerPage form h3 {
+  font-size: 1.2em;
+  color: #555;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.EventWorkerPage .formActions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.EventWorkerPage .buttonGroup {
+  margin-bottom: 20px;
+}
