@@ -1,6 +1,13 @@
 package isep.labdsof.backend.controllers;
 
+import isep.labdsof.backend.domain.exceptions.event.EventInvalidFieldException;
+import isep.labdsof.backend.domain.requests.CreateEventRequest;
+import isep.labdsof.backend.domain.responses.MessageDto;
+import isep.labdsof.backend.services.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,24 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class EventManagerController {
 
-    /*
-    @PostMapping("/reserva")
-    public ResponseEntity<MessageDto> createReserva(@AuthenticationPrincipal(expression = "name") String userEmail,
-                                                    @Valid @RequestBody final RequestCreateReservaBody requestCreateReservaBody) {
+
+    private final EventService eventService;
+
+    @PostMapping("/event")
+    public ResponseEntity<MessageDto> createEvent(@RequestBody CreateEventRequest request) {
         try {
-            reservaService.createReserva(requestCreateReservaBody, userEmail);
-            return ResponseEntity.status(201).body(new MessageDto("Reserva created successfully"));
-        } finally {
-            // Nullify the sensitive data after use
-            if (userEmail != null) {
-                Arrays.fill(userEmail.toCharArray(), '\0');
-                userEmail = null;
-            }
+            eventService.create(request);
+            return ResponseEntity.status(201).body(new MessageDto("Event created successfully"));
+        } catch (EventInvalidFieldException e){
+            return ResponseEntity.badRequest().body(new MessageDto(e.getMessage()));
         }
     }
-     */
-
-
 
 
 }
