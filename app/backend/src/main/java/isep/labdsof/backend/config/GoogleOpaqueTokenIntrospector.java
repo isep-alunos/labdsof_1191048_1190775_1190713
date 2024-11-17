@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.MDC;
@@ -31,14 +32,7 @@ public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
     @Override
     public OAuth2AuthenticatedPrincipal introspect(String token) {
         final String finalToken = token;
-        final GoogleUserInfoDto googleUserInfoDto = userInfoClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/oauth2/v3/userinfo")
-                        .queryParam("access_token", finalToken)
-                        .build())
-                .retrieve()
-                .bodyToMono(GoogleUserInfoDto.class)
-                .block();
+        final GoogleUserInfoDto googleUserInfoDto = userInfoClient.get().uri(uriBuilder -> uriBuilder.path("/oauth2/v3/userinfo").queryParam("access_token", finalToken).build()).retrieve().bodyToMono(GoogleUserInfoDto.class).block();
         Map<String, Object> attributes = new HashMap<>();
         assert googleUserInfoDto != null;
         String name = googleUserInfoDto.getName();
@@ -48,29 +42,30 @@ public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
         attributes.put("email", email);
         attributes.put("picture", picture);
         final List<Role> roles = new ArrayList<>();
-        final String finalName = name;
-        final String finalEmail = email;
-        userRepository.findUserByEmail(email).ifPresentOrElse(
-                user -> {
-                    roles.addAll(user.getRoles());
-                    MDC.put("userId", user.getId().toString());
-                },
-                () -> {
-                    User user = userRepository.save(User.builder()
-                            .nome(finalName)
-                            .email(finalEmail)
-                            .roles(Collections.singletonList(Role.USER))
-                            .build());
-                    MDC.put("userId", user.getId().toString());
-                    roles.addAll(user.getRoles());
-                });
+        final Optional<User> user = userRepository.findUserByEmail(email);
+        user.ifPresent(u -> {
+            roles.addAll(u.getRoles());
+            MDC.put("userId", u.getId().toString());
+        });
+        if (user.isEmpty()) {
+            attributes.put("isNewUser", Boolean.TRUE);
+        } else {
+            attributes.put("isWaitingForApprovalForEventWorker", user.get().isWaitingForApprovalForEventWorker());
+            attributes.put("isWaitingForApprovalForEventManager", user.get().isWaitingForApprovalForEventManager());
+        }
+        //TODO: SAVE USER CODE. MOVE THIS CODE OUT TO BE A OPTION TO REGISTER USERS
+//                    User user = userRepository.save(User.builder()
+//                            .nome(name)
+//                            .email(email)
+//                            .roles(Collections.singletonList(Role.USER))
+//                            .build());
+//                    MDC.put("userId", user.getId().toString());
+//                    roles.addAll(user.getRoles());
         attributes.put("roles", roles);
 
-        final List<GrantedAuthority> authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole()))
-                .collect(Collectors.toList());
+        final List<GrantedAuthority> authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());
         try {
-            return new OAuth2IntrospectionAuthenticatedPrincipal(googleUserInfoDto.getEmail(), attributes, authorities);
+            return new OAuth2IntrospectionAuthenticatedPrincipal(googleUserInfoDto.getName(), new HashMap<>(attributes), authorities);
         } finally {
             // Nullify the sensitive data after use
             if (token != null) {

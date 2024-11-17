@@ -1,3 +1,6 @@
+* {
+  font-family: Arial, sans-serif;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -135,7 +138,6 @@ a:active {
   transition-delay: 1000ms;
 }
 
-
 /**
 ** SCROLL BAR SETTINGS
 */
@@ -153,7 +155,6 @@ a:active {
   z-index: -1;
 }
 
-
 /* Handle */
 .topnavbar::-webkit-scrollbar-thumb {
   background: #0f1651c5;
@@ -167,26 +168,35 @@ a:active {
   z-index: -1;
 }
 
-div#horario1,div#horario2,div#horario3 {
+div#horario1,
+div#horario2,
+div#horario3 {
   width: 29%;
 }
 
-#horarioAlmoco{
+#horarioAlmoco {
   background-color: transparent;
-  color:white;
-  text-shadow: 1px 1px ;
+  color: white;
+  text-shadow: 1px 1px;
   height: 20px;
 }
 
-#JEM_Table_Size2{
+#JEM_Table_Size2 {
   height: calc(83px * 2 + 10px * 2 + 2px + 2px);
 }
 
-
-#JEM_Table_Size3{
+#JEM_Table_Size3 {
   height: calc(83px * 3 + 10px * 4 + 4px + 2px);
 }
 
-#JEM_Table_Size4{
+#JEM_Table_Size4 {
   height: calc(83px * 4 + 10px * 6 + 6px + 2px);
+}
+
+.test {
+  background-color: rgb(255, 141, 141);
+  border-style: groove;
+  border-width: 20px;
+  border-color: black yellow;
+
 }
