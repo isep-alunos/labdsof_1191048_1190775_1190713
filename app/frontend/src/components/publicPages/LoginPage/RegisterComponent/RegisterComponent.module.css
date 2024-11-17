@@ -1,0 +1,181 @@
+/* RegisterComponent.module.css */
+
+.RegisterComponent {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.RegisterComponent h1 {
+  font-size: 34px;
+  color: #333;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.RegisterComponent h2 {
+  font-size: 1.5em;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.RegisterComponent h3 {
+  font-size: 1.8em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.RegisterComponent button {
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.RegisterComponent form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.RegisterComponent form div {
+  margin-bottom: 10px;
+}
+
+.RegisterComponent form label {
+  display: block;
+  text-align: left;
+  font-size: 17px;
+  color: #555;
+  margin-bottom: 0;
+  margin-top: 20px;
+  text-decoration: none;
+}
+
+.RegisterComponent form .role_justification label {
+  margin-top: 0px;
+  font-size: 15px;
+}
+
+.RegisterComponent form .role_justification textarea {
+  resize: none;
+  width: 100%;
+  height: 150px;
+}
+
+.RegisterComponent form input,
+.RegisterComponent form select {
+  width: calc(100% - 22px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.RegisterComponent form input[type="text"],
+.RegisterComponent form input[type="email"],
+.RegisterComponent form input[type="checkbox"] {
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.RegisterComponent form input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+}
+
+.RegisterComponent form .checkmark {
+  margin-left: 10px;
+}
+
+.RegisterComponent .room-section {
+  margin-top: 20px;
+}
+
+.RegisterComponent .roomEditor {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.RegisterComponent .roomEditor span {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.RegisterComponent .trashIcon {
+  color: red;
+  font-size: 1.2em;
+}
+
+.RegisterComponent form h3 {
+  font-size: 1.2em;
+  color: #555;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.RegisterComponent .formActions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.RegisterComponent .buttonGroup {
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="email"],
+.formGroup input[type="checkbox"] {
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.formGroup input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+}

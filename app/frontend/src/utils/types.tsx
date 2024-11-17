@@ -41,6 +41,17 @@ type registerResponse = {
   messages?: messageDto[];
 };
 
+type roleRequestDto = {
+  name: string;
+  email: string;
+  role: string;
+  justification: string;
+};
+
+type listRoleRequestsRequest = {
+  requests: roleRequestDto[];
+};
+
 export {
   httpResponse,
   tokenResponse,
@@ -48,4 +59,6 @@ export {
   registerResponse,
   messageDto,
   criticality,
+  roleRequestDto,
+  listRoleRequestsRequest,
 };

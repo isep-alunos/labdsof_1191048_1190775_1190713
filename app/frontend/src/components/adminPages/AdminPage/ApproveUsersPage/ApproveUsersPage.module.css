@@ -1,0 +1,64 @@
+.ApproveUsersPage {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 6%;
+}
+
+.ApproveUsersPage h1 {
+  font-size: 2em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.ApproveUsersTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #0f165166;
+  color: #dadce6;
+  font-size: 100%;
+}
+
+.ApproveUsersTable th,
+.ApproveUsersTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.ApproveUsersTable th {
+  background-color: #1c2541;
+  color: #dadce6;
+}
+
+.ApproveUsersTable td button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 2px;
+}
+
+.ApproveUsersTable td button.approve {
+  background-color: #28a745;
+  border-color: darkgreen;
+  color: white;
+}
+
+.ApproveUsersTable td button.approve:hover {
+  background-color: #218838;
+}
+
+.ApproveUsersTable td button.deny {
+  background-color: #dc3545;
+  color: white;
+  border-color: darkred;
+}
+
+.ApproveUsersTable td button.deny:hover {
+  background-color: #c82333;
+}
