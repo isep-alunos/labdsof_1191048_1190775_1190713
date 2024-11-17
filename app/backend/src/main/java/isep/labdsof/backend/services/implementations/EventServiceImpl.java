@@ -1,24 +1,29 @@
 package isep.labdsof.backend.services.implementations;
 
-
-import isep.labdsof.backend.domain.exceptions.event.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.event.Address;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.event.EventLocation;
+import isep.labdsof.backend.domain.models.user.User;
 import isep.labdsof.backend.domain.requests.CreateEventRequest;
 import isep.labdsof.backend.repositories.EventRepository;
 import isep.labdsof.backend.services.EventService;
+import isep.labdsof.backend.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final UserService userService;
 
     @Override
-    public void create(CreateEventRequest createEventRequest) throws EventInvalidFieldException {
+    public void create(CreateEventRequest createEventRequest) throws Exception {
 
         Address address = new Address(
                 createEventRequest.street,
@@ -32,6 +37,12 @@ public class EventServiceImpl implements EventService {
                 address
         );
 
+        List<User> ewList = new ArrayList<>();
+
+        for (UUID id : createEventRequest.eventWorkers) {
+            ewList.add(userService.getById(id));
+        }
+
         Event e = new Event(
                 createEventRequest.name,
                 createEventRequest.description,
@@ -39,7 +50,8 @@ public class EventServiceImpl implements EventService {
                 createEventRequest.endDate,
                 createEventRequest.maxParticipants,
                 createEventRequest.eventWebsite,
-                location
+                location,
+                ewList
         );
 
         eventRepository.save(e);

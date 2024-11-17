@@ -1,4 +1,4 @@
-package isep.labdsof.backend.domain.exceptions.event;
+package isep.labdsof.backend.domain.exceptions;
 
 public class EventInvalidFieldException extends Exception {
 

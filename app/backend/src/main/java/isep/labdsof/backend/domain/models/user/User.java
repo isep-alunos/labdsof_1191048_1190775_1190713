@@ -43,4 +43,8 @@ public class User extends BaseEntity {
     private String eventWorkerJustification;
     private boolean isWaitingForApprovalForEventManager = false;
     private String eventManagerJustification;
+
+    public boolean hasRole(Role role) {
+        return this.roles.contains(role);
+    }
 }
