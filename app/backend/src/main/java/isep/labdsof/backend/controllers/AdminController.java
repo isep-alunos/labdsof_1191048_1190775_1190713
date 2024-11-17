@@ -36,4 +36,10 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("/approvals/roles/reject")
+    public ResponseEntity<StatusResponse> rejectRoleRequest(@RequestBody final RoleRequestBasicDto body) {
+        final StatusResponse response = adminService.rejectRoleRequest(body);
+        return ResponseEntity.ok(response);
+    }
+
 }

@@ -4,12 +4,16 @@ import HttpService from "../../../../utils/http";
 import {
   listRoleRequestsRequest,
   roleRequestDto,
+  registerResponse,
+  messageDto,
 } from "../../../../utils/types";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useAlert } from "../../../../utils/alerts/AlertContext";
 
 const ApproveUsersPage: React.FC = () => {
   const [requests, setRequests] = useState<roleRequestDto[]>([]);
+  const alert = useAlert();
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -24,16 +28,47 @@ const ApproveUsersPage: React.FC = () => {
     fetchRequests();
   }, []);
 
-  const handleApprove = (email: string, role: string) => {
-    // Implement approve logic
-    console.log(`Approved: ${email} for role ${role}`);
-    //TODO: Call the backend to approve the user
+  const sendAlert = (message: messageDto) => {
+    alert.addAlert(message);
   };
 
-  const handleDeny = (email: string, role: string) => {
-    // Implement deny logic
-    console.log(`Denied: ${email} for role ${role}`);
-    //TODO: Call the backend to deny the user
+  const handleApprove = async (email: string, role: string) => {
+    const http = new HttpService();
+    const response = await http.putPrivate<registerResponse>(
+      "/admin/approvals/roles/approve",
+      { email, role }
+    );
+    if (response.body) {
+      for (let message of response.body.messages ?? []) {
+        sendAlert(message);
+      }
+      if (response.body.success) {
+        setRequests((prevRequests) =>
+          prevRequests.filter(
+            (request) =>
+              request.email + ":" + request.role !== email + ":" + role
+          )
+        );
+      }
+    }
+  };
+
+  const handleDeny = async (email: string, role: string) => {
+    const http = new HttpService();
+    const response = await http.putPrivate<registerResponse>(
+      "/admin/approvals/roles/reject",
+      { email, role }
+    );
+    if (response.body) {
+      for (let message of response.body.messages ?? []) {
+        sendAlert(message);
+      }
+      if (response.body.success) {
+        setRequests((prevRequests) =>
+          prevRequests.filter((request) => request.email !== email)
+        );
+      }
+    }
   };
 
   return (
