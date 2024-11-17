@@ -21,115 +21,42 @@
   margin-bottom: 15px;
 }
 
-button {
+
+.AdminMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.AdminMenuItem {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.AdminMenuItem h2 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.AdminMenuItem p {
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.AdminMenuItem button {
   background-color: #007bff;
   color: white;
   border: none;
   padding: 10px 15px;
-  margin: 5px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9em;
 }
 
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.deleteButton {
-  background-color: red;
-}
-
-.deleteButton:hover:not(:disabled) {
-  background-color: darkred;
-}
-
-.AdminPage ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.AdminPage li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.AdminPage li span {
-  font-size: 1em;
-  color: #333;
-}
-
-.AdminPage form {
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-}
-
-.AdminPage form div {
-  margin-bottom: 10px;
-}
-
-.AdminPage form label {
-  display: block;
-  font-size: 0.9em;
-  color: #555;
-  margin-bottom: 5px;
-}
-
-.AdminPage form input,
-.AdminPage form select {
-  width: calc(100% - 22px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.AdminPage .room-section {
-  margin-top: 20px;
-}
-
-.AdminPage .roomEditor {
-  display: flex;
-  flex-direction: column;
-  background-color: #fff;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-
-.AdminPage .roomEditor span {
-  align-items: center;
-  justify-content: space-between;
-}
-
-.AdminPage .trashIcon {
-  color: red;
-  font-size: 1.2em;
-}
-
-.AdminPage form h3 {
-  font-size: 1.2em;
-  color: #555;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
-
-.AdminPage .formActions {
-  display: flex;
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.AdminPage .buttonGroup {
-  margin-bottom: 20px;
+.AdminMenuItem button:hover {
+  background-color: #0056b3;
 }

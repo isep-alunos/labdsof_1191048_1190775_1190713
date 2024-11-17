@@ -105,7 +105,7 @@ const LoginPage = ({
           handleLogin={handleLogin}
           homePage={homePage}
         />
-      )}
+      )}  
     </div>
   );
 };
