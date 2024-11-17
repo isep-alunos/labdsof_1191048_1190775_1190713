@@ -3,7 +3,8 @@ import styles from "./LoginPage.module.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import HttpService from "../../../utils/http";
 import RegisterComponent from "./RegisterComponent/RegisterComponent";
-import { tokenResponse } from "../../../utils/types";
+import { criticality, messageDto, tokenResponse } from "../../../utils/types";
+import { useAlert } from "../../../utils/alerts/AlertContext";
 
 // Destructure handleLogin from props
 const LoginPage = ({
@@ -29,6 +30,11 @@ const LoginPage = ({
     waiting_for_response: true,
     success: false,
   });
+  const alert = useAlert(); // Use the useAlert hook
+
+  const sendAlert = (message: messageDto) => {
+    alert.addAlert(message);
+  };
   function homePage() {
     navigate("/");
   }
@@ -39,8 +45,13 @@ const LoginPage = ({
       const fetchToken = async () => {
         const code = queryParameters.get("code");
         if (!code) {
-          //navigate("/");
-          //TODO: UNCOMENT THIS LINE AND ADD A POP UP MESSAGE
+          sendAlert({
+            message:
+              "Something went wrong during the login, please retry. " +
+              "If the error continues, please contact us.",
+            criticality: criticality.ERROR,
+          });
+          navigate("/");
         }
         const http = new HttpService();
         const tokenResponse2 = await http.getToken(code ?? "");
@@ -63,13 +74,22 @@ const LoginPage = ({
               tokenResponse2.expireDate
             );
           } else {
-            //TODO: INFORM USER THAT HE IS WAITING FOR APPROVAL FOR EVENT WORKER AND/OR EVENT MANAGER
+            sendAlert({
+              message:
+                "You are waiting for approval to be an event worker and/or event manager. Your account will be unlocked after that process.",
+              criticality: criticality.INFO,
+            });
           }
           navigate("/");
         }
         if (!tokenResponse2.success) {
-          // navigate("/");
-          //TODO: UNCOMENT THIS LINE AND ADD A POP UP MESSAGE
+          sendAlert({
+            message:
+              "Something went wrong during the login, please retry. " +
+              "If the error continues, please contact us.",
+            criticality: criticality.ERROR,
+          });
+          navigate("/");
         }
       };
 
@@ -86,40 +106,6 @@ const LoginPage = ({
           homePage={homePage}
         />
       )}
-      <div className="test">
-        <h2>Token Response</h2>
-        <button
-          onClick={() => {
-            console.log(tokenResponse);
-            tokenResponse.isNewUser = true;
-            setTokenResponse({
-              success: true,
-              waiting_for_response: false,
-              isNewUser: true,
-            });
-          }}
-        >
-          Do something!
-        </button>
-        {tokenResponse && (
-          <>
-            <p>
-              Waiting for response: {tokenResponse.waiting_for_response + ""}
-            </p>
-            <p>Success: {tokenResponse.success + ""}</p>
-            <p>Token: {tokenResponse.token}</p>
-            <p>Refresh Token: {tokenResponse.refreshToken}</p>
-            <p>Name: {tokenResponse.name}</p>
-            <p>Email: {tokenResponse.email}</p>
-            <p>Picture: {tokenResponse.picture}</p>
-            <p>Is New User: {tokenResponse.isNewUser + ""}</p>
-            <p>Is Event Worker: {tokenResponse.isEventWorker + ""}</p>
-            <p>Is Event Manager: {tokenResponse.isEventManager + ""}</p>
-            <p>Is Admin: {tokenResponse.isAdmin + ""}</p>
-            <p>Expire Date: {tokenResponse.expireDate + ""}</p>
-          </>
-        )}
-      </div>
     </div>
   );
 };

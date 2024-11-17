@@ -19,7 +19,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: create-drop #update
+      ddl-auto: update #create-drop
     database-platform: org.hibernate.dialect.H2Dialect
 
 frontend:

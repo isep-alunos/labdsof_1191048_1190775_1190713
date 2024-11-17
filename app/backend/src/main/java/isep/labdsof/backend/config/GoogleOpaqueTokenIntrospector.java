@@ -53,14 +53,6 @@ public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
             attributes.put("isWaitingForApprovalForEventWorker", user.get().isWaitingForApprovalForEventWorker());
             attributes.put("isWaitingForApprovalForEventManager", user.get().isWaitingForApprovalForEventManager());
         }
-        //TODO: SAVE USER CODE. MOVE THIS CODE OUT TO BE A OPTION TO REGISTER USERS
-//                    User user = userRepository.save(User.builder()
-//                            .nome(name)
-//                            .email(email)
-//                            .roles(Collections.singletonList(Role.USER))
-//                            .build());
-//                    MDC.put("userId", user.getId().toString());
-//                    roles.addAll(user.getRoles());
         attributes.put("roles", roles);
 
         final List<GrantedAuthority> authorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getRole())).collect(Collectors.toList());

@@ -76,19 +76,18 @@ function App() {
 
   //Only not logged in users
   function onlyPublicUserRoutes(): ReactNode {
-    //TODO: UNCOMENT THIS LINE AFTER TESTING
-    //if (!isLoggedIn) {
-    return (
-      <Route
-        path="/login"
-        element={
-          <div>
-            <LoginPage handleLogin={handleLogin} />
-          </div>
-        }
-      />
-    );
-    //}
+    if (!isLoggedIn) {
+      return (
+        <Route
+          path="/login"
+          element={
+            <div>
+              <LoginPage handleLogin={handleLogin} />
+            </div>
+          }
+        />
+      );
+    }
   }
 
   //User logged in

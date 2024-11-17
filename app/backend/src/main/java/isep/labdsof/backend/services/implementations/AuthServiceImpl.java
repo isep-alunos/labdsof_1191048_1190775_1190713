@@ -50,16 +50,15 @@ public class AuthServiceImpl implements AuthService {
                         .build();
             }
         }
-        //TODO: UNCOMENT THIS TO MAKE THE CODE WORK
-//        userRepository.save(User.builder()
-//                .email(email)
-//                .nome(name)
-//                .roles(Collections.singletonList(Role.USER))
-//                .isWaitingForApprovalForEventWorker(isEventWorker)
-//                .eventWorkerJustification(eventWorkerInfo)
-//                .isWaitingForApprovalForEventManager(isEventManager)
-//                .eventManagerJustification(eventManagerInfo)
-//                .build());
+        userRepository.save(User.builder()
+                .email(email)
+                .nome(name)
+                .roles(Collections.singletonList(Role.USER))
+                .isWaitingForApprovalForEventWorker(isEventWorker)
+                .eventWorkerJustification(eventWorkerInfo)
+                .isWaitingForApprovalForEventManager(isEventManager)
+                .eventManagerJustification(eventManagerInfo)
+                .build());
 
         final List<MessageDto> messages = new ArrayList<>(List.of(new MessageDto("User registered successfully.")));
         if (isEventWorker) {
