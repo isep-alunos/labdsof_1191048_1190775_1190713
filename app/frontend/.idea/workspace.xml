@@ -4,19 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2ae131c-2584-4b84-9eae-7f38e2a78246" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/eventManagerPages/CreateEventPage/CreateEvent.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/eventManagerPages/CreateEventPage/CreateEvent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/eventManagerPages/CreateEventPage/LocationSelector.tsx" afterDir="false" />
+    <list default="true" id="f2ae131c-2584-4b84-9eae-7f38e2a78246" name="Changes" comment="Frontend create event page">
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/isep/labdsof/backend/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/isep/labdsof/backend/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/isep/labdsof/backend/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/isep/labdsof/backend/config/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/application-local.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/application-local.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/eventManagerPages/EventManagerPage/EventManagerPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eventManagerPages/EventManagerPage.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/eventManagerPages/EventManagerPage/EventWorkerPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eventManagerPages/EventManagerPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/eventManagerPages/CreateEventPage/CreateEvent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eventManagerPages/CreateEventPage/CreateEvent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/eventManagerPages/CreateEventPage/LocationSelector.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eventManagerPages/CreateEventPage/LocationSelector.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,11 +71,23 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1731866147597</updated>
-      <workItem from="1731866148809" duration="5837000" />
+      <workItem from="1731866148809" duration="7664000" />
     </task>
+    <task id="LOCAL-00001" summary="Frontend create event page">
+      <created>1731877911226</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731877911226</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Frontend create event page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Frontend create event page" />
   </component>
 </project>

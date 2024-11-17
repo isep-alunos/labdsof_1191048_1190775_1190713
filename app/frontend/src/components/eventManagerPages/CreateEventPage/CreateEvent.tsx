@@ -77,9 +77,9 @@ class CreateEvent extends Component<MyProps, MyState> {
         this.setState({ eventWorkers: selectedEventWorkers });
     };
 
-    handleLocationChange = (latitude: number, longitude: number) => {
+    handleLocationChange = (latitude: number, longitude: number, street: string, number: number, postalCode: string) => {
         // Update state with the selected latitude and longitude
-        this.setState({ latitude, longitude });
+        this.setState({ latitude, longitude, street, number, postalCode });
     };
 
     handleSubmit = (e: React.FormEvent) => {
