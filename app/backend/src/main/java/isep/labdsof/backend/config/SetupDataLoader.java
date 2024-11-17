@@ -33,12 +33,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     private void addAdminUser() {
-        if(userRepository.findUserByEmail(adminEmail).isPresent())
+        if (userRepository.findUserByEmail(adminEmail).isPresent())
             return;
         final User user = User.builder()
                 .nome("Admin")
                 .email(adminEmail)
                 .roles(Collections.singletonList(Role.ADMIN))
+                .isWaitingForApprovalForEventWorker(false)
+                .isWaitingForApprovalForEventManager(false)
                 .build();
         userRepository.save(user);
     }

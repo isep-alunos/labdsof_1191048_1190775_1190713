@@ -10,8 +10,14 @@ public class TokenDto {
     private String expireDate;
     private String refreshToken;
     private String name;
+    private String email;
     private String picture;
+    private boolean newUser;
+    private boolean eventWorker;
+    private boolean eventManager;
     private boolean admin;
+    private boolean waitingForApprovalForEventWorker;
+    private boolean waitingForApprovalForEventManager;
 
     public TokenDto(final String token, final String expireDate) {
         this.token = token;

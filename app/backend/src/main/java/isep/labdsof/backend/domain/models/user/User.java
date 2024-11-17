@@ -34,4 +34,9 @@ public class User {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
+
+    private boolean isWaitingForApprovalForEventWorker = false;
+    private String eventWorkerJustification;
+    private boolean isWaitingForApprovalForEventManager = false;
+    private String eventManagerJustification;
 }
