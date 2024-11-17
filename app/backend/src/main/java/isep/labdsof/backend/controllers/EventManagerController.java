@@ -20,13 +20,11 @@ public class EventManagerController {
     private final EventService eventService;
 
     @PostMapping("/event")
-    public ResponseEntity<MessageDto> createEvent(@RequestBody CreateEventRequest request) {
-        try {
-            eventService.create(request);
-            return ResponseEntity.status(201).body(new MessageDto("Event created successfully"));
-        } catch (EventInvalidFieldException e){
-            return ResponseEntity.badRequest().body(new MessageDto(e.getMessage()));
-        }
+    public ResponseEntity<MessageDto> createEvent(@RequestBody CreateEventRequest request) throws EventInvalidFieldException {
+
+        eventService.create(request);
+        return ResponseEntity.status(201).body(new MessageDto("Event created successfully"));
+
     }
 
 

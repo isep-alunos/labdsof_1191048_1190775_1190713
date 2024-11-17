@@ -1,7 +1,10 @@
 package isep.labdsof.backend.controllers.handler;
 
 
+import isep.labdsof.backend.domain.exceptions.event.EventInvalidFieldException;
+import isep.labdsof.backend.domain.responses.MessageDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,6 +34,16 @@ public class CustomGlobalExceptionHandler {
         body.put("errors", errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<MessageDto> handleDataIntegrityViolationException() {
+        return new ResponseEntity<>(new MessageDto("A data integrity error occurred"), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(EventInvalidFieldException.class)
+    public ResponseEntity<MessageDto> handleIllegalArgumentException(EventInvalidFieldException ex) {
+        return new ResponseEntity<>(new MessageDto(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
 }

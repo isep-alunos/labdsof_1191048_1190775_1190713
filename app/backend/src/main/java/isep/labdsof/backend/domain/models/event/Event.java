@@ -2,6 +2,7 @@ package isep.labdsof.backend.domain.models.event;
 
 import isep.labdsof.backend.domain.exceptions.event.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 
@@ -12,11 +13,12 @@ import java.util.regex.Pattern;
 @NoArgsConstructor
 public class Event extends BaseEntity {
 
+    @Column(unique = true)
     private String name;
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private int maxParticipants;
+    private Integer maxParticipants;
     private String eventWebsite;
     private EventLocation location;
 
@@ -24,7 +26,7 @@ public class Event extends BaseEntity {
             "([\\w-]+\\.)+[\\w-]+" +                            // Domain name
             "(:\\d+)?(/.*)?$";                                  // Optional port and path
 
-    public Event(String name, String description, LocalDateTime startDate, LocalDateTime endDate, int maxParticipants, String eventWebsite, EventLocation location) throws EventInvalidFieldException {
+    public Event(String name, String description, LocalDateTime startDate, LocalDateTime endDate, Integer maxParticipants, String eventWebsite, EventLocation location) throws EventInvalidFieldException {
         setName(name);
         setDescription(description);
         setDateRange(startDate, endDate);
@@ -67,8 +69,10 @@ public class Event extends BaseEntity {
     }
 
 
-    public void setMaxParticipants(int maxParticipants) throws EventInvalidFieldException {
-        if (maxParticipants < 1) {
+    public void setMaxParticipants(Integer maxParticipants) throws EventInvalidFieldException {
+        if (maxParticipants == null) {
+            throw new EventInvalidFieldException("Empty max participants");
+        } else if (maxParticipants < 1) {
             throw new EventInvalidFieldException("The event number of participants" + " should be greater or equal than 1");
         }
         this.maxParticipants = maxParticipants;

@@ -1,6 +1,7 @@
 package isep.labdsof.backend.domain.requests;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,14 +11,16 @@ public class CreateEventRequest {
 
     public String name;
     public String description;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     public LocalDateTime startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     public LocalDateTime endDate;
-    public int maxParticipants;
+    public Integer maxParticipants;
     public String eventWebsite;
-   /* public double latitude;
-    public double longitude;
+    public Double latitude;
+    public Double longitude;
     public String street;
-    public int number;
-    public String postalCode;*/
+    public Integer number;
+    public String postalCode;
 
 }
