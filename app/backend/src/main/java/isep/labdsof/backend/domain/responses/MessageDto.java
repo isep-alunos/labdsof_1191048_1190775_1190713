@@ -6,5 +6,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MessageDto {
-    private String message;
+    final private String message;
+    final private MessageCriticality criticality;
+
+    public MessageDto(final String message) {
+        this.message = message;
+        criticality = MessageCriticality.INFO;
+    }
 }

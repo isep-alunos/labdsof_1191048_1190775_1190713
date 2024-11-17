@@ -39,4 +39,8 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
+    private boolean isWaitingForApprovalForEventWorker = false;
+    private String eventWorkerJustification;
+    private boolean isWaitingForApprovalForEventManager = false;
+    private String eventManagerJustification;
 }

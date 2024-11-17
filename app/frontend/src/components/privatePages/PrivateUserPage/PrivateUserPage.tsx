@@ -17,7 +17,7 @@ class PrivateUserPage extends React.Component<MyProps, MyState> {
   render() {
     return (
       <div className={styles.PrivateUserPage}>
-        <h2>TODO: Event Worker Page</h2>
+        <h2>TODO: Private User Page</h2>
       </div>
     );
   }

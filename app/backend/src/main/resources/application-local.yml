@@ -19,7 +19,7 @@ spring:
   jpa:
     show-sql: false
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create-drop #update
     database-platform: org.hibernate.dialect.H2Dialect
 
 frontend:
@@ -39,7 +39,7 @@ logging:
 
 logbook:
   obfuscate:
-    json-body-fields: email,nome,name,token,refreshToken
+    json-body-fields:
 
 server:
   port: 8080

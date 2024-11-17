@@ -10,6 +10,7 @@ import React, { ReactNode } from "react";
 import EventWorkerPage from "./components/eventWorkerPages/EventWorkerPage/EventWorkerPage";
 import PrivateUserPage from "./components/privatePages/PrivateUserPage/PrivateUserPage";
 import EventManagerPage from "./components/eventManagerPages/EventManagerPage/EventWorkerPage";
+import { AlertProvider } from "./utils/alerts/AlertContext";
 export const NON_TOP_NAV_BAR_ID = "non-top-nav-bar-id-12321";
 function App() {
   const zoomLevelWidth = window.innerWidth / 1879;
@@ -45,11 +46,15 @@ function App() {
 
   const handleLogin = (
     status: boolean,
+    token: string | undefined,
+    refreshToken: string | undefined,
     userName: string | undefined,
+    userEmail: string | undefined,
     userPicture: string | undefined,
     isEventWorker: boolean | undefined,
     isEventManager: boolean | undefined,
-    isAdmin: boolean | undefined
+    isAdmin: boolean | undefined,
+    expireDate: Date | undefined
   ) => {
     setIsLoggedIn(status);
     setLoggedInName(userName);
@@ -57,22 +62,33 @@ function App() {
     setIsEventWorker(isEventWorker);
     setIsEventManager(isEventManager);
     setIsAdmin(isAdmin);
+    const cookies = new Cookies();
+    cookies.set("token", token, { path: "/" });
+    cookies.set("refreshToken", refreshToken, { path: "/" });
+    cookies.set("name", userName, { path: "/" });
+    cookies.set("email", userEmail, { path: "/" });
+    cookies.set("picture", userPicture, { path: "/" });
+    cookies.set("isEventWorker", isEventWorker, { path: "/" });
+    cookies.set("isEventManager", isEventManager, { path: "/" });
+    cookies.set("isAdmin", isAdmin, { path: "/" });
+    cookies.set("expireDate", expireDate, { path: "/" });
   };
 
   //Only not logged in users
   function onlyPublicUserRoutes(): ReactNode {
-    if (!isLoggedIn) {
-      return (
-        <Route
-          path="/login"
-          element={
-            <div>
-              <LoginPage handleLogin={handleLogin} />
-            </div>
-          }
-        />
-      );
-    }
+    //TODO: UNCOMENT THIS LINE AFTER TESTING
+    //if (!isLoggedIn) {
+    return (
+      <Route
+        path="/login"
+        element={
+          <div>
+            <LoginPage handleLogin={handleLogin} />
+          </div>
+        }
+      />
+    );
+    //}
   }
 
   //User logged in
@@ -146,42 +162,44 @@ function App() {
   }
 
   return (
-    <Router>
-      <div className={"background_v1"} />
-      <div id={NON_TOP_NAV_BAR_ID}>
-        <TopNavBar
-          isLoggedIn={isLoggedIn}
-          loggedInName={loggedInName}
-          loggedInPicture={loggedInPicture}
-          isEventWorker={isEventWorker}
-          isEventManager={isEventManager}
-          isAdmin={isAdmin}
-        />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div>
-                <HomePage isLoggedIn={isLoggedIn} />
-              </div>
-            }
-          ></Route>
-          {privateUserRoutes()}
-          {eventWorkerRoutes()}
-          {eventManagerRoutes()}
-          {adminRoutes()}
-          {onlyPublicUserRoutes()}
-          <Route
-            path="*"
-            element={
-              <div>
-                <LostPage />
-              </div>
-            }
-          ></Route>
-        </Routes>
-      </div>
-    </Router>
+    <AlertProvider>
+      <Router>
+        <div className={"background_v1"} />
+        <div id={NON_TOP_NAV_BAR_ID}>
+          <TopNavBar
+            isLoggedIn={isLoggedIn}
+            loggedInName={loggedInName}
+            loggedInPicture={loggedInPicture}
+            isEventWorker={isEventWorker}
+            isEventManager={isEventManager}
+            isAdmin={isAdmin}
+          />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <div>
+                  <HomePage isLoggedIn={isLoggedIn} />
+                </div>
+              }
+            ></Route>
+            {privateUserRoutes()}
+            {eventWorkerRoutes()}
+            {eventManagerRoutes()}
+            {adminRoutes()}
+            {onlyPublicUserRoutes()}
+            <Route
+              path="*"
+              element={
+                <div>
+                  <LostPage />
+                </div>
+              }
+            ></Route>
+          </Routes>
+        </div>
+      </Router>
+    </AlertProvider>
   );
 }
 
