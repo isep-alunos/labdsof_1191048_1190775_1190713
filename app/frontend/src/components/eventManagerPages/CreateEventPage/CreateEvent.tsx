@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import styles from "./CreateEvent.module.css";
 import HttpService from "../../../utils/http";
-import {tokenResponse} from "../../../utils/types";
+import {messageDto, tokenResponse} from "../../../utils/types";
 import LocationSelector from './LocationSelector';
+import { useAlert } from "../../../utils/alerts/AlertContext";
 
-type MyProps = {
-};
+
+type MyProps = {};
 
 type MyState = {
     name: string;
@@ -20,7 +21,7 @@ type MyState = {
     number: number;
     postalCode: string;
     eventWorkers: string[];
-    availableEventWorkers: { id: string; name: string }[];
+    availableEventWorkers: { id: string; name: string, email: string }[];
     isSubmitting: boolean;
 };
 
@@ -34,8 +35,8 @@ class CreateEvent extends Component<MyProps, MyState> {
             endDate: "",
             maxParticipants: 0,
             eventWebsite: "",
-            latitude: 0,
-            longitude: 0,
+            latitude: 41.155296,
+            longitude: -8.633501,
             street: "",
             number: 0,
             postalCode: "",
@@ -45,17 +46,19 @@ class CreateEvent extends Component<MyProps, MyState> {
         };
     }
 
+
     componentDidMount() {
         // Fetch available event workers when component mounts
-        //this.fetchAvailableEventWorkers();
+        this.fetchAvailableEventWorkers();
     }
 
     fetchAvailableEventWorkers = () => {
         const http = new HttpService();
         http
-            .getPublic<{ id: string; name: string }[]>("/event-workers")
+            .getPrivate<{ id: string; name: string, email: string }[]>("/event-manager/get-event-workers")
             .then((data) => {
-                this.setState({ availableEventWorkers: data.body || [] });
+                console.log (data.body)
+                this.setState({availableEventWorkers: data.body || []});
             })
             .catch((error) => {
                 console.error("Error fetching event workers:", error);
@@ -63,62 +66,66 @@ class CreateEvent extends Component<MyProps, MyState> {
     };
 
     handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         this.setState({[name]: value} as unknown as Pick<MyState, keyof MyState>);
     };
 
     handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = parseInt(e.target.value, 10);
-        this.setState({ maxParticipants: value });
+        this.setState({maxParticipants: value});
     };
 
     handleEventWorkerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedEventWorkers = Array.from(e.target.selectedOptions, (option) => option.value);
-        this.setState({ eventWorkers: selectedEventWorkers });
+        this.setState({eventWorkers: selectedEventWorkers});
     };
 
     handleLocationChange = (latitude: number, longitude: number, street: string, number: number, postalCode: string) => {
         // Update state with the selected latitude and longitude
-        this.setState({ latitude, longitude, street, number, postalCode });
+        this.setState({latitude, longitude, street, number, postalCode});
     };
 
     handleSubmit = (e: React.FormEvent) => {
-      /*  e.preventDefault();
-        const { name, description, startDate, endDate, maxParticipants, eventWebsite, latitude, longitude, street, number, postalCode, eventWorkers } = this.state;
+       /*   e.preventDefault();
+          const { name, description, startDate, endDate, maxParticipants, eventWebsite, latitude, longitude, street, number, postalCode, eventWorkers } = this.state;
 
-        const eventData = {
-            name,
-            description,
-            startDate,
-            endDate,
-            maxParticipants,
-            eventWebsite,
-            latitude,
-            longitude,
-            street,
-            number,
-            postalCode,
-            eventWorkers,
-        };
+          const eventData = {
+              name,
+              description,
+              startDate,
+              endDate,
+              maxParticipants,
+              eventWebsite,
+              latitude,
+              longitude,
+              street,
+              number,
+              postalCode,
+              eventWorkers,
+          };
 
-        this.setState({ isSubmitting: true });
+          this.setState({ isSubmitting: true });
 
-        const http = new HttpService();
-        http
-            .postPublic("/events", eventData)
-            .then((data) => {
-                console.log("Event created successfully", data);
-                this.props.homePage();
-            })
-            .catch((error) => {
-                console.error("Error creating event:", error);
-            })
-            .finally(() => {
-                this.setState({ isSubmitting: false });
-            });
+          const http = new HttpService();
+          http
+          .postPrivate("/event-manager/event", eventData)
+              .then((data) => {
+                  for (let message of data.body.messages ?? []) {
+                      console.log("Message:", message);
+                      useAlert(message);
+                  }
+                  console.log("Event created successfully", data);
+                  //this.props.homePage();
+              })
+              .catch((error) => {
+                  console.error("Error creating event:", error);
+              })
+              .finally(() => {
+                  this.setState({ isSubmitting: false });
+              });
+*/
 
 
-       */
     };
 
     render() {
@@ -256,7 +263,7 @@ class CreateEvent extends Component<MyProps, MyState> {
                         >
                             {availableEventWorkers.map((worker) => (
                                 <option key={worker.id} value={worker.id}>
-                                    {worker.name}
+                                    {worker.name + " | " + worker.email }
                                 </option>
                             ))}
                         </select>
