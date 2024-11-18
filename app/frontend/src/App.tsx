@@ -5,6 +5,7 @@ import LostPage from "./components/publicPages/LostPage/LostPage";
 import TopNavBar from "./components/publicPages/TopNavBar/TopNavBar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Cookies from "universal-cookie";
+import ApproveUsersPage from "./components/adminPages/AdminPage/ApproveUsersPage/ApproveUsersPage";
 
 import React, { ReactNode } from "react";
 import EventWorkerPage from "./components/eventWorkerPages/EventWorkerPage/EventWorkerPage";
@@ -152,6 +153,14 @@ function App() {
             element={
               <div>
                 <AdminPage />
+              </div>
+            }
+          />
+          <Route
+            path="/admin/approve-users"
+            element={
+              <div>
+                <ApproveUsersPage />
               </div>
             }
           />
