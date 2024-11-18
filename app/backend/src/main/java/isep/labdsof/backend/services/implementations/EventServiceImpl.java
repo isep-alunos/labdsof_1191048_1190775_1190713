@@ -1,5 +1,6 @@
 package isep.labdsof.backend.services.implementations;
 
+import isep.labdsof.backend.domain.dtos.EventWorkersDto;
 import isep.labdsof.backend.domain.models.event.Address;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.event.EventLocation;
@@ -55,5 +56,17 @@ public class EventServiceImpl implements EventService {
         );
 
         eventRepository.save(e);
+    }
+
+    @Override
+    public List<EventWorkersDto> getEventWorkers() throws Exception {
+        List<User> eventWorkers = userService.getEventWorkers();
+        return eventWorkers.stream().map(e -> EventWorkersDto
+                .builder()
+                .name(e.getNome())
+                .email(e.getEmail())
+                .id(e.getId())
+                .build()
+        ).toList();
     }
 }
