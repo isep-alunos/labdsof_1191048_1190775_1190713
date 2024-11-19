@@ -1,6 +1,6 @@
 package isep.labdsof.backend.repositories;
 
-import isep.labdsof.backend.domain.models.user.UserProfile;
+import isep.labdsof.backend.domain.models.userProfile.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

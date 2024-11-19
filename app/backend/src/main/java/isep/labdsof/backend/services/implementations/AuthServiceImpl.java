@@ -3,7 +3,7 @@ package isep.labdsof.backend.services.implementations;
 import isep.labdsof.backend.domain.dtos.RegisterUserDto;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
-import isep.labdsof.backend.domain.models.user.UserProfile;
+import isep.labdsof.backend.domain.models.userProfile.UserProfile;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import isep.labdsof.backend.domain.responses.MessageDto;
 import isep.labdsof.backend.repositories.UserProfileRepository;

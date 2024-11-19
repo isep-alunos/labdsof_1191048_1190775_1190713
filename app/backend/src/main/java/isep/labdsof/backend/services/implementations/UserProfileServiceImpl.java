@@ -2,7 +2,7 @@ package isep.labdsof.backend.services.implementations;
 
 
 import isep.labdsof.backend.domain.exceptions.UserNotFoundException;
-import isep.labdsof.backend.domain.models.user.UserProfile;
+import isep.labdsof.backend.domain.models.userProfile.UserProfile;
 import isep.labdsof.backend.repositories.UserProfileRepository;
 import isep.labdsof.backend.services.UserProfileService;
 import lombok.RequiredArgsConstructor;

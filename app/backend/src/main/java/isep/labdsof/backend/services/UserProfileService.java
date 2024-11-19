@@ -1,7 +1,7 @@
 package isep.labdsof.backend.services;
 
 
-import isep.labdsof.backend.domain.models.user.UserProfile;
+import isep.labdsof.backend.domain.models.userProfile.UserProfile;
 
 import java.util.UUID;
 

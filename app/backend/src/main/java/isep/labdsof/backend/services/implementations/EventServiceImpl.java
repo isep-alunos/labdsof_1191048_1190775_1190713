@@ -6,8 +6,9 @@ import isep.labdsof.backend.domain.models.event.Address;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.event.EventLocation;
 import isep.labdsof.backend.domain.models.user.User;
-import isep.labdsof.backend.domain.models.user.UserProfile;
+import isep.labdsof.backend.domain.models.userProfile.UserProfile;
 import isep.labdsof.backend.domain.requests.CreateEventRequest;
+import isep.labdsof.backend.domain.requests.MarkPresenceAtEventRequest;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import isep.labdsof.backend.domain.responses.MessageDto;
 import isep.labdsof.backend.domain.responses.StatusResponse;
@@ -90,10 +91,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public StatusResponse markPresenceAtEvent(String name, String userEmail) {
+    public StatusResponse markPresenceAtEvent(MarkPresenceAtEventRequest request, String userEmail) {
         try {
             final UserProfile userProfile = userProfileService.getByUserEmail(userEmail);
-            final Event event = getByName(name);
+            final Event event = getByName(request.name);
             final boolean success = userProfile.addAttendedEvent(event);
             return StatusResponse.builder()
                     .success(success)
