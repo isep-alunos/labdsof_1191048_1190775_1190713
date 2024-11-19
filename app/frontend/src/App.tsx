@@ -13,6 +13,7 @@ import PrivateUserPage from "./components/privatePages/PrivateUserPage/PrivateUs
 import EventManagerPage from "./components/eventManagerPages/EventManagerPage";
 import {AlertProvider} from "./utils/alerts/AlertContext";
 import CreateEvent from "./components/eventManagerPages/CreateEventPage/CreateEvent";
+import {ROUTES} from './routes';
 
 export const NON_TOP_NAV_BAR_ID = "non-top-nav-bar-id-12321";
 
@@ -83,7 +84,7 @@ function App() {
         if (!isLoggedIn) {
             return (
                 <Route
-                    path="/login"
+                    path={ROUTES.LOGIN}
                     element={
                         <div>
                             <LoginPage handleLogin={handleLogin}/>
@@ -99,7 +100,7 @@ function App() {
         if (isLoggedIn) {
             return (
                 <Route
-                    path="/private"
+                    path={ROUTES.PRIVATE_USER}
                     element={
                         <div>
                             <PrivateUserPage/>
@@ -116,7 +117,7 @@ function App() {
             return (
                 <>
                     <Route
-                        path="/event-worker"
+                        path={ROUTES.EVENT_WORKER}
                         element={
                             <div>
                                 <EventWorkerPage/>
@@ -134,7 +135,7 @@ function App() {
             return (
                 <>
                     <Route
-                        path="/event-manager"
+                        path={ROUTES.EVENT_MANAGER}
                         element={
                             <div>
                                 <EventManagerPage/>
@@ -142,7 +143,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/event-manager/create-event"
+                        path={ROUTES.CREATE_EVENT}
                         element={
                             <div>
                                 <CreateEvent/>
@@ -160,7 +161,7 @@ function App() {
             return (
                 <>
                     <Route
-                        path="/admin"
+                        path={ROUTES.ADMIN}
                         element={
                             <div>
                                 <AdminPage/>
@@ -168,7 +169,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/admin/approve-users"
+                        path={ROUTES.APPROVE_USERS}
                         element={
                             <div>
                                 <ApproveUsersPage/>
@@ -193,29 +194,31 @@ function App() {
                         isEventManager={isEventManager}
                         isAdmin={isAdmin}
                     />
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <div>
-                                    <HomePage isLoggedIn={isLoggedIn}/>
-                                </div>
-                            }
-                        ></Route>
-                        {privateUserRoutes()}
-                        {eventWorkerRoutes()}
-                        {eventManagerRoutes()}
-                        {adminRoutes()}
-                        {onlyPublicUserRoutes()}
-                        <Route
-                            path="*"
-                            element={
-                                <div>
-                                    <LostPage/>
-                                </div>
-                            }
-                        ></Route>
-                    </Routes>
+                    <div style={{marginTop: '150px'}}>
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={
+                                    <div>
+                                        <HomePage isLoggedIn={isLoggedIn}/>
+                                    </div>
+                                }
+                            ></Route>
+                            {privateUserRoutes()}
+                            {eventWorkerRoutes()}
+                            {eventManagerRoutes()}
+                            {adminRoutes()}
+                            {onlyPublicUserRoutes()}
+                            <Route
+                                path={ROUTES.LOST}
+                                element={
+                                    <div>
+                                        <LostPage/>
+                                    </div>
+                                }
+                            ></Route>
+                        </Routes>
+                    </div>
                 </div>
             </Router>
         </AlertProvider>

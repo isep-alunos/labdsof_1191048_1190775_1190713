@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/event-manager", consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/event-manager")
 @RequiredArgsConstructor
 public class EventManagerController {
 

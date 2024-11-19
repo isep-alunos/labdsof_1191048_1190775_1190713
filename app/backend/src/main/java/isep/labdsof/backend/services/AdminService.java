@@ -8,4 +8,6 @@ public interface AdminService {
     ListRoleRequestsRequest listAllUsersWaitingForApprovals();
 
     StatusResponse approveRoleRequest(final RoleRequestBasicDto body);
+
+    StatusResponse rejectRoleRequest(final RoleRequestBasicDto body);
 }

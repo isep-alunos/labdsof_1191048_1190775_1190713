@@ -75,8 +75,10 @@ const TopNavBar: React.FC<MyProps> = (props) => {
         } else {
           console.log(data.body);
         }
+      })
+      .finally(() => {
+        window.location.href = "/";
       });
-    window.location.pathname = "/";
   };
 
   const isLoginPage = location.pathname === "/login";
