@@ -96,6 +96,7 @@ public class EventServiceImpl implements EventService {
             final UserProfile userProfile = userProfileService.getByUserEmail(userEmail);
             final Event event = getByName(request.name);
             final boolean success = userProfile.addAttendedEvent(event);
+            userProfileRepository.save(userProfile);
             return StatusResponse.builder()
                     .success(success)
                     .build();
