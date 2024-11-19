@@ -4,6 +4,7 @@ import HttpService from "../../../utils/http";
 import { useAlert } from "../../../utils/alerts/AlertContext"; // Import the useAlert hook
 import LocationSelector from './LocationSelector';
 import {criticality, messageDto} from "../../../utils/types";
+import {useNavigate} from "react-router-dom";
 
 type EventWorker = { id: string; name: string; email: string };
 
@@ -26,6 +27,7 @@ const CreateEvent: React.FC = () => {
     });
 
     const alert = useAlert(); // Use the useAlert hook
+    const navigate = useNavigate(); // Hook for navigation
 
     const sendAlert = (message: messageDto) => {
         alert.addAlert(message);
@@ -129,16 +131,12 @@ const CreateEvent: React.FC = () => {
         const http = new HttpService();
         http.postPrivate<messageDto>("/event-manager/event", eventData)
             .then((data) => {
-                sendAlert({
-                    message: "Event Created",
-                    criticality: criticality.INFO,
-                });
-            })
-            .catch(() => {
-                sendAlert({
-                    message: "Failed to create the event. Please try again.",
-                    criticality: criticality.ERROR,
-                });
+                if (data.code === 201) {
+                    sendAlert(data.body!);
+                    navigate("/");
+                } else {
+                    sendAlert(data.body!);
+                }
             })
             .finally(() => {
                 setFormState((prevState) => ({

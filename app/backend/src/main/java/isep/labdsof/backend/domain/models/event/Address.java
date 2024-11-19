@@ -24,8 +24,8 @@ public class Address extends ValueObject {
         if (street == null || street.trim().isEmpty()) {
             throw new EventInvalidFieldException("Street cannot be null or empty");
         }
-        if (!street.matches("[a-zA-Z0-9 .'-]+")) {
-            throw new EventInvalidFieldException("Street contains invalid characters");
+        if (street.length() > 100) {
+            throw new EventInvalidFieldException("Street should not be greater than 100 characters");
         }
         this.street = street.trim();
     }
