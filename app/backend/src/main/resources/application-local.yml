@@ -27,7 +27,7 @@ frontend:
     public: http://localhost:3000
 
 backend:
-  admin-email: admin@gmail.com
+  admin-email: ruipedrotelesribeiro@gmail.com
 
 crypt:
   password: ThisIsASecretKey

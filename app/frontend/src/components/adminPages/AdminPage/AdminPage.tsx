@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./AdminPage.module.css";
 import { Link } from "react-router-dom";
+import {ROUTES} from "../../../routes";
 
 type MyProps = {};
 type MyState = {};
@@ -25,7 +26,7 @@ class AdminPage extends React.Component<MyProps, MyState> {
             <p>
               Sub-página onde o administrador pode aprovar todos os utilizadores que solicitaram um papel de gestor de eventos ou trabalhador de eventos.
             </p>
-            <Link to="/admin/approve-users">
+            <Link to={ROUTES.APPROVE_USERS}>
               <button>Aprovar Utilizadores</button>
             </Link>
           </div>
