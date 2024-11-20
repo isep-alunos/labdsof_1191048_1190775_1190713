@@ -3,6 +3,8 @@ package isep.labdsof.backend.domain.models.event;
 import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
+import isep.labdsof.backend.domain.models.issue.Issue;
+import isep.labdsof.backend.domain.models.issue.IssueStatus;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
 import jakarta.persistence.Column;
@@ -12,6 +14,7 @@ import jakarta.persistence.OneToMany;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -29,6 +32,8 @@ public class Event extends BaseEntity {
     private EventLocation location;
     @ManyToMany
     private List<User> eventWorkers;
+    @OneToMany
+    private List<Issue> issues;
 
     private static final String URL_REGEX = "^(https?://)?" +   // Optional HTTP or HTTPS
             "([\\w-]+\\.)+[\\w-]+" +                            // Domain name
@@ -42,6 +47,7 @@ public class Event extends BaseEntity {
         setEventWebsite(eventWebsite);
         setLocation(location);
         setEventWorkerList(ewList);
+        issues = new ArrayList<>();
     }
 
 
@@ -105,12 +111,22 @@ public class Event extends BaseEntity {
     }
 
     private void setEventWorkerList(List<User> ewList) throws EventInvalidFieldException {
+        if (ewList == null || ewList.isEmpty()) {
+            throw new EventInvalidFieldException("Empty Event Worker list");
+        }
         for (User u : ewList) {
             if (!u.hasRole(Role.EVENT_WORKER)) {
                 throw new EventInvalidFieldException("Event workers should have EVENT_WORKER role");
             }
         }
         this.eventWorkers = ewList;
+    }
+
+    public void newIssue(Issue issue) throws EventInvalidFieldException {
+        if (issue == null) {
+            throw new EventInvalidFieldException("Invalid issue");
+        }
+        issues.add(issue);
     }
 
     public EventDto toDto() {
