@@ -52,6 +52,23 @@ type listRoleRequestsRequest = {
   requests: roleRequestDto[];
 };
 
+type eventDto = {
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  maxParticipants: number;
+  eventWebsite: string;
+  location: {
+    latitude: number;
+    longitude: number;
+    street: string;
+    number: number;
+    postalCode: string;
+  };
+  eventWorkerNames: string[];
+};
+
 export {
   httpResponse,
   tokenResponse,
@@ -61,4 +78,5 @@ export {
   criticality,
   roleRequestDto,
   listRoleRequestsRequest,
+  eventDto
 };

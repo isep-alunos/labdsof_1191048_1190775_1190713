@@ -4,10 +4,12 @@ package isep.labdsof.backend.domain.models.event;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.ValueObject;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor
+@Getter
 public class Address extends ValueObject {
 
     private String street;

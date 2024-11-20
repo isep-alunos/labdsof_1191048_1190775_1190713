@@ -1,3 +1,52 @@
 .HomePageContent {
   text-align: center;
+  background-color: #f4f7fc;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tableHeader {
+  background-color: #160C4F;
+  color: white;
+}
+
+.tableSortLabel {
+  color: #007bff;
+}
+
+.tableRow {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+.tableRow:hover {
+  background-color: #e6f0ff;
+}
+
+.tableCell {
+  padding: 10px 20px;
+}
+
+.tableContainer {
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHead {
+  background-color: #f2f7fc;
+}
+
+.tableSortLabelActive {
+  font-weight: bold;
+  color: white;
+}
+
+.tableSortLabelInactive {
+  font-weight: normal;
+  color: white;
 }
