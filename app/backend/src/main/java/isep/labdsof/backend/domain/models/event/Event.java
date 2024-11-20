@@ -1,5 +1,6 @@
 package isep.labdsof.backend.domain.models.event;
 
+import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
 import isep.labdsof.backend.domain.models.user.Role;
@@ -110,5 +111,18 @@ public class Event extends BaseEntity {
             }
         }
         this.eventWorkers = ewList;
+    }
+
+    public EventDto toDto() {
+        return EventDto.builder()
+                .name(name)
+                .description(description)
+                .startDate(startDate)
+                .endDate(endDate)
+                .maxParticipants(maxParticipants)
+                .eventWebsite(eventWebsite)
+                .location(location.toDto())
+                .eventWorkerNames(eventWorkers.stream().map(User::getNome).toList())
+                .build();
     }
 }

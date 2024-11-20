@@ -1,8 +1,11 @@
 package isep.labdsof.backend.domain.models.event;
 
 
+import isep.labdsof.backend.domain.dtos.event.EventDto;
+import isep.labdsof.backend.domain.dtos.event.EventLocationDto;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.ValueObject;
+import isep.labdsof.backend.domain.models.user.User;
 import jakarta.persistence.Embeddable;
 import lombok.NoArgsConstructor;
 
@@ -41,5 +44,15 @@ public class EventLocation extends ValueObject {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public EventLocationDto toDto() {
+        return EventLocationDto.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .street(address.getStreet())
+                .number(address.getNumber())
+                .postalCode(address.getPostalCode())
+                .build();
     }
 }
