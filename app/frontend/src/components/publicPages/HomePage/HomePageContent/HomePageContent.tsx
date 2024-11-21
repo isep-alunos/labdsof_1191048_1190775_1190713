@@ -8,18 +8,13 @@ import {
   TableRow,
   TableSortLabel,
   Paper,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogActions,
-  Button,
 } from "@mui/material";
 import HttpService from "../../../../utils/http";
 import { criticality, eventDto } from "../../../../utils/types";
 import { visuallyHidden } from "@mui/utils";
 import { useAlert } from "../../../../utils/alerts/AlertContext";
 import styles from "./HomePageContent.module.css";
-import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
+import EventDialog from "./EventDialog";
 
 type MyProps = {
   isLoggedIn: boolean;
@@ -31,21 +26,16 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
   const [order, setOrder] = useState<"asc" | "desc">("asc");
   const [errorShown, setErrorShown] = useState(false);
 
-  const [open, setOpen] = useState(false);
+  const [isDialogOpen, setDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-
-  const position = selectedEvent?.location ? {
-    lat: selectedEvent.location.latitude,
-    lng: selectedEvent.location.longitude
-  } : { lat: 0, lng: 0 };
 
   const handleRowClick = (event: any) => {
     setSelectedEvent(event);
-    setOpen(true);
+    setDialogOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
     setSelectedEvent(null);
   };
 
@@ -241,33 +231,12 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>{selectedEvent?.name}</DialogTitle>
-          <DialogContent>
-            <p><strong>Description:</strong> {selectedEvent?.description}</p>
-            <p><strong>Start Date:</strong> {new Date(selectedEvent?.startDate).toLocaleString()}</p>
-            <p><strong>End Date:</strong> {new Date(selectedEvent?.endDate).toLocaleString()}</p>
-            <p><strong>Max Participants:</strong> {selectedEvent?.maxParticipants}</p>
-            <p><strong>Location:</strong> {`${selectedEvent?.location.street}, ${selectedEvent?.location.number}, ${selectedEvent?.location.postalCode}`}</p>
-            <p><strong>Event Workers:</strong> {selectedEvent?.eventWorkerNames.join(", ")}</p>
-            <p><a href={selectedEvent?.eventWebsite} target="_blank" rel="noopener noreferrer">Event Website</a></p>
-            <LoadScript googleMapsApiKey="AIzaSyBRjYJ-6-HMhU-_s9GOuT5t9B4cfJKY6KY">
-              <GoogleMap
-                mapContainerStyle={{ height: "300px", width: "100%" }}
-                center={position}
-                zoom={13}
-              >
-                <Marker position={position} />
-              </GoogleMap>
-            </LoadScript>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Close
-            </Button>
-          </DialogActions>
-        </Dialog>
+      <EventDialog
+        event={selectedEvent}
+        open={isDialogOpen}
+        onClose={handleCloseDialog}
+        isLoggedIn={isLoggedIn} // Pass login status here
+      />
       </div>
   );
 };
