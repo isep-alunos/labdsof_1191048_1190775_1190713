@@ -2,6 +2,7 @@ package isep.labdsof.backend.services.implementations;
 
 import isep.labdsof.backend.domain.dtos.EventWorkersDto;
 import isep.labdsof.backend.domain.exceptions.EventNotFoundException;
+import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.models.event.Address;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.event.EventLocation;
@@ -106,5 +107,11 @@ public class EventServiceImpl implements EventService {
                     .messages(List.of(new MessageDto(ex.getMessage(), MessageCriticality.ERROR)))
                     .build();
         }
+    }
+
+    @Override
+    public List<EventDto> getEvents() {
+        List<Event> events = eventRepository.findAll();
+        return events.stream().map(Event::toDto).toList();
     }
 }
