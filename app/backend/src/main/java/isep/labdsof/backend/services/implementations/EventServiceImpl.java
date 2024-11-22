@@ -13,6 +13,7 @@ import isep.labdsof.backend.domain.requests.CreateEventRequest;
 import isep.labdsof.backend.repositories.EventRepository;
 import isep.labdsof.backend.services.EventService;
 import isep.labdsof.backend.services.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -82,19 +83,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public boolean eventExists(UUID id) {
-        return false;
-    }
-
-    @Override
-    public void addIssue(Issue issue, UUID eventId) throws EntityNotFoundException, EventInvalidFieldException {
-        Optional<Event> eventOpt = eventRepository.findById(eventId);
+    public Event getEvent(UUID id) throws EntityNotFoundException {
+        Optional<Event> eventOpt = eventRepository.findById(id);
         if (!eventOpt.isPresent()) {
             throw new EntityNotFoundException("Event not found");
         }
-
-        Event event = eventOpt.get();
-        event.newIssue(issue);
-        eventRepository.save(event);
+        return eventOpt.get();
     }
 }

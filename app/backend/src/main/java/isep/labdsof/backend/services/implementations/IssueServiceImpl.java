@@ -1,43 +1,99 @@
 package isep.labdsof.backend.services.implementations;
 
-import isep.labdsof.backend.domain.exceptions.EntityNotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.issue.Issue;
 import isep.labdsof.backend.domain.models.issue.IssueLocation;
+import isep.labdsof.backend.domain.requests.AnalyzeIssuesRequest;
+import isep.labdsof.backend.domain.requests.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
+import isep.labdsof.backend.domain.responses.MessageCriticality;
 import isep.labdsof.backend.repositories.IssueRepository;
 import isep.labdsof.backend.services.EventService;
 import isep.labdsof.backend.services.IssueService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class IssueServiceImpl implements IssueService {
 
-    private EventService eventService;
-    private IssueRepository issueRepository;
+    private final EventService eventService;
+    private final IssueRepository issueRepository;
 
     @Override
-    public void create(CreateIssueRequest createIssueRequest) throws Exception {
+    public AnalyzeIssuesResponse create(CreateIssueRequest createIssueRequest) throws Exception {
 
-        boolean eventExists = eventService.eventExists(createIssueRequest.eventId);
-        if (!eventExists) {
-            throw new EntityNotFoundException("Event not found");
-        }
-
+        Event event = eventService.getEvent(createIssueRequest.eventId);
         IssueLocation location = new IssueLocation(createIssueRequest.location);
 
         Issue issue = new Issue(
                 createIssueRequest.title,
                 createIssueRequest.description,
-                location
+                location,
+                event
         );
 
-        // TODO VALIDATE IF ISUE IS ALREADY REPORTED USING AI
+        AnalyzeIssuesResponse response = validateRepeatedIssue(issue, event);
 
-        issueRepository.save(issue);
+        if (!response.isSimilar()) {
+            issueRepository.save(issue);
+            response.setCreated(true);
+            response.setCriticality(MessageCriticality.INFO);
+        }
 
-        eventService.addIssue(issue, createIssueRequest.eventId);
+        return response;
+
+    }
+
+    // AI validation
+
+    private AnalyzeIssuesResponse validateRepeatedIssue(Issue issue, Event event) {
+        List<Issue> pastIssues = issueRepository.getIssueByEvent(event);
+        if (pastIssues.size() == 0) return null;
+
+        RestTemplate restTemplate = new RestTemplate();
+        String pythonApiUrl = "http://localhost:8081/analyze_issues";
+
+        AnalyzeIssuesRequest requestPayload = new AnalyzeIssuesRequest();
+        requestPayload.setCurrentIssue(issue.toMap());
+        requestPayload.setPastIssues(pastIssues.stream().map(Issue::toMap).toList());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<AnalyzeIssuesRequest> requestEntity = new HttpEntity<>(requestPayload, headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    pythonApiUrl,
+                    requestEntity,
+                    String.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                String json = response.getBody();
+                Gson gson = new Gson();
+
+                // Parse the JSON string into a YourObject instance
+                AnalyzeIssuesResponse parsedObject = gson.fromJson(json.substring(1, json.length() - 2).replace("\\", ""), AnalyzeIssuesResponse.class);
+
+                return parsedObject;
+                //return Arrays.asList(Objects.requireNonNull(response.getBody()));
+            } else {
+                throw new RuntimeException("Failed to call AI API");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error communicating with AI API: " + e.getMessage(), e);
+        }
+
     }
 }

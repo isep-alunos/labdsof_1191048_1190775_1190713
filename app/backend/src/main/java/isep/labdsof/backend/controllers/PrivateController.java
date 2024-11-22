@@ -1,5 +1,6 @@
 package isep.labdsof.backend.controllers;
 
+import isep.labdsof.backend.domain.requests.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.requests.CreateEventRequest;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
 import isep.labdsof.backend.domain.responses.MessageDto;
@@ -21,9 +22,9 @@ public class PrivateController {
 
 
     @PostMapping("/create-issue")
-    public ResponseEntity<MessageDto> createIssue(@RequestBody CreateIssueRequest request) throws Exception {
-        issueService.create(request);
-        return ResponseEntity.status(201).body(new MessageDto("Issue created successfully"));
+    public ResponseEntity<AnalyzeIssuesResponse> createIssue(@RequestBody CreateIssueRequest request) throws Exception {
+        AnalyzeIssuesResponse response = issueService.create(request);
+        return ResponseEntity.status(201).body(response);
     }
 
 }

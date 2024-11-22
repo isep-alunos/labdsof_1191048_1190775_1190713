@@ -7,10 +7,7 @@ import isep.labdsof.backend.domain.models.issue.Issue;
 import isep.labdsof.backend.domain.models.issue.IssueStatus;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -32,8 +29,6 @@ public class Event extends BaseEntity {
     private EventLocation location;
     @ManyToMany
     private List<User> eventWorkers;
-    @OneToMany
-    private List<Issue> issues;
 
     private static final String URL_REGEX = "^(https?://)?" +   // Optional HTTP or HTTPS
             "([\\w-]+\\.)+[\\w-]+" +                            // Domain name
@@ -47,7 +42,6 @@ public class Event extends BaseEntity {
         setEventWebsite(eventWebsite);
         setLocation(location);
         setEventWorkerList(ewList);
-        issues = new ArrayList<>();
     }
 
 
@@ -120,13 +114,6 @@ public class Event extends BaseEntity {
             }
         }
         this.eventWorkers = ewList;
-    }
-
-    public void newIssue(Issue issue) throws EventInvalidFieldException {
-        if (issue == null) {
-            throw new EventInvalidFieldException("Invalid issue");
-        }
-        issues.add(issue);
     }
 
     public EventDto toDto() {
