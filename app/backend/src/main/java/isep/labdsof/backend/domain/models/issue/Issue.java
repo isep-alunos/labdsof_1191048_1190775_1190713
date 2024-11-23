@@ -1,5 +1,6 @@
 package isep.labdsof.backend.domain.models.issue;
 
+import isep.labdsof.backend.domain.dtos.issue.IssueDto;
 import isep.labdsof.backend.domain.exceptions.IssueInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
 import isep.labdsof.backend.domain.models.event.Event;
@@ -83,5 +84,18 @@ public class Issue extends BaseEntity {
         map.put("title", title);
         map.put("description", description);
         return map;
+    }
+
+    public IssueDto toDto() {
+        return IssueDto.builder()
+                .creationDate(creationDate)
+                .title(title)
+                .description(description)
+                .issueStatusUpdateList(issueStatusUpdateList.stream()
+                        .map(IssueStatusUpdate::toDto) // Convert IssueStatusUpdate to its DTO
+                        .toList())
+                .location(location.toDto()) // Assuming IssueLocation has a toDto method
+                .eventName(event.getName()) // If you only need the Event ID, otherwise map Event to EventDto
+                .build();
     }
 }

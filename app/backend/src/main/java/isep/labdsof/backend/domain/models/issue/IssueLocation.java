@@ -1,5 +1,6 @@
 package isep.labdsof.backend.domain.models.issue;
 
+import isep.labdsof.backend.domain.dtos.issue.IssueLocationDto;
 import isep.labdsof.backend.domain.exceptions.IssueInvalidFieldException;
 import isep.labdsof.backend.domain.models.ValueObject;
 import jakarta.persistence.Embeddable;
@@ -25,5 +26,11 @@ public class IssueLocation extends ValueObject {
                     " be greater than 100 characters");
         }
         this.location = location;
+    }
+
+    public IssueLocationDto toDto() {
+        return IssueLocationDto.builder()
+                .location(location)
+                .build();
     }
 }

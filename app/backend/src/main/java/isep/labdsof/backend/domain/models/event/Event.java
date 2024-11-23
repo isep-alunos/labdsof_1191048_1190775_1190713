@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 public class Event extends BaseEntity {
 
     @Column(unique = true)
+    @Getter
     private String name;
     private String description;
     private LocalDateTime startDate;

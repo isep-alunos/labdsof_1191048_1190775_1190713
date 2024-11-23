@@ -37,4 +37,14 @@ public class PrivateController {
         return ResponseEntity.status(201).body(response);
     }
 
+    @GetMapping("/eventIssues/{eventName}")
+    public ResponseEntity<AnalyzeIssuesResponse> getIssuesByEvent(@PathVariable String eventName) throws Exception {
+
+        // Your logic to process the eventName and fetch issues goes here.
+        AnalyzeIssuesResponse response = new AnalyzeIssuesResponse();  // Example response object
+
+        return ResponseEntity.status(201).body(response);
+    }
+
+
 }
