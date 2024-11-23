@@ -3,16 +3,13 @@ package isep.labdsof.backend.domain.models.event;
 import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
-import isep.labdsof.backend.domain.models.issue.Issue;
-import isep.labdsof.backend.domain.models.issue.IssueStatus;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
-import jakarta.persistence.*;
 import lombok.Getter;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -21,6 +18,7 @@ import java.util.regex.Pattern;
 public class Event extends BaseEntity {
 
     @Column(unique = true)
+    @Getter
     private String name;
     private String description;
     private LocalDateTime startDate;

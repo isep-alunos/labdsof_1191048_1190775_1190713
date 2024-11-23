@@ -1,5 +1,6 @@
 package isep.labdsof.backend.domain.models.issue;
 
+import isep.labdsof.backend.domain.dtos.issue.IssueStatusUpdateDto;
 import isep.labdsof.backend.domain.exceptions.IssueInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
 
@@ -51,5 +52,13 @@ public class IssueStatusUpdate extends BaseEntity {
             throw new IssueInvalidFieldException("Invalid new status");
         }
         this.status = status;
+    }
+
+    public IssueStatusUpdateDto toDto() {
+        return IssueStatusUpdateDto.builder()
+                .updateTime(updateTime)
+                .description(description)
+                .status(status != null ? status.name() : IssueStatus.PENDING.name()) // The status will be passed as the Enum (or you can map to a DTO if needed)
+                .build();
     }
 }

@@ -1,15 +1,13 @@
 package isep.labdsof.backend.services.implementations;
 
 import isep.labdsof.backend.domain.dtos.EventWorkersDto;
-import isep.labdsof.backend.domain.exceptions.EventNotFoundException;
 import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.exceptions.EntityNotFoundException;
-import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
+import isep.labdsof.backend.domain.exceptions.EventNotFoundException;
 import isep.labdsof.backend.domain.exceptions.MarkPresenceNotNearEventException;
 import isep.labdsof.backend.domain.models.event.Address;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.event.EventLocation;
-import isep.labdsof.backend.domain.models.issue.Issue;
 import isep.labdsof.backend.domain.models.user.User;
 import isep.labdsof.backend.domain.models.userProfile.UserProfile;
 import isep.labdsof.backend.domain.requests.CreateEventRequest;
@@ -22,7 +20,6 @@ import isep.labdsof.backend.repositories.UserProfileRepository;
 import isep.labdsof.backend.services.EventService;
 import isep.labdsof.backend.services.UserProfileService;
 import isep.labdsof.backend.services.UserService;
-import jakarta.transaction.Transactional;
 import isep.labdsof.backend.utils.LocationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

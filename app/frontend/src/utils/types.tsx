@@ -80,6 +80,34 @@ type eventDto = {
   eventWorkerNames: string[];
 };
 
+enum issueStatus {
+  PENDING = "PENDING",
+  IN_PROGRESS = "IN_PROGRESS",
+  RESOLVED = "RESOLVED",
+  REJECTED = "REJECTED",
+}
+
+interface issueLocation {
+  location: string;
+}
+
+interface issueStatusUpdate {
+  updateTime: string;
+  description: string;
+  status: issueStatus;
+}
+
+interface issue {
+  id: string;
+  creationDate: string;
+  title: string;
+  description: string;
+  issueStatusUpdateList: issueStatusUpdate[];
+  location: issueLocation;
+  eventName: string;
+}
+
+
 export {
   httpResponse,
   tokenResponse,
@@ -91,5 +119,9 @@ export {
   listRoleRequestsRequest,
   eventDto,
   markPresenceRequest,
-  markPresenceResponse
+  markPresenceResponse,
+  issue,
+  issueLocation,
+  issueStatus,
+  issueStatusUpdate
 };
