@@ -1,5 +1,7 @@
 package isep.labdsof.backend.controllers;
 
+import isep.labdsof.backend.domain.dtos.event.EventDto;
+import isep.labdsof.backend.domain.dtos.issue.IssueDto;
 import isep.labdsof.backend.domain.requests.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
 import isep.labdsof.backend.domain.requests.MarkPresenceAtEventRequest;
@@ -13,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.server.resource.introspection.OAuth2IntrospectionAuthenticatedPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,12 +42,10 @@ public class PrivateController {
     }
 
     @GetMapping("/eventIssues/{eventName}")
-    public ResponseEntity<AnalyzeIssuesResponse> getIssuesByEvent(@PathVariable String eventName) throws Exception {
+    public ResponseEntity<List<IssueDto>> getIssuesByEvent(@PathVariable String eventName) throws Exception {
+        final List<IssueDto> result = issueService.getIssuesByEventName(eventName);
 
-        // Your logic to process the eventName and fetch issues goes here.
-        AnalyzeIssuesResponse response = new AnalyzeIssuesResponse();  // Example response object
-
-        return ResponseEntity.status(201).body(response);
+        return ResponseEntity.status(201).body(result);
     }
 
 

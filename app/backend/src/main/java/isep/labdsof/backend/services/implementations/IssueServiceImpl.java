@@ -1,8 +1,7 @@
 package isep.labdsof.backend.services.implementations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import isep.labdsof.backend.domain.dtos.issue.IssueDto;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.issue.Issue;
 import isep.labdsof.backend.domain.models.issue.IssueLocation;
@@ -18,10 +17,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +49,14 @@ public class IssueServiceImpl implements IssueService {
 
         return response;
 
+    }
+
+    @Override
+    public List<IssueDto> getIssuesByEventName(String eventName) throws Exception {
+        final Event event = eventService.getByName(eventName);
+        final List<Issue> issues = issueRepository.getIssuesByEvent_Name(event.getName());
+
+        return issues.stream().map(Issue::toDto).toList();
     }
 
     // AI validation

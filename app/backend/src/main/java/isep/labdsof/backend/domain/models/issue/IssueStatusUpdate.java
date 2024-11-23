@@ -58,7 +58,7 @@ public class IssueStatusUpdate extends BaseEntity {
         return IssueStatusUpdateDto.builder()
                 .updateTime(updateTime)
                 .description(description)
-                .status(status.name()) // The status will be passed as the Enum (or you can map to a DTO if needed)
+                .status(status != null ? status.name() : IssueStatus.PENDING.name()) // The status will be passed as the Enum (or you can map to a DTO if needed)
                 .build();
     }
 }

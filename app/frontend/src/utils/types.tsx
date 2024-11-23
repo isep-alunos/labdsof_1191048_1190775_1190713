@@ -88,23 +88,23 @@ enum issueStatus {
 }
 
 interface issueLocation {
-  location: string; // e.g., "Main Street 123, City"
+  location: string;
 }
 
 interface issueStatusUpdate {
-  id: string;
-  updateTime: string; // ISO date string, e.g., "2024-11-21T14:30:00Z"
-  description: string; // e.g., "Reported to the authorities"
-  status: issueStatus; // Status of the issue
+  updateTime: string;
+  description: string;
+  status: issueStatus;
 }
 
 interface issue {
-  id: string; // Unique identifier for the issue
-  creationDate: string; // ISO date string, e.g., "2024-11-21T10:15:00Z"
-  title: string; // Short description of the issue, e.g., "Broken streetlight"
-  description: string; // Detailed explanation of the issue
-  issueStatusUpdateList: issueStatusUpdate[]; // History of status updates
-  location: issueLocation; // Location details for the issue
+  id: string;
+  creationDate: string;
+  title: string;
+  description: string;
+  issueStatusUpdateList: issueStatusUpdate[];
+  location: issueLocation;
+  eventName: string;
 }
 
 

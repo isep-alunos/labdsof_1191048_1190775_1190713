@@ -88,6 +88,7 @@ public class Issue extends BaseEntity {
 
     public IssueDto toDto() {
         return IssueDto.builder()
+                .id(String.valueOf(getId()))
                 .creationDate(creationDate)
                 .title(title)
                 .description(description)

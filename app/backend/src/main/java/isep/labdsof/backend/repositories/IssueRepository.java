@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface IssueRepository extends JpaRepository<Issue, UUID> {
 
     List<Issue> getIssueByEvent(Event event);
+    List<Issue> getIssuesByEvent_Name(String event_name);
 }

@@ -14,38 +14,44 @@ import {
   SelectChangeEvent,
   Box,
 } from "@mui/material";
-import { issue, issueStatus } from "../../../../utils/types"; // Your Issue model types
-
-// Mockup issues for demonstration purposes
-const mockIssues: issue[] = [
-  {
-    id: "1",
-    creationDate: new Date().toISOString(),
-    title: "Lighting issue",
-    description: "Streetlights are not working properly.",
-    issueStatusUpdateList: [
-      { id: "101", updateTime: new Date().toISOString(), description: "Reported", status: issueStatus.PENDING },
-    ],
-    location: { location: "Main Street" },
-  },
-  {
-    id: "2",
-    creationDate: new Date(new Date().getTime() - 86400000).toISOString(),
-    title: "Garbage collection delay",
-    description: "Garbage has not been collected for three days.",
-    issueStatusUpdateList: [
-      { id: "102", updateTime: new Date().toISOString(), description: "In progress", status: issueStatus.IN_PROGRESS },
-    ],
-    location: { location: "5th Avenue" },
-  },
-];
+import { criticality, issue, issueStatus } from "../../../../utils/types";
+import HttpService from "../../../../utils/http";
+import { useAlert } from "../../../../utils/alerts/AlertContext";
 
 const EventIssuesPage: React.FC = () => {
-  const { eventName } = useParams<{ eventName: string }>(); // Retrieve the eventName from the URL
-  const [issues, setIssues] = useState<issue[]>(mockIssues);
+  const { eventName } = useParams<{ eventName: string }>();
+  const [issues, setIssues] = useState<issue[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [selectedIssue, setSelectedIssue] = useState<issue | null>(null);
+  const [errorShown, setErrorShown] = useState(false);
+
+  const alert = useAlert();
+
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
+        const http = new HttpService();
+        const data = await http.getPrivate<issue[]>(`/private/eventIssues/${eventName}`);
+        console.log(data);
+        if (data.code >= 400) {
+          throw new Error("Error fetching issues.");
+        }
+        if (data.body) setIssues(data.body);
+      } catch (error: any) {
+        if (!errorShown) {
+          alert.addAlert({
+            message:
+              "Something went wrong during the fetching the issues of the event.",
+            criticality: criticality.ERROR,
+          });
+          setErrorShown(true);
+        }
+      }
+    };
+
+    fetchIssues();
+  }, [eventName]);
 
   const filteredIssues = issues.filter((issue) =>
     filterStatus === "ALL" ? true : issue.issueStatusUpdateList[0]?.status === filterStatus
@@ -99,7 +105,7 @@ const EventIssuesPage: React.FC = () => {
               backgroundColor: "#f5f5f5",
               borderRadius: "4px",
               padding: "8px 12px",
-              height: "40px", // Fixed height for alignment
+              height: "40px",
             }}
           >
             <MenuItem value="ALL">All</MenuItem>
@@ -124,7 +130,7 @@ const EventIssuesPage: React.FC = () => {
               backgroundColor: "#f5f5f5",
               borderRadius: "4px",
               padding: "8px 12px",
-              height: "40px", // Fixed height for alignment
+              height: "40px",
             }}
           >
             <MenuItem value="asc">Creation Date (Ascending)</MenuItem>
@@ -167,7 +173,7 @@ const EventIssuesPage: React.FC = () => {
             <h4>Status History:</h4>
             <ul>
               {selectedIssue.issueStatusUpdateList.map((update) => (
-                <li key={update.id}>
+                <li>
                   {update.status} - {update.description} (
                   {new Date(update.updateTime).toLocaleString()})
                 </li>

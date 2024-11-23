@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @Builder
 public class IssueDto {
+    private String id;
     private LocalDateTime creationDate;
     private String title;
     private String description;
