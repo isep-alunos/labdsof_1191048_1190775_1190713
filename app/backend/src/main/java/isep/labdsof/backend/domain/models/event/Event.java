@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class Event extends BaseEntity {
     private LocalDateTime endDate;
     private Integer maxParticipants;
     private String eventWebsite;
+    @Getter
     private EventLocation location;
     @ManyToMany
     private List<User> eventWorkers;
