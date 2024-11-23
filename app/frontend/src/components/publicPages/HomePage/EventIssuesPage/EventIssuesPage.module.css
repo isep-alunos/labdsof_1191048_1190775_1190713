@@ -1,0 +1,98 @@
+.EventIssuesPage {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 6%;
+}
+
+.EventIssuesPage h1 {
+  font-size: 2em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.Filters {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.FilterControl {
+  min-width: 200px;
+}
+
+.IssuesTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #f4f7fc;
+  color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.IssuesTable th {
+  background-color: #160C4F;
+  color: white;
+  padding: 10px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+
+.IssuesTable td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.TableRow {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.TableRow:hover {
+  background-color: #e6f0ff;
+}
+
+.DialogContent p {
+  margin: 10px 0;
+  font-size: 1em;
+  color: #333;
+}
+
+.DialogContent ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.DialogContent ul li {
+  background: #f9f9f9;
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.DialogTitle {
+  font-size: 1.5em;
+  color: #160C4F;
+  text-align: center;
+}
+
+.DialogActions button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.DialogActions button:hover {
+  background-color: #0056b3;
+}

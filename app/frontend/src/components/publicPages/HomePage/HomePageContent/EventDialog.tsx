@@ -4,6 +4,7 @@ import { LoadScript, GoogleMap, Marker } from "@react-google-maps/api";
 import { criticality, eventDto, markPresenceRequest, markPresenceResponse } from "../../../../utils/types";
 import HttpService from "../../../../utils/http";
 import { useAlert } from "../../../../utils/alerts/AlertContext";
+import { useNavigate } from "react-router-dom";
 
 const EventDialog: React.FC<{
   event: eventDto | null;
@@ -13,65 +14,80 @@ const EventDialog: React.FC<{
 }> = ({ event, open, onClose, isLoggedIn }) => {
   const [isButtonDisabled, setButtonDisabled] = useState(false);
   const alert = useAlert();
+  const navigate = useNavigate();
 
   const handleMarkPresence = async () => {
-    if(!isLoggedIn){
-        alert.addAlert({
-            message:
-              "You must be logged to mark presence at event.",
-            criticality: criticality.ERROR,
-          });
-        setButtonDisabled(true);
-        return;
+    if (!isLoggedIn) {
+      alert.addAlert({
+        message: "You must be logged to mark presence at event.",
+        criticality: criticality.ERROR,
+      });
+      setButtonDisabled(true);
+      return;
     }
 
     if (!navigator.geolocation) {
-        alert.addAlert({
-          message: "Geolocation is not supported by your browser.",
-          criticality: criticality.ERROR,
-        });
-        return;
-      }
-    
+      alert.addAlert({
+        message: "Geolocation is not supported by your browser.",
+        criticality: criticality.ERROR,
+      });
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
-        async (position) => {
-            const userLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            };
+      async (position) => {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
 
         console.log(userLocation);
-        
+
         const body: markPresenceRequest = {
-            name: event?.name ?? "",
-            latitude: userLocation.lat,
-            longitude: userLocation.lng,
-          };
+          name: event?.name ?? "",
+          latitude: userLocation.lat,
+          longitude: userLocation.lng,
+        };
 
         const http = new HttpService();
         const response = await http.putPrivate<markPresenceResponse>(
-            "/private/markPresence",
-            body
+          "/private/markPresence",
+          body
         );
         if (response.body) {
-            for (let message of response.body.messages ?? []) {
+          for (let message of response.body.messages ?? []) {
             alert.addAlert(message);
-            }
-            if (response.body.success) {
+          }
+          if (response.body.success) {
             alert.addAlert({
-                message:
-                    "Successfully marked presence at event.",
-                criticality: criticality.SUCCESS,
-                })
-            }
-        }});
+              message: "Successfully marked presence at event.",
+              criticality: criticality.SUCCESS,
+            });
+          }
+        }
+      },
+      (error) => {
+        alert.addAlert({
+          message: `Failed to get location: ${error.message}`,
+          criticality: criticality.ERROR,
+        });
+      }
+    );
+  };
+
+  const handleIssuesClick = () => {
+    if (event) {
+      navigate(`/events/${encodeURIComponent(event.name)}/issues`);
+    }
   };
 
   const mapContainerStyle = { height: "300px", width: "100%" };
-    const position = event?.location ? {
-    lat: event.location.latitude,
-    lng: event.location.longitude
-  } : { lat: 0, lng: 0 };
+  const position = event?.location
+    ? {
+        lat: event.location.latitude,
+        lng: event.location.longitude,
+      }
+    : { lat: 0, lng: 0 };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -107,6 +123,9 @@ const EventDialog: React.FC<{
         </Button>
         <Button onClick={handleMarkPresence} disabled={isButtonDisabled} color="primary" variant="contained">
           Mark Presence
+        </Button>
+        <Button onClick={handleIssuesClick} color="secondary" variant="outlined">
+          Issues
         </Button>
       </DialogActions>
     </Dialog>
