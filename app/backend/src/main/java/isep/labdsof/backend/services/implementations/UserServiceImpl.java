@@ -1,7 +1,7 @@
 package isep.labdsof.backend.services.implementations;
 
 
-import isep.labdsof.backend.domain.exceptions.UserNotFoundException;
+import isep.labdsof.backend.domain.exceptions.EntityNotFoundException;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
 import isep.labdsof.backend.repositories.UserRepository;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public User getById(UUID id) throws Exception {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
-            throw new UserNotFoundException("User with id " + id + " not found");
+            throw new EntityNotFoundException("User with id " + id + " not found");
         }
         return userOpt.get();
     }

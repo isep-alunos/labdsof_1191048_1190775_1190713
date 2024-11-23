@@ -3,13 +3,12 @@ package isep.labdsof.backend.domain.models.event;
 import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
+import isep.labdsof.backend.domain.models.issue.Issue;
+import isep.labdsof.backend.domain.models.issue.IssueStatus;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -107,6 +106,9 @@ public class Event extends BaseEntity {
     }
 
     private void setEventWorkerList(List<User> ewList) throws EventInvalidFieldException {
+        if (ewList == null || ewList.isEmpty()) {
+            throw new EventInvalidFieldException("Empty Event Worker list");
+        }
         for (User u : ewList) {
             if (!u.hasRole(Role.EVENT_WORKER)) {
                 throw new EventInvalidFieldException("Event workers should have EVENT_WORKER role");
