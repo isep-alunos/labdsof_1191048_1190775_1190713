@@ -1,0 +1,181 @@
+/* CreateIssuePage.module.css */
+
+.CreateIssuePage {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.CreateIssuePage h1 {
+  font-size: 34px;
+  color: #333;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.CreateIssuePage h2 {
+  font-size: 1.5em;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.CreateIssuePage h3 {
+  font-size: 1.8em;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.CreateIssuePage button {
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.CreateIssuePage form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.CreateIssuePage form div {
+  margin-bottom: 10px;
+}
+
+.CreateIssuePage form label {
+  display: block;
+  text-align: left;
+  font-size: 17px;
+  color: #555;
+  margin-bottom: 0;
+  margin-top: 20px;
+  text-decoration: none;
+}
+
+.CreateIssuePage form .role_justification label {
+  margin-top: 0px;
+  font-size: 15px;
+}
+
+.CreateIssuePage form .role_justification textarea {
+  resize: none;
+  width: 100%;
+  height: 150px;
+}
+
+.CreateIssuePage form input,
+.CreateIssuePage form select {
+  width: calc(100% - 22px);
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.CreateIssuePage form input[type="text"],
+.CreateIssuePage form input[type="email"],
+.CreateIssuePage form input[type="checkbox"] {
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.CreateIssuePage form input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+}
+
+.CreateIssuePage form .checkmark {
+  margin-left: 10px;
+}
+
+.CreateIssuePage .room-section {
+  margin-top: 20px;
+}
+
+.CreateIssuePage .roomEditor {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.CreateIssuePage .roomEditor span {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.CreateIssuePage .trashIcon {
+  color: red;
+  font-size: 1.2em;
+}
+
+.CreateIssuePage form h3 {
+  font-size: 1.2em;
+  color: #555;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.CreateIssuePage .formActions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.CreateIssuePage .buttonGroup {
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="email"],
+.formGroup input[type="checkbox"] {
+  margin-top: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.formGroup input[type="checkbox"] {
+  width: auto;
+  margin-right: 10px;
+}

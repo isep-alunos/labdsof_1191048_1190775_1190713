@@ -235,108 +235,10 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
         event={selectedEvent}
         open={isDialogOpen}
         onClose={handleCloseDialog}
-        isLoggedIn={isLoggedIn} // Pass login status here
+        isLoggedIn={isLoggedIn}
       />
       </div>
   );
 };
 
 export default HomePageContent;
-
-// TODO: Remove after having good bootstrap of events
-const mockupEvents : eventDto[] = [{
-  name: "Evento BODA",
-  description: "olaa",
-  startDate: "2024-11-12T18:00:00",
-  endDate: "2024-11-12T20:00:00",
-  maxParticipants: 2,
-  eventWebsite: "https://www.youtube.com/?gl=PT",
-  location: {
-    latitude: 10.0,
-    longitude: 50.0,
-    street: "Estrada da Bragada",
-    number: 1160,
-    postalCode: "4620-722",
-  },
-  eventWorkerNames: [],
-},
-{
-  name: "Tech Conference 2024",
-  description: "A tech conference discussing the future of AI.",
-  startDate: "2024-11-20T10:00:00",
-  endDate: "2024-11-20T17:00:00",
-  maxParticipants: 200,
-  eventWebsite: "https://techconference2024.com",
-  location: {
-    latitude: 37.7749,
-    longitude: -122.4194,
-    street: "Market Street",
-    number: 123,
-    postalCode: "94103",
-  },
-  eventWorkerNames: ["Alice", "Bob"],
-},
-{
-  name: "Music Festival",
-  description: "A live music festival featuring various artists.",
-  startDate: "2024-11-18T16:00:00",
-  endDate: "2024-11-18T23:00:00",
-  maxParticipants: 5000,
-  eventWebsite: "https://musicfestival.com",
-  location: {
-    latitude: 40.7128,
-    longitude: -74.006,
-    street: "Broadway",
-    number: 456,
-    postalCode: "10007",
-  },
-  eventWorkerNames: ["Charlie"],
-},
-{
-  name: "Art Exhibition",
-  description: "A showcase of modern and classical art.",
-  startDate: "2024-11-15T09:00:00",
-  endDate: "2024-11-15T18:00:00",
-  maxParticipants: 100,
-  eventWebsite: "https://artexhibition.com",
-  location: {
-    latitude: 48.8566,
-    longitude: 2.3522,
-    street: "Champs-Élysées",
-    number: 789,
-    postalCode: "75008",
-  },
-  eventWorkerNames: [],
-},
-{
-  name: "Startup Pitch Night",
-  description: "An event for startups to pitch their ideas to investors.",
-  startDate: "2024-11-25T18:00:00",
-  endDate: "2024-11-25T21:00:00",
-  maxParticipants: 50,
-  eventWebsite: "https://startuppitchnight.com",
-  location: {
-    latitude: 51.5074,
-    longitude: -0.1278,
-    street: "Baker Street",
-    number: 221,
-    postalCode: "NW1 6XE",
-  },
-  eventWorkerNames: ["David", "Eve"],
-},
-{
-  name: "Coding Hackathon",
-  description: "A 48-hour hackathon to build innovative software solutions.",
-  startDate: "2024-11-22T09:00:00",
-  endDate: "2024-11-24T17:00:00",
-  maxParticipants: 300,
-  eventWebsite: "https://codinghackathon.com",
-  location: {
-    latitude: 34.0522,
-    longitude: -118.2437,
-    street: "Sunset Boulevard",
-    number: 900,
-    postalCode: "90028",
-  },
-  eventWorkerNames: ["Frank", "Grace"],
-}];

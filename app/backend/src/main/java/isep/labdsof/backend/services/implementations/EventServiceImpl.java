@@ -1,8 +1,9 @@
 package isep.labdsof.backend.services.implementations;
 
 import isep.labdsof.backend.domain.dtos.EventWorkersDto;
-import isep.labdsof.backend.domain.exceptions.EventNotFoundException;
 import isep.labdsof.backend.domain.dtos.event.EventDto;
+import isep.labdsof.backend.domain.exceptions.EntityNotFoundException;
+import isep.labdsof.backend.domain.exceptions.EventNotFoundException;
 import isep.labdsof.backend.domain.exceptions.MarkPresenceNotNearEventException;
 import isep.labdsof.backend.domain.models.event.Address;
 import isep.labdsof.backend.domain.models.event.Event;
@@ -85,15 +86,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event getByName(String name) throws EventNotFoundException {
-        final Optional<Event> eventOpt = eventRepository.findByName(name);
-        if (eventOpt.isEmpty()) {
-            throw new EventNotFoundException("Event with name " + name + " not found");
-        }
-        return eventOpt.get();
-    }
-
-    @Override
     public StatusResponse markPresenceAtEvent(MarkPresenceAtEventRequest request, String userEmail) {
         final double minDistanceRequiredInMeters = 100.0;
         try {
@@ -120,5 +112,23 @@ public class EventServiceImpl implements EventService {
     public List<EventDto> getEvents() {
         List<Event> events = eventRepository.findAll();
         return events.stream().map(Event::toDto).toList();
+    }
+
+    @Override
+    public Event getEvent(UUID id) throws EntityNotFoundException {
+        Optional<Event> eventOpt = eventRepository.findById(id);
+        if (!eventOpt.isPresent()) {
+            throw new EntityNotFoundException("Event", "Event not found");
+        }
+        return eventOpt.get();
+    }
+
+    @Override
+    public Event getByName(String name) throws EventNotFoundException {
+        final Optional<Event> eventOpt = eventRepository.findByName(name);
+        if (eventOpt.isEmpty()) {
+            throw new EventNotFoundException("Event with name " + name + " not found");
+        }
+        return eventOpt.get();
     }
 }

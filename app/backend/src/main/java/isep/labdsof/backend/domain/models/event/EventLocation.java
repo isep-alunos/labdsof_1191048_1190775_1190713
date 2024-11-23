@@ -5,7 +5,6 @@ import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.dtos.event.EventLocationDto;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.ValueObject;
-import isep.labdsof.backend.domain.models.user.User;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
