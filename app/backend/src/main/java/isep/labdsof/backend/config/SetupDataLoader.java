@@ -2,6 +2,8 @@ package isep.labdsof.backend.config;
 
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
+import isep.labdsof.backend.domain.models.userProfile.UserProfile;
+import isep.labdsof.backend.repositories.UserProfileRepository;
 import isep.labdsof.backend.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserProfileRepository userProfileRepository;
 
     @Value("${backend.admin-email}")
     private String adminEmail;
@@ -43,5 +48,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 .isWaitingForApprovalForEventManager(false)
                 .build();
         userRepository.save(user);
+
+        final UserProfile userProfile = UserProfile.builder()
+                .user(user)
+                .build();
+        userProfileRepository.save(userProfile);
     }
 }

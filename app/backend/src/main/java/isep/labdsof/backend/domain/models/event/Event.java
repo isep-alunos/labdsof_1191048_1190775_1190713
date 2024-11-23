@@ -8,6 +8,7 @@ import isep.labdsof.backend.domain.models.issue.IssueStatus;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class Event extends BaseEntity {
     private LocalDateTime endDate;
     private Integer maxParticipants;
     private String eventWebsite;
+    @Getter
     private EventLocation location;
     @ManyToMany
     private List<User> eventWorkers;

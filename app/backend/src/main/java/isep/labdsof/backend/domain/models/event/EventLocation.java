@@ -6,10 +6,12 @@ import isep.labdsof.backend.domain.dtos.event.EventLocationDto;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.ValueObject;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
 @NoArgsConstructor
+@Getter
 public class EventLocation extends ValueObject {
 
     private Double latitude;

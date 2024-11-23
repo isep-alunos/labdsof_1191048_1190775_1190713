@@ -41,6 +41,17 @@ type registerResponse = {
   messages?: messageDto[];
 };
 
+type markPresenceResponse = {
+  success: boolean;
+  messages?: messageDto[];
+};
+
+type markPresenceRequest = {
+  name: string;
+  latitude: number;
+  longitude: number;
+};
+
 type roleRequestDto = {
   name: string;
   email: string;
@@ -78,5 +89,7 @@ export {
   criticality,
   roleRequestDto,
   listRoleRequestsRequest,
-  eventDto
+  eventDto,
+  markPresenceRequest,
+  markPresenceResponse
 };

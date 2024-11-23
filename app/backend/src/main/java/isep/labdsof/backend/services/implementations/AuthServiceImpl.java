@@ -3,8 +3,10 @@ package isep.labdsof.backend.services.implementations;
 import isep.labdsof.backend.domain.dtos.RegisterUserDto;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
+import isep.labdsof.backend.domain.models.userProfile.UserProfile;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import isep.labdsof.backend.domain.responses.MessageDto;
+import isep.labdsof.backend.repositories.UserProfileRepository;
 import isep.labdsof.backend.repositories.UserRepository;
 import isep.labdsof.backend.services.AuthService;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+
+    private final UserProfileRepository userProfileRepository;
 
     @Override
     public RegisterUserDto register(final String email, final String name, final boolean isEventWorker,
@@ -50,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
                         .build();
             }
         }
-        userRepository.save(User.builder()
+        final User userResult = userRepository.save(User.builder()
                 .email(email)
                 .nome(name)
                 .roles(Collections.singletonList(Role.USER))
@@ -58,6 +62,10 @@ public class AuthServiceImpl implements AuthService {
                 .eventWorkerJustification(eventWorkerInfo)
                 .isWaitingForApprovalForEventManager(isEventManager)
                 .eventManagerJustification(eventManagerInfo)
+                .build());
+
+        userProfileRepository.save(UserProfile.builder()
+                .user(userResult)
                 .build());
 
         final List<MessageDto> messages = new ArrayList<>(List.of(new MessageDto("User registered successfully.")));
