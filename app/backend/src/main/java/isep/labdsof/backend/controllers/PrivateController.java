@@ -1,5 +1,6 @@
 package isep.labdsof.backend.controllers;
 
+import isep.labdsof.backend.domain.dtos.issue.IssueDto;
 import isep.labdsof.backend.domain.requests.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
 import isep.labdsof.backend.services.IssueService;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
