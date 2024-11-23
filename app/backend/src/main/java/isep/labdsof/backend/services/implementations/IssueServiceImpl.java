@@ -5,9 +5,9 @@ import isep.labdsof.backend.domain.dtos.issue.IssueDto;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.issue.Issue;
 import isep.labdsof.backend.domain.models.issue.IssueLocation;
-import isep.labdsof.backend.domain.requests.AnalyzeIssuesRequest;
-import isep.labdsof.backend.domain.requests.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
+import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesRequest;
+import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import isep.labdsof.backend.repositories.IssueRepository;
 import isep.labdsof.backend.services.EventService;
@@ -29,7 +29,7 @@ public class IssueServiceImpl implements IssueService {
     @Override
     public AnalyzeIssuesResponse create(CreateIssueRequest createIssueRequest) throws Exception {
 
-        Event event = eventService.getEvent(createIssueRequest.eventId);
+        Event event = eventService.getByName(createIssueRequest.eventName);
         IssueLocation location = new IssueLocation(createIssueRequest.location);
 
         Issue issue = new Issue(
@@ -39,11 +39,25 @@ public class IssueServiceImpl implements IssueService {
                 event
         );
 
-        AnalyzeIssuesResponse response = validateRepeatedIssue(issue, event);
+        AnalyzeIssuesResponse response = null;
 
-        if (!response.isSimilar()) {
+        if (!createIssueRequest.force) {
+            response = validateRepeatedIssue(issue, event);
+        }
+
+        if (response == null) {
+            issueRepository.save(issue);
+            response = new AnalyzeIssuesResponse()
+                    .builder()
+                    .created(true)
+                    .criticality(MessageCriticality.INFO)
+                    .message("Issue Created!")
+                    .build();
+
+        } else if (!response.isSimilar()) {
             issueRepository.save(issue);
             response.setCreated(true);
+            response.setMessage("Issue Created!");
             response.setCriticality(MessageCriticality.INFO);
         }
 

@@ -1,4 +1,4 @@
-package isep.labdsof.backend.domain.requests;
+package isep.labdsof.backend.domain.requests.ai;
 
 import isep.labdsof.backend.domain.models.issue.Issue;
 import lombok.Data;

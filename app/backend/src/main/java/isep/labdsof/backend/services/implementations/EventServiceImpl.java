@@ -86,15 +86,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event getByName(String name) throws EventNotFoundException {
-        final Optional<Event> eventOpt = eventRepository.findByName(name);
-        if (eventOpt.isEmpty()) {
-            throw new EventNotFoundException("Event with name " + name + " not found");
-        }
-        return eventOpt.get();
-    }
-
-    @Override
     public StatusResponse markPresenceAtEvent(MarkPresenceAtEventRequest request, String userEmail) {
         final double minDistanceRequiredInMeters = 100.0;
         try {
@@ -127,7 +118,16 @@ public class EventServiceImpl implements EventService {
     public Event getEvent(UUID id) throws EntityNotFoundException {
         Optional<Event> eventOpt = eventRepository.findById(id);
         if (!eventOpt.isPresent()) {
-            throw new EntityNotFoundException("Event not found");
+            throw new EntityNotFoundException("Event", "Event not found");
+        }
+        return eventOpt.get();
+    }
+
+    @Override
+    public Event getByName(String name) throws EventNotFoundException {
+        final Optional<Event> eventOpt = eventRepository.findByName(name);
+        if (eventOpt.isEmpty()) {
+            throw new EventNotFoundException("Event with name " + name + " not found");
         }
         return eventOpt.get();
     }

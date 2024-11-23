@@ -4,7 +4,7 @@ from together import Together
 client = Together()
 
 
-def getResponse(msg):
+def askAI(msg):
     response = client.chat.completions.create(
         model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo",
         messages=[{"role": "user", "content": msg}],

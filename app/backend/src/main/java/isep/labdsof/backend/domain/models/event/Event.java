@@ -3,8 +3,6 @@ package isep.labdsof.backend.domain.models.event;
 import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
-import isep.labdsof.backend.domain.models.issue.Issue;
-import isep.labdsof.backend.domain.models.issue.IssueStatus;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
 import lombok.Getter;

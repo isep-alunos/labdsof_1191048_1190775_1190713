@@ -15,6 +15,7 @@ import {AlertProvider} from "./utils/alerts/AlertContext";
 import CreateEvent from "./components/eventManagerPages/CreateEventPage/CreateEvent";
 import {ROUTES} from './routes';
 import EventIssuesPage from "./components/publicPages/HomePage/EventIssuesPage/EventIssuesPage";
+import CreateIssuePage from "./components/publicPages/HomePage/CreateIssuePage/CreateIssuePage";
 
 export const NON_TOP_NAV_BAR_ID = "non-top-nav-bar-id-12321";
 
@@ -114,6 +115,15 @@ function App() {
                         element={
                             <div>
                                 <EventIssuesPage />
+                            </div>}>
+
+                    </Route>
+
+                    <Route
+                        path={ROUTES.CREATE_ISSUE}
+                        element={
+                            <div>
+                                <CreateIssuePage />
                             </div>}>
 
                     </Route>

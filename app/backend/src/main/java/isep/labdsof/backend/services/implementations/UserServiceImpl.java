@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     public User getById(UUID id) throws Exception {
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
-            throw new EntityNotFoundException("User with id " + id + " not found");
+            throw new EntityNotFoundException("User", "User with id " + id + " not found");
         }
         return userOpt.get();
     }
