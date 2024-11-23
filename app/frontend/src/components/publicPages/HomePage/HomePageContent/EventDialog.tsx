@@ -13,13 +13,14 @@ const EventDialog: React.FC<{
   isLoggedIn: boolean;
 }> = ({ event, open, onClose, isLoggedIn }) => {
   const [isButtonDisabled, setButtonDisabled] = useState(false);
+  const [isIssuesButtonDisabled, setIssuesButtonDisabled] = useState(false);
   const alert = useAlert();
   const navigate = useNavigate();
 
   const handleMarkPresence = async () => {
     if (!isLoggedIn) {
       alert.addAlert({
-        message: "You must be logged to mark presence at event.",
+        message: "You must be logged in to mark presence at event.",
         criticality: criticality.ERROR,
       });
       setButtonDisabled(true);
@@ -76,6 +77,15 @@ const EventDialog: React.FC<{
   };
 
   const handleIssuesClick = () => {
+    if (!isLoggedIn) {
+      alert.addAlert({
+        message: "You must be logged in to to see the event's issues.",
+        criticality: criticality.ERROR,
+      });
+      setIssuesButtonDisabled(true);
+      return;
+    }
+
     if (event) {
       navigate(`/events/${encodeURIComponent(event.name)}/issues`);
     }
@@ -124,7 +134,7 @@ const EventDialog: React.FC<{
         <Button onClick={handleMarkPresence} disabled={isButtonDisabled} color="primary" variant="contained">
           Mark Presence
         </Button>
-        <Button onClick={handleIssuesClick} color="secondary" variant="outlined">
+        <Button onClick={handleIssuesClick} disabled={isIssuesButtonDisabled} color="secondary" variant="outlined">
           Issues
         </Button>
       </DialogActions>
