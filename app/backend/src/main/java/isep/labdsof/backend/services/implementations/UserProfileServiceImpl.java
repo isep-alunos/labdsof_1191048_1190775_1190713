@@ -1,7 +1,7 @@
 package isep.labdsof.backend.services.implementations;
 
 
-import isep.labdsof.backend.domain.exceptions.UserNotFoundException;
+import isep.labdsof.backend.domain.exceptions.EntityNotFoundException;
 import isep.labdsof.backend.domain.models.userProfile.UserProfile;
 import isep.labdsof.backend.repositories.UserProfileRepository;
 import isep.labdsof.backend.services.UserProfileService;
@@ -21,7 +21,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public UserProfile getByUserId(UUID id) throws Exception {
         Optional<UserProfile> userProfileOpt = userProfileRepository.findByUserId(id);
         if (userProfileOpt.isEmpty()) {
-            throw new UserNotFoundException("User with id " + id + " not found");
+            throw new EntityNotFoundException("User with id " + id + " not found");
         }
         return userProfileOpt.get();
     }
@@ -30,7 +30,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public UserProfile getByUserEmail(String email) throws Exception {
         Optional<UserProfile> userProfileOpt = userProfileRepository.findByUser_Email(email);
         if (userProfileOpt.isEmpty()) {
-            throw new UserNotFoundException("User with email " + email + " not found");
+            throw new EntityNotFoundException("User with email " + email + " not found");
         }
         return userProfileOpt.get();
     }
