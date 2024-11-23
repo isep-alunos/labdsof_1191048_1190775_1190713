@@ -21,7 +21,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public UserProfile getByUserId(UUID id) throws Exception {
         Optional<UserProfile> userProfileOpt = userProfileRepository.findByUserId(id);
         if (userProfileOpt.isEmpty()) {
-            throw new EntityNotFoundException("User with id " + id + " not found");
+            throw new EntityNotFoundException("User Profile", "User with id " + id + " not found");
         }
         return userProfileOpt.get();
     }
@@ -30,7 +30,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     public UserProfile getByUserEmail(String email) throws Exception {
         Optional<UserProfile> userProfileOpt = userProfileRepository.findByUser_Email(email);
         if (userProfileOpt.isEmpty()) {
-            throw new EntityNotFoundException("User with email " + email + " not found");
+            throw new EntityNotFoundException("User Profile","User with email " + email + " not found");
         }
         return userProfileOpt.get();
     }

@@ -3,6 +3,7 @@ package isep.labdsof.backend.controllers.handler;
 
 import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
 import isep.labdsof.backend.domain.exceptions.EntityNotFoundException;
+import isep.labdsof.backend.domain.exceptions.IssueInvalidFieldException;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import isep.labdsof.backend.domain.responses.MessageDto;
 import lombok.extern.slf4j.Slf4j;
@@ -48,9 +49,14 @@ public class CustomGlobalExceptionHandler {
         return new ResponseEntity<>(new MessageDto(ex.getMessage(), MessageCriticality.ERROR), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IssueInvalidFieldException.class)
+    public ResponseEntity<MessageDto> handleIllegalArgumentException(IssueInvalidFieldException ex) {
+        return new ResponseEntity<>(new MessageDto(ex.getMessage(), MessageCriticality.ERROR), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<MessageDto> userNotFound() {
-        return new ResponseEntity<>(new MessageDto("User not found!", MessageCriticality.ERROR), HttpStatus.NOT_FOUND);
+    public ResponseEntity<MessageDto> entityNotFound(EntityNotFoundException ex) {
+        return new ResponseEntity<>(new MessageDto(ex.getEntity() + " not found!", MessageCriticality.ERROR), HttpStatus.NOT_FOUND);
     }
 
 }

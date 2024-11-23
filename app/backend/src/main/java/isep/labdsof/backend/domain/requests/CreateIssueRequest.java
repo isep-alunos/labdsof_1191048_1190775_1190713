@@ -10,6 +10,7 @@ public class CreateIssueRequest {
     public String title;
     public String description;
     public String location;
-    public UUID eventId;
+    public String eventName;
+    public boolean force;
 
 }

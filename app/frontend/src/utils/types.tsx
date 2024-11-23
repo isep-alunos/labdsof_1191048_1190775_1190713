@@ -36,6 +36,15 @@ type messageDto = {
   criticality: criticality;
 };
 
+type createIssueDto = {
+  message: string;
+  criticality: criticality;
+  similar: boolean;
+  count: number;
+  issues: any;
+  created: boolean;
+};
+
 type registerResponse = {
   success: boolean;
   messages?: messageDto[];
@@ -123,5 +132,6 @@ export {
   issue,
   issueLocation,
   issueStatus,
-  issueStatusUpdate
+  issueStatusUpdate,
+  createIssueDto,
 };
