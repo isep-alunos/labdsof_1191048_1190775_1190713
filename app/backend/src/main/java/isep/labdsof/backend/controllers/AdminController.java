@@ -23,7 +23,7 @@ public class AdminController {
     public ResponseEntity<ListRoleRequestsRequest> listRoleRequests() {
         final ListRoleRequestsRequest response = adminService.listAllUsersWaitingForApprovals();
 
-        if (response.getRequests().isEmpty()) {
+        if (response.requests().isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.ok(response);
