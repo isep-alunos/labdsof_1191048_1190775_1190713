@@ -8,11 +8,10 @@ mvn clean package
 
 ## Run on local
 
-First, start a database as described bellow.
-
 ```
 mvn spring-boot:run
 ```
+> Note: Make sure to use the Spring Profile "local"
 
 The application will be available at `http://localhost:8080`
 

@@ -2,9 +2,8 @@ package isep.labdsof.backend.services.implementations;
 
 import isep.labdsof.backend.domain.dtos.EventWorkersDto;
 import isep.labdsof.backend.domain.dtos.event.EventDto;
-import isep.labdsof.backend.domain.exceptions.EntityNotFoundException;
-import isep.labdsof.backend.domain.exceptions.EventNotFoundException;
-import isep.labdsof.backend.domain.exceptions.MarkPresenceNotNearEventException;
+import isep.labdsof.backend.domain.exceptions.AppCustomExceptions;
+import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.event.Address;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.event.EventLocation;
@@ -39,33 +38,33 @@ public class EventServiceImpl implements EventService {
     private final UserProfileRepository userProfileRepository;
 
     @Override
-    public void create(CreateEventRequest createEventRequest) throws Exception {
+    public void create(CreateEventRequest createEventRequest) throws LabdsofCustomException {
 
         Address address = new Address(
-                createEventRequest.street,
-                createEventRequest.number,
-                createEventRequest.postalCode
+                createEventRequest.getStreet(),
+                createEventRequest.getNumber(),
+                createEventRequest.getPostalCode()
         );
 
         EventLocation location = new EventLocation(
-                createEventRequest.latitude,
-                createEventRequest.longitude,
+                createEventRequest.getLatitude(),
+                createEventRequest.getLongitude(),
                 address
         );
 
         List<User> ewList = new ArrayList<>();
 
-        for (UUID id : createEventRequest.eventWorkers) {
+        for (UUID id : createEventRequest.getEventWorkers()) {
             ewList.add(userService.getById(id));
         }
 
         Event e = new Event(
-                createEventRequest.name,
-                createEventRequest.description,
-                createEventRequest.startDate,
-                createEventRequest.endDate,
-                createEventRequest.maxParticipants,
-                createEventRequest.eventWebsite,
+                createEventRequest.getName(),
+                createEventRequest.getDescription(),
+                createEventRequest.getStartDate(),
+                createEventRequest.getEndDate(),
+                createEventRequest.getMaxParticipants(),
+                createEventRequest.getEventWebsite(),
                 location,
                 ewList
         );
@@ -74,7 +73,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventWorkersDto> getEventWorkers() throws Exception {
+    public List<EventWorkersDto> getEventWorkers() {
         List<User> eventWorkers = userService.getEventWorkers();
         return eventWorkers.stream().map(e -> EventWorkersDto
                 .builder()
@@ -90,17 +89,17 @@ public class EventServiceImpl implements EventService {
         final double minDistanceRequiredInMeters = 100.0;
         try {
             final UserProfile userProfile = userProfileService.getByUserEmail(userEmail);
-            final Event event = getByName(request.name);
+            final Event event = getByName(request.getName());
             final double distanceFromEventInMeters = LocationUtils.calculateDistance(request.getLatitude(), request.getLongitude(), event.getLocation().getLatitude(), event.getLocation().getLongitude());
-            if(distanceFromEventInMeters >= minDistanceRequiredInMeters){
-                throw new MarkPresenceNotNearEventException(String.format("You must be within %.2f meters to mark presence. You are only %.2f meters away.", minDistanceRequiredInMeters, distanceFromEventInMeters));
+            if (distanceFromEventInMeters >= minDistanceRequiredInMeters) {
+                throw new LabdsofCustomException(AppCustomExceptions.MARK_PRESENCE_NOT_NEAR_EVENT, String.format("You must be within %.2f meters to mark presence. You are only %.2f meters away.", minDistanceRequiredInMeters, distanceFromEventInMeters));
             }
             final boolean success = userProfile.addAttendedEvent(event);
             userProfileRepository.save(userProfile);
             return StatusResponse.builder()
                     .success(success)
                     .build();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return StatusResponse.builder()
                     .success(false)
                     .messages(List.of(new MessageDto(ex.getMessage(), MessageCriticality.ERROR)))
@@ -115,19 +114,19 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event getEvent(UUID id) throws EntityNotFoundException {
+    public Event getEvent(UUID id) throws LabdsofCustomException {
         Optional<Event> eventOpt = eventRepository.findById(id);
         if (!eventOpt.isPresent()) {
-            throw new EntityNotFoundException("Event", "Event not found");
+            throw new LabdsofCustomException(AppCustomExceptions.ENTITY_NOT_FOUND, "Event not found");
         }
         return eventOpt.get();
     }
 
     @Override
-    public Event getByName(String name) throws EventNotFoundException {
+    public Event getByName(String name) throws LabdsofCustomException {
         final Optional<Event> eventOpt = eventRepository.findByName(name);
         if (eventOpt.isEmpty()) {
-            throw new EventNotFoundException("Event with name " + name + " not found");
+            throw new LabdsofCustomException(AppCustomExceptions.EVENT_NOT_FOUND, "Event with name " + name + " not found");
         }
         return eventOpt.get();
     }

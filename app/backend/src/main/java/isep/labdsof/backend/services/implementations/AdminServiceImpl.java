@@ -62,14 +62,14 @@ Porto Eventos
             return StatusResponse.builder().success(false).messages(List.of(new MessageDto("User not found", MessageCriticality.ERROR))).build();
         }
         final User user = userOptional.get();
-        final Optional<Role> roleApplied = Role.fromShortRoleDescription(body.getRole());
+        final Optional<Role> roleApplied = Role.fromString(body.getRole());
 
         if (roleApplied.isEmpty()) {
             return StatusResponse.builder().success(false).messages(List.of(new MessageDto("Role not found", MessageCriticality.ERROR))).build();
         }
 
         final List<MessageDto> messages = new ArrayList<>();
-        final List<Role> userRoles = user.getRoles();
+        final List<Role> userRoles = new ArrayList<>(user.getRoles());
 
         switch (roleApplied.get()) {
             case EVENT_WORKER -> {
@@ -117,7 +117,7 @@ Porto Eventos
             return StatusResponse.builder().success(false).messages(List.of(new MessageDto("User not found", MessageCriticality.ERROR))).build();
         }
         final User user = userOptional.get();
-        final Optional<Role> roleApplied = Role.fromShortRoleDescription(body.getRole());
+        final Optional<Role> roleApplied = Role.fromString(body.getRole());
 
         if (roleApplied.isEmpty()) {
             return StatusResponse.builder().success(false).messages(List.of(new MessageDto("Role not found", MessageCriticality.ERROR))).build();
