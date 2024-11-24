@@ -21,6 +21,17 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.SQLServerDialect
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 
 frontend:

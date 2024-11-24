@@ -1,0 +1,31 @@
+@startuml
+
+actor User as user
+participant UI as ui
+participant Back as back
+database Database as db
+
+
+activate user
+
+user -> ui : /events\nEvents
+
+activate ui
+
+ui -> back : [GET] public/events
+
+activate back
+
+back -> db: getEvents()
+activate db
+db --> back : events
+deactivate db
+
+back --> ui : 200 : events
+deactivate back
+
+ui --> user : show events
+deactivate ui
+
+
+@enduml
