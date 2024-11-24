@@ -1,8 +1,11 @@
 package isep.labdsof.backend.domain.models.user;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.Optional;
 
+@Getter
 public enum Role {
     EVENT_MANAGER("EVENT_MANAGER", "Event Manager"),
     EVENT_WORKER("EVENT_WORKER", "Event Worker"),
@@ -17,17 +20,9 @@ public enum Role {
         this.shortRoleDescription = shortRoleDescription;
     }
 
-    public static Optional<Role> fromShortRoleDescription(final String role) {
+    public static Optional<Role> fromString(final String role) {
         return Arrays.stream(Role.values())
-                .filter(r -> r.getShortRoleDescription().equals(role))
+                .filter(r -> r.getShortRoleDescription().equalsIgnoreCase(role) || r.getRole().equalsIgnoreCase(role))
                 .findFirst();
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public String getShortRoleDescription() {
-        return shortRoleDescription;
     }
 }

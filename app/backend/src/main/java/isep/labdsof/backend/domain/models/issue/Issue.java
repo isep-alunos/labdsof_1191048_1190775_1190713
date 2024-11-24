@@ -1,12 +1,17 @@
 package isep.labdsof.backend.domain.models.issue;
 
 import isep.labdsof.backend.domain.dtos.issue.IssueDto;
-import isep.labdsof.backend.domain.exceptions.IssueInvalidFieldException;
+import isep.labdsof.backend.domain.exceptions.AppCustomExceptions;
+import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.BaseEntity;
 import isep.labdsof.backend.domain.models.event.Event;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,8 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
+@Data
 public class Issue extends BaseEntity {
 
     private LocalDateTime creationDate;
@@ -28,7 +35,7 @@ public class Issue extends BaseEntity {
     @ManyToOne
     private Event event;
 
-    public Issue(String title, String description, IssueLocation location, Event event) throws IssueInvalidFieldException {
+    public Issue(String title, String description, IssueLocation location, Event event) throws LabdsofCustomException {
         LocalDateTime now = LocalDateTime.now();
         this.creationDate = now;
         setTitle(title);
@@ -41,39 +48,39 @@ public class Issue extends BaseEntity {
         setEvent(event);
     }
 
-    public void setTitle(String title) throws IssueInvalidFieldException {
+    public void setTitle(String title) throws LabdsofCustomException {
         if (title == null || title.isBlank()) {
-            throw new IssueInvalidFieldException("Empty issue title");
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Empty issue title");
         } else if (title.length() > 50) {
-            throw new IssueInvalidFieldException("Issue title should not" +
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Issue title should not" +
                     " be greater than 50 characters");
         }
         this.title = title;
     }
 
-    public void setDescription(String description) throws IssueInvalidFieldException {
+    public void setDescription(String description) throws LabdsofCustomException {
         if (description == null || description.isBlank()) {
-            throw new IssueInvalidFieldException("Empty issue description");
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Empty issue description");
         } else if (description.length() > 500) {
-            throw new IssueInvalidFieldException("Issue description should not" +
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Issue description should not" +
                     " be greater than 500 characters");
         }
         this.description = description;
     }
 
-    public void newStatusUpdate(IssueStatusUpdate newStatus) throws IssueInvalidFieldException {
+    public void newStatusUpdate(final IssueStatusUpdate newStatus) throws LabdsofCustomException {
         if (issueStatusUpdateList == null) {
             issueStatusUpdateList = new ArrayList<>();
         }
         if (newStatus == null) {
-            throw new IssueInvalidFieldException("Invalid new status update");
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Invalid new status update");
         }
         issueStatusUpdateList.add(newStatus);
     }
 
-    public void setEvent(Event event) throws IssueInvalidFieldException {
+    public void setEvent(Event event) throws LabdsofCustomException {
         if (event == null) {
-            throw new IssueInvalidFieldException("Invalid event");
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Invalid event");
         }
         this.event = event;
     }

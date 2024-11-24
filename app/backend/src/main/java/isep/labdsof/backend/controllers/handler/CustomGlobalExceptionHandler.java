@@ -1,9 +1,7 @@
 package isep.labdsof.backend.controllers.handler;
 
 
-import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
-import isep.labdsof.backend.domain.exceptions.EntityNotFoundException;
-import isep.labdsof.backend.domain.exceptions.IssueInvalidFieldException;
+import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import isep.labdsof.backend.domain.responses.MessageDto;
 import lombok.extern.slf4j.Slf4j;
@@ -44,19 +42,11 @@ public class CustomGlobalExceptionHandler {
         return new ResponseEntity<>(new MessageDto("A data integrity error occurred", MessageCriticality.ERROR), HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(EventInvalidFieldException.class)
-    public ResponseEntity<MessageDto> handleIllegalArgumentException(EventInvalidFieldException ex) {
-        return new ResponseEntity<>(new MessageDto(ex.getMessage(), MessageCriticality.ERROR), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(IssueInvalidFieldException.class)
-    public ResponseEntity<MessageDto> handleIllegalArgumentException(IssueInvalidFieldException ex) {
-        return new ResponseEntity<>(new MessageDto(ex.getMessage(), MessageCriticality.ERROR), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<MessageDto> entityNotFound(EntityNotFoundException ex) {
-        return new ResponseEntity<>(new MessageDto(ex.getEntity() + " not found!", MessageCriticality.ERROR), HttpStatus.NOT_FOUND);
+    @ExceptionHandler(LabdsofCustomException.class)
+    public ResponseEntity<MessageDto> labdsoftCustomExceptionHandler(final LabdsofCustomException ex) {
+        return new ResponseEntity<>(new MessageDto(ex.getMessage(),
+                ex.getAppCustomExceptions().getMessageCriticality()),
+                ex.getAppCustomExceptions().getHttpStatus());
     }
 
 }

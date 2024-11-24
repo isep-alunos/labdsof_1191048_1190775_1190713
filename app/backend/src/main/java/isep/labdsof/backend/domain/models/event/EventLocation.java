@@ -1,9 +1,9 @@
 package isep.labdsof.backend.domain.models.event;
 
 
-import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.dtos.event.EventLocationDto;
-import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
+import isep.labdsof.backend.domain.exceptions.AppCustomExceptions;
+import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.ValueObject;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -18,27 +18,27 @@ public class EventLocation extends ValueObject {
     private Double longitude;
     private Address address;
 
-    public EventLocation(Double latitude, Double longitude, Address address) throws EventInvalidFieldException {
+    public EventLocation(Double latitude, Double longitude, Address address) throws LabdsofCustomException {
         setLatitude(latitude);
         setLongitude(longitude);
         setAddress(address);
     }
 
-    public void setLatitude(Double latitude) throws EventInvalidFieldException {
+    public void setLatitude(Double latitude) throws LabdsofCustomException {
         if (latitude == null) {
-            throw new EventInvalidFieldException("Empty latitude");
+            throw new LabdsofCustomException(AppCustomExceptions.EVENT_INVALID_FIELD, "Empty latitude");
         } else if (!(latitude >= -90 && latitude <= 90)) {
-            throw new EventInvalidFieldException("Latitude hould be >= -90 and <= 90");
+            throw new LabdsofCustomException(AppCustomExceptions.EVENT_INVALID_FIELD, "Latitude hould be >= -90 and <= 90");
         }
 
         this.latitude = latitude;
     }
 
-    public void setLongitude(Double longitude) throws EventInvalidFieldException {
+    public void setLongitude(Double longitude) throws LabdsofCustomException {
         if (longitude == null) {
-            throw new EventInvalidFieldException("Empty longitude");
+            throw new LabdsofCustomException(AppCustomExceptions.EVENT_INVALID_FIELD, "Empty longitude");
         } else if (!(longitude >= -180 && longitude <= 180)) {
-            throw new EventInvalidFieldException("Longitude hould be >= -180 and <= 180");
+            throw new LabdsofCustomException(AppCustomExceptions.EVENT_INVALID_FIELD, "Longitude hould be >= -180 and <= 180");
         }
         this.longitude = longitude;
     }
