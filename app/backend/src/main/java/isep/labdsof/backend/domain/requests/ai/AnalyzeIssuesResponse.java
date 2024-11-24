@@ -1,8 +1,5 @@
 package isep.labdsof.backend.domain.requests.ai;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +27,7 @@ public class AnalyzeIssuesResponse {
     boolean similar;
     List<Issue> issues;
     boolean created;
+    @Builder.Default
     MessageCriticality criticality = MessageCriticality.WARNING;
     String message;
 

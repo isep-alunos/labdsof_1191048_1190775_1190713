@@ -1,9 +1,9 @@
 package isep.labdsof.backend.domain.models.issue;
 
 import isep.labdsof.backend.domain.dtos.issue.IssueStatusUpdateDto;
-import isep.labdsof.backend.domain.exceptions.IssueInvalidFieldException;
+import isep.labdsof.backend.domain.exceptions.AppCustomExceptions;
+import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.BaseEntity;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,7 +20,7 @@ public class IssueStatusUpdate extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private IssueStatus status;
 
-    public IssueStatusUpdate(LocalDateTime updateTime, String description, IssueStatus status) throws IssueInvalidFieldException {
+    public IssueStatusUpdate(LocalDateTime updateTime, String description, IssueStatus status) throws LabdsofCustomException {
         setUpdateTime(updateTime);
         setDescription(description);
         setStatus(status);
@@ -30,26 +30,26 @@ public class IssueStatusUpdate extends BaseEntity {
 
     }
 
-    public void setUpdateTime(LocalDateTime updateTime) throws IssueInvalidFieldException {
+    public void setUpdateTime(LocalDateTime updateTime) throws LabdsofCustomException {
         if (updateTime == null) {
-            throw new IssueInvalidFieldException("Invalid update time");
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Invalid update time");
         }
         this.updateTime = updateTime;
     }
 
-    public void setDescription(String description) throws IssueInvalidFieldException {
+    public void setDescription(String description) throws LabdsofCustomException {
         if (description == null || description.isBlank()) {
-            throw new IssueInvalidFieldException("Empty status update description");
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Empty status update description");
         } else if (description.length() > 200) {
-            throw new IssueInvalidFieldException("Status update description should not" +
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Status update description should not" +
                     " be greater than 200 characters");
         }
         this.description = description;
     }
 
-    public void setStatus(IssueStatus status) throws IssueInvalidFieldException {
+    public void setStatus(IssueStatus status) throws LabdsofCustomException {
         if (status == null) {
-            throw new IssueInvalidFieldException("Invalid new status");
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Invalid new status");
         }
         this.status = status;
     }

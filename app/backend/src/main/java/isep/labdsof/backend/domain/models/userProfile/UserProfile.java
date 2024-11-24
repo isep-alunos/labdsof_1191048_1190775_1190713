@@ -1,7 +1,7 @@
 package isep.labdsof.backend.domain.models.userProfile;
 
-import isep.labdsof.backend.domain.exceptions.EventAlreadyAttendedException;
-import isep.labdsof.backend.domain.exceptions.EventInvalidFieldException;
+import isep.labdsof.backend.domain.exceptions.AppCustomExceptions;
+import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.BaseEntity;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.user.User;
@@ -44,9 +44,9 @@ public class UserProfile extends BaseEntity {
         this.user = user;
     }
 
-    public boolean addAttendedEvent(Event event) throws EventAlreadyAttendedException {
-        if(attendedEvents.contains(event))
-            throw new EventAlreadyAttendedException("This event is already in your attended list");
+    public boolean addAttendedEvent(Event event) throws LabdsofCustomException {
+        if (attendedEvents.contains(event))
+            throw new LabdsofCustomException(AppCustomExceptions.EVENT_ALREADY_ATTENDED, "This event is already in your attended list");
         return attendedEvents.add(event);
     }
 }

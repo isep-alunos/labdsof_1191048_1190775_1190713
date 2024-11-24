@@ -1,0 +1,48 @@
+@startuml
+
+actor Utilizador as u
+participant Frontend as f
+participant Backend as b
+participant "Google API" as g
+
+group "Processo de Login"
+    u -> f : <base-host>/\nInicia processo de login
+    activate u
+    activate f
+    f -> b : Solicita URL para autenticar através de uma conta Google
+    activate b
+    return URL para autenticar através da Google
+    return redireciona utilizador para a página da Google
+    u -> g : Insere as suas credenciais Google
+    activate g
+    g --> f : Retorna um código de autenticação
+    deactivate g
+    activate f
+    f -> b : Pedido para obter o token de autenticação associado ao OAuth2
+    activate b
+    b -> g: Pedido para gerar o token de autenticação através do código de autenticação
+    activate g
+    return token de autenticação
+    return token de autenticação
+    f -> f : Guarda o token de autenticação
+    f --> u : Redireciona o utilizador para a página principal
+    deactivate f
+    deactivate u
+end
+
+group "Casos de uso que necessitam de o utilizador estar logado no sistema\nExemplo: ver os issues reportados de um evento"
+    u -> f : <base-host>/eventIssues/:eventName\nVer os issues de um evento
+    activate u
+    activate f
+    f -> b: Obter issues do evento (envia um token de autenticação no pedido, gerado no processo de login)
+    activate b
+    b -> g: Valida o token de autenticação enviado no pedido
+    activate g
+    return é válido
+    return Dados dos issues do evento
+    return Apresenta os issues do evento
+    deactivate u
+
+end
+
+@enduml
