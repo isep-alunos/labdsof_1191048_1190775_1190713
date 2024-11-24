@@ -92,7 +92,7 @@ const RegisterComponent: React.FC<MyProps> = ({
       <div>
         <div>
           <div>
-            <h1>Registo de conta</h1>
+            <h1>Registration</h1>
             <form id="register-form" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="name">Nome</label>
@@ -124,7 +124,7 @@ const RegisterComponent: React.FC<MyProps> = ({
                     onChange={(e) => setAgreeToStoreData(e.target.checked)}
                     required
                   />
-                  Aceita partilhar o seu nome e email connosco?
+                  Will you share your name and email with us?
                 </label>
               </div>
               <div>
@@ -136,15 +136,15 @@ const RegisterComponent: React.FC<MyProps> = ({
                     checked={isEventWorker}
                     onChange={(e) => setIsEventWorker(e.target.checked)}
                   />
-                  É trabalhador em algum evento?
+                  Are you an event worker?
                 </label>
               </div>
               {isEventWorker && (
                 <div className={styles.role_justification}>
                   <label htmlFor="justificationEventWorker">
-                    Por favor, forneça a sua informação para que um Gestor de
-                    Eventos possa verificar e aprovar a sua conta. Será
-                    notificado quando a sua conta for criada para "
+                    Please provide your information so that an Event Manager can
+                    Manager can check and approve your account. You will be
+                    notified when your account has been created for "
                     {tokenResponse.email}".
                     <textarea
                       name="justificationEventWorker"
@@ -158,7 +158,7 @@ const RegisterComponent: React.FC<MyProps> = ({
                       minLength={20}
                       onChange={(e) => setEventWorkerInfo(e.target.value)}
                     />
-                    Nota: Minimo de 20 caracteres
+                    Note: Minimum of 20 characters
                   </label>
                 </div>
               )}
@@ -171,15 +171,15 @@ const RegisterComponent: React.FC<MyProps> = ({
                     disabled={isSubmitting}
                     onChange={(e) => setIsEventManager(e.target.checked)}
                   />
-                  É um gestor de evento(s)?
+                  Are you an event manager?
                 </label>
               </div>
               {isEventManager && (
                 <div className={styles.role_justification}>
                   <label htmlFor="justificationEventManager">
-                    Por favor, forneça a sua informação para que um
-                    Administrador possa verificar e aprovar a sua conta. Será
-                    notificado quando a sua conta for criada para "
+                    Please provide your information so that an
+                    Administrator can verify and approve your account. You will be
+                    notified when your account has been created for "
                     {tokenResponse.email}".
                     <textarea
                       name="justificationEventManager"
@@ -193,7 +193,7 @@ const RegisterComponent: React.FC<MyProps> = ({
                       minLength={20}
                       onChange={(e) => setEventManagerInfo(e.target.value)}
                     />
-                    Nota: Minimo de 20 caracteres
+                    Note: Minimum of 20 characters
                   </label>
                 </div>
               )}
@@ -207,7 +207,7 @@ const RegisterComponent: React.FC<MyProps> = ({
                   (isEventManager && eventManagerInfo.length < 20)
                 }
               >
-                Registar
+                Register
               </button>
             </form>
           </div>

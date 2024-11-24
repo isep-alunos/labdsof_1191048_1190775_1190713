@@ -1,6 +1,8 @@
 import os
 from together import Together
 
+from service.prompt import buildAnalyseIssuesPrompt
+
 client = Together()
 
 
@@ -18,3 +20,7 @@ def askAI(msg):
 
     # Return the result as a JSON response
     return result
+
+def analyseIssues(issue, pastIssues):
+    prompt = buildAnalyseIssuesPrompt(issue, pastIssues)
+    return askAI(prompt)

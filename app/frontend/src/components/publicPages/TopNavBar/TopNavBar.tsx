@@ -162,7 +162,7 @@ const TopNavBar: React.FC<MyProps> = (props) => {
           <div>
             <h2 style={{ fontSize: dynamicSize / 4 + "px" }}>PortoEventos.</h2>
             <h4 style={{ fontSize: dynamicSize / 4 + "px" }}>
-              Todos os eventos do Porto num só lugar.
+              Issue Reporting
             </h4>
           </div>
         </div>

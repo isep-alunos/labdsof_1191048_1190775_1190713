@@ -1,0 +1,47 @@
+@startuml
+
+actor User as user
+participant UI as ui
+participant Back as back
+database Database as db
+participant AI as ai
+
+
+activate user
+
+user -> ui : /events/:eventName/report-issue\nReports Issue \n(issue)
+
+activate ui
+
+ui -> ui : validation\n(issue)
+
+ui -> back : [POST] /create-issue (issue))
+
+activate back
+
+back -> db: event =\n getEventByName(eventName)
+activate db
+deactivate db
+
+back -> db: pastIssues =\n getPastIssues(event)
+activate db
+deactivate db
+
+back -> ai : [POST] /analyze_issues (issue, pastIssues)
+
+activate ai
+deactivate ai
+
+back -> db : save(issue)
+
+activate db
+deactivate db
+
+back --> ui : 201
+deactivate back
+
+ui --> user : success
+deactivate ui
+
+
+@enduml

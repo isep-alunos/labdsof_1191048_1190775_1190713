@@ -1,0 +1,148 @@
+
+@startuml
+
+package "User Aggregate" {
+    class User {
+        - String username
+        - String password
+        - String email
+    }
+
+    class Admin {
+
+    }
+
+    class Citizen {
+
+    }
+
+
+    class EventManager {
+        - boolean approved
+        - String accountApprovalRequestInfo
+    }
+
+    class EventWorker {
+        - boolean approved
+        - String accountApprovalRequestInfo
+    }
+
+}
+
+
+
+package "Citizen Profile Aggregate" {
+
+    class CitizenProfile {
+        - int totalPoints
+        - int availablePoints
+    }
+
+    class PersonalInterest {
+
+    }
+}
+
+package "Praise Aggregate" {
+    class Praise {
+        - string praise
+    }
+}
+
+
+
+
+enum Reaction {
+    UP, DOWN
+}
+
+
+package "Issue Aggregate" {
+    class Issue {
+        - Date date
+        - String title
+        - String description
+    }
+
+    class IssueLocation {
+        - String textDescription
+    }
+
+    enum IssueStatus {
+        PENDING, IN_PROGRESS,
+         RESOLVED, REJECTED
+    }
+
+    class IssueReaction {
+
+    }
+
+    class IssueStatusUpdate {
+        - Date date
+        - String message
+    }
+}
+
+
+
+package "Event Aggregate" {
+    class Event {
+        - String name
+        - String description
+        - Date start
+        - Date end
+        - int maxParticipants
+        - String officialEventUrl
+    }
+
+    class EventLocation {
+        - double latitude
+        - double longitude
+    }
+
+    class Address {
+        - String street
+        - int number
+        - String postal code
+    }
+}
+
+
+
+
+
+User <|-- Admin
+User <|-- EventManager
+User <|-- EventWorker
+User <|-- Citizen
+
+CitizenProfile "1" --> "*" PersonalInterest
+CitizenProfile "1" ----> "*" Event : attended events
+
+Praise "1" ---> "1" CitizenProfile : from
+Praise "1" ---> "1" EventWorker : to worker that completed
+
+Issue "1" --> "1" IssueStatus
+Issue "1" ------> "1" CitizenProfile : reported by
+Issue "1" ------> "1" EventWorker : assigned to
+Issue "1" --> "*" IssueReaction : can have
+Issue "1"--> "*" IssueStatusUpdate : can have
+Issue "1" --> "1" IssueLocation : has
+Praise "1" ----> "1" Issue : has associated
+
+IssueReaction "1" --> "0..1" Reaction : with
+IssueReaction "1" ----> "1" CitizenProfile : reacted
+
+IssueStatusUpdate "1" --> "0..1" EventWorker : done by
+IssueStatusUpdate "1" --> "0..1" IssueStatus : new status
+
+Event "1" ---> "1" EventManager : organized by
+Event "1" ----> "*" Issue : can have
+Event "1" --> "1" EventLocation
+Event "1" ----> "1..*" EventWorker : has workers
+
+EventLocation "1" --> "1" Address
+
+CitizenProfile "1" ---> "1" Citizen : has associated
+
+@enduml
