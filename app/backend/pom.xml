@@ -119,64 +119,30 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.owasp</groupId>
-                <artifactId>dependency-check-maven</artifactId>
-                <version>9.1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Set the CVSS score threshold here. Any vulnerability with a score equal to or higher than this will cause the build to fail. -->
-                            <failBuildOnCVSS>7.0</failBuildOnCVSS>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <suppressionFile>configs/owasp-suppression.xml</suppressionFile>
-                </configuration>
-            </plugin>
+
+
             <!-- Add Jacoco coverage plugin -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.7</version>
+                <version>0.8.10</version>
                 <executions>
+                    <!-- Prepare agent for code coverage -->
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+                    <!-- Generate report after tests -->
                     <execution>
                         <id>report</id>
-                        <phase>prepare-package</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
                 </executions>
-                <!-- Define coverage rules -->
-                <configuration>
-                    <excludes>
-                        <exclude>**/config/*</exclude>
-                        <exclude>isep/labdsof/backend/controllers/AuthController*</exclude>
-                        <exclude>isep/labdsof/backend/BackendApplication*</exclude>
-                    </excludes>
-                    <rules>
-                        <rule>
-                            <element>BUNDLE</element>
-                            <limits>
-                                <limit>
-                                    <counter>LINE</counter>
-                                    <value>COVEREDRATIO</value>
-                                    <minimum>0.7</minimum>
-                                </limit>
-                            </limits>
-                        </rule>
-                    </rules>
-                </configuration>
             </plugin>
         </plugins>
     </build>

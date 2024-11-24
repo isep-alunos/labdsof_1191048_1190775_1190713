@@ -25,7 +25,9 @@ def analyze_issues():
         data = request.get_json()
         current_issue = data[next(iter(data))]
         past_issues = next(islice(data.items(), 1, 2))
-        return analyseIssues(current_issue, past_issues)
+        result = analyseIssues(current_issue, past_issues)
+        print(result)
+        return result
     except Exception as e:
         return make_response(jsonify({'error': str(e)}), 400)
 

@@ -50,7 +50,7 @@ public class IssueServiceImpl implements IssueService {
         AnalyzeIssuesResponse response = null;
 
         if (!createIssueRequest.force) {
-            response = validateRepeatedIssue(issue, event);
+            response = validateRepeatedIssue(issue, event, new RestTemplate());
         }
 
         if (response == null) {
@@ -83,11 +83,10 @@ public class IssueServiceImpl implements IssueService {
 
     // AI validation
 
-    private AnalyzeIssuesResponse validateRepeatedIssue(Issue issue, Event event) {
+    public AnalyzeIssuesResponse validateRepeatedIssue(Issue issue, Event event, RestTemplate restTemplate) {
         List<Issue> pastIssues = issueRepository.getIssueByEvent(event);
         if (pastIssues.size() == 0) return null;
 
-        RestTemplate restTemplate = new RestTemplate();
         String pythonApiUrl = "http://localhost:8081/analyze_issues";
 
         AnalyzeIssuesRequest requestPayload = new AnalyzeIssuesRequest();

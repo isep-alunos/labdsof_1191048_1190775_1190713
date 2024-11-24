@@ -17,8 +17,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -34,6 +40,11 @@ class IssueServiceImplTest {
 
     @InjectMocks
     private IssueServiceImpl issueService;
+
+
+    @Mock
+    private RestTemplate restTemplate;
+
 
     @Test
     void testCreateIssue() throws Exception {
@@ -72,5 +83,93 @@ class IssueServiceImplTest {
         assertEquals(1, result.size());
         verify(eventService).getByName(eventName);
         verify(issueRepository).getIssuesByEvent_Name(eventName);
+    }
+
+    @Test
+    void testValidateRepeatedIssue_NoPastIssues() {
+        Event mockEvent = new Event();
+        Issue mockIssue = new Issue();
+
+        when(issueRepository.getIssueByEvent(mockEvent)).thenReturn(new ArrayList<>());
+
+        AnalyzeIssuesResponse response = issueService.validateRepeatedIssue(mockIssue, mockEvent, restTemplate);
+
+        assertNull(response);
+        verify(issueRepository, times(1)).getIssueByEvent(mockEvent);
+        verifyNoInteractions(restTemplate);
+    }
+
+    @Test
+    void testValidateRepeatedIssue_NoSimilarIssues() {
+        Event mockEvent = new Event();
+        Issue mockIssue = new Issue();
+
+        List<Issue> pastIssues = List.of(new Issue());
+        when(issueRepository.getIssueByEvent(mockEvent)).thenReturn(pastIssues);
+
+        ResponseEntity<String> mockResponse = new ResponseEntity<>("", HttpStatus.OK);
+        when(restTemplate.postForEntity(anyString(), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(mockResponse);
+
+        AnalyzeIssuesResponse response = issueService.validateRepeatedIssue(mockIssue, mockEvent, restTemplate);
+
+        assertNull(response);
+        verify(issueRepository, times(1)).getIssueByEvent(mockEvent);
+        verify(restTemplate, times(1)).postForEntity(anyString(), any(HttpEntity.class), eq(String.class));
+    }
+
+    @Test
+    void testValidateRepeatedIssue_SimilarIssuesFound() throws Exception {
+        Event mockEvent = new Event();
+        Issue mockIssue = new Issue();
+
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+
+        mockIssue.setId(id1);
+        mockIssue.setTitle("Current Issue");
+        mockIssue.setDescription("Current issue description");
+
+        Issue pastIssue1 = new Issue();
+        pastIssue1.setId(id2);
+        pastIssue1.setTitle("Past Issue 1");
+        pastIssue1.setDescription("Description of past issue 1");
+
+        List<Issue> pastIssues = List.of(pastIssue1);
+        when(issueRepository.getIssueByEvent(mockEvent)).thenReturn(pastIssues);
+
+        String mockResponseBody = id2.toString(); // ID of the similar issue returned by the Python service
+        ResponseEntity<String> mockResponse = new ResponseEntity<>(mockResponseBody, HttpStatus.OK);
+        when(restTemplate.postForEntity(anyString(), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(mockResponse);
+
+        AnalyzeIssuesResponse response = issueService.validateRepeatedIssue(mockIssue, mockEvent, restTemplate);
+
+        assertNotNull(response);
+        assertTrue(response.isSimilar());
+        assertEquals(1, response.getIssues().size());
+        assertEquals("Past Issue 1", response.getIssues().get(0).getTitle());
+        assertEquals("Description of past issue 1", response.getIssues().get(0).getDescription());
+
+        verify(issueRepository, times(1)).getIssueByEvent(mockEvent);
+        verify(restTemplate, times(1)).postForEntity(anyString(), any(HttpEntity.class), eq(String.class));
+    }
+
+    @Test
+    void testValidateRepeatedIssue_PythonServiceError() {
+        Event mockEvent = new Event();
+        Issue mockIssue = new Issue();
+
+        List<Issue> pastIssues = List.of(new Issue());
+        when(issueRepository.getIssueByEvent(mockEvent)).thenReturn(pastIssues);
+
+        when(restTemplate.postForEntity(anyString(), any(HttpEntity.class), eq(String.class)))
+                .thenThrow(new RuntimeException("Python service unavailable"));
+
+        AnalyzeIssuesResponse response = issueService.validateRepeatedIssue(mockIssue, mockEvent, restTemplate);
+
+        assertNull(response);
+        verify(issueRepository, times(1)).getIssueByEvent(mockEvent);
+        verify(restTemplate, times(1)).postForEntity(anyString(), any(HttpEntity.class), eq(String.class));
     }
 }

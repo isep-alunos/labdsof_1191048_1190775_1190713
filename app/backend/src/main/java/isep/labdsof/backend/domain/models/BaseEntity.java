@@ -21,4 +21,11 @@ public abstract class BaseEntity {
 
     public BaseEntity() {
     }
+
+    public void setId(UUID id) throws Exception {
+        if (id == null) {
+            throw new Exception("Invalid ID");
+        }
+        this.id = id;
+    }
 }

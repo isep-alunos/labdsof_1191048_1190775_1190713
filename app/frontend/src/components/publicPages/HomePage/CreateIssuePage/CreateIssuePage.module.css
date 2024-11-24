@@ -1,13 +1,11 @@
 /* CreateIssuePage.module.css */
 
 .CreateIssuePage {
+  font-family: Arial, sans-serif;
   padding: 20px;
   max-width: 600px;
   margin: 0 auto;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
+  padding-top: 6%;
 }
 
 .CreateIssuePage h1 {
