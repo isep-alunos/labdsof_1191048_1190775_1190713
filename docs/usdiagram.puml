@@ -1,0 +1,62 @@
+@startuml
+
+left to right direction
+
+"Admin" as admin
+"Citizen" as cit
+"Event Worker" as ew
+"Event Manager" as em
+"Unregistered User" as uu
+
+(US1 - Citizen Registration) as US1
+(US2 - Event Manager/Worker Registration) as US2
+(US3 - Admin Approval for Event Manager/Worker) as US3
+(US4 - Login and Logout) as US4
+(US5 - Event Creation) as US5
+(US6 - Mark Presence on Event) as US6
+(US7 - Event Deletion) as US7
+(US9 - Search Events) as US9
+(US14 - Praise Event Worker) as US14
+(US16 - Redirect to event website) as US16
+(US18 - Gain Points) as US18
+(US10 - View Leaderboard) as US10
+(US17 - Exchange points for ticket discount) as US17
+(US8 - Check Profile) as US8
+(US11 - Update Problem Status) as US11
+(US12 - Report a Problem) as US12
+(US13 - React to a Reported Problem) as US13
+(US15 - View Event Problems) as US15
+
+
+
+admin --> US3
+
+uu --> US1
+uu --> US2
+
+cit ---> US4
+ew ---> US4
+em ---> US4
+
+em --> US5
+em --> US7
+
+ew --> US11
+
+
+cit --> US6
+cit --> US9
+cit --> US14
+cit --> US16
+cit --> US18
+cit --> US10
+cit --> US17
+cit --> US8
+cit --> US12
+cit --> US13
+cit --> US15
+
+
+
+
+@enduml

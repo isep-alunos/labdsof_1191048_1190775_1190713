@@ -19,15 +19,15 @@ class AdminPage extends React.Component<MyProps, MyState> {
   render() {
     return (
       <div className={styles.AdminPage}>
-        <h1>Página de Administração</h1>
+        <h1>Admin Page</h1>
         <div className={styles.AdminMenu}>
           <div className={styles.AdminMenuItem}>
-            <h2>Aprovar Utilizadores</h2>
+            <h2>Approve Users</h2>
             <p>
-              Sub-página onde o administrador pode aprovar todos os utilizadores que solicitaram um papel de gestor de eventos ou trabalhador de eventos.
+              Sub-page where the administrator can approve all users who have requested an event manager or event worker role.
             </p>
             <Link to={ROUTES.APPROVE_USERS}>
-              <button>Aprovar Utilizadores</button>
+              <button>Approve Users</button>
             </Link>
           </div>
           {/* Adicione mais itens de menu conforme necessário */}

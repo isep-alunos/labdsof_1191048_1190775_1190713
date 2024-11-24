@@ -102,7 +102,7 @@ public class IssueServiceImpl implements IssueService {
                 Gson gson = new Gson();
 
                 // Parse the JSON string into a YourObject instance
-                AnalyzeIssuesResponse parsedObject = gson.fromJson(json.substring(1, json.length() - 2).replace("\\", ""), AnalyzeIssuesResponse.class);
+                AnalyzeIssuesResponse parsedObject = gson.fromJson(json, AnalyzeIssuesResponse.class);
 
                 return parsedObject;
                 //return Arrays.asList(Objects.requireNonNull(response.getBody()));
