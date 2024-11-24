@@ -8,27 +8,30 @@ type MyProps = {};
 type MyState = {};
 
 class EventManagerPage extends React.Component<MyProps, MyState> {
-    constructor(props: MyProps) {
-        super(props);
-        this.state = {};
-    }
+  constructor(props: MyProps) {
+    super(props);
+    this.state = {};
+  }
 
-    componentDidMount() {}
+  componentDidMount() {}
 
-    componentWillUnmount() {}
+  componentWillUnmount() {}
 
-    render() {
-        return (
-            <div className={styles.EventManagerPage}>
-                <Link to={ROUTES.CREATE_EVENT} className={styles.cardLink}>
-                    <div className={styles.card}>
-                        <FaCalendarPlus className={styles.icon} />
-                        <h3>Create Event</h3>
-                    </div>
-                </Link>
+  render() {
+    return (
+      <div className={styles.EventManagerPage}>
+        <h1>Event Manager Page</h1>
+        <div>
+          <Link to={ROUTES.CREATE_EVENT} className={styles.cardLink}>
+            <div className={styles.card}>
+              <FaCalendarPlus className={styles.icon} />
+              <h3>Create Event</h3>
             </div>
-        );
-    }
+          </Link>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default EventManagerPage;

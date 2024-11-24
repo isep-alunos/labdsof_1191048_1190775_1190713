@@ -7,6 +7,7 @@ import { authUrlResponse } from "../../../utils/types";
 
 const NAV_MAX_HEIGHT_PX: number = 106;
 const NAV_MIN_HEIGHT_PX = 56;
+const NAV_SPEED = 10;
 
 type MyProps = {
   isLoggedIn: boolean;
@@ -21,15 +22,38 @@ const TopNavBar: React.FC<MyProps> = (props) => {
   const [dynamicSize, setDynamicSize] = useState(NAV_MAX_HEIGHT_PX);
   const [authURL, setAuthURL] = useState<string | null>(null);
   const location = useLocation();
+  let timerID: NodeJS.Timer | undefined;
+  let isOnTop = true;
+
+  const decrementSize = () => {
+    setDynamicSize((prevSize) => {
+      if (prevSize > NAV_MIN_HEIGHT_PX) return prevSize - 2;
+      clearInterval(timerID);
+      return prevSize;
+    });
+  };
+
+  const incrementSize = () => {
+    setDynamicSize((prevSize) => {
+      if (prevSize < NAV_MAX_HEIGHT_PX) return prevSize + 2;
+      clearInterval(timerID);
+      return prevSize;
+    });
+  };
 
   useEffect(() => {
     document.body.classList.add("topnavbar");
 
     const handleScroll = () => {
-      if (window.pageYOffset === 0) {
-        setDynamicSize(NAV_MAX_HEIGHT_PX);
-      } else {
-        setDynamicSize(NAV_MIN_HEIGHT_PX);
+      if ((window.pageYOffset === 0) !== isOnTop) {
+        isOnTop = window.pageYOffset === 0;
+        if (isOnTop) {
+          clearInterval(timerID);
+          timerID = setInterval(incrementSize, NAV_SPEED);
+        } else {
+          clearInterval(timerID);
+          timerID = setInterval(decrementSize, NAV_SPEED);
+        }
       }
     };
 
@@ -43,6 +67,7 @@ const TopNavBar: React.FC<MyProps> = (props) => {
     return () => {
       document.body.classList.remove("topnavbar");
       window.removeEventListener("scroll", handleScroll);
+      clearInterval(timerID);
     };
   }, []);
 
