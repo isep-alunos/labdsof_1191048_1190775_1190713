@@ -34,17 +34,17 @@ public class AdminServiceImpl implements AdminService {
     private final UserProfileRepository userProfileRepository;
     private final EmailService emailService;
 
-    private static final String roleAppealResultEmailTitle = "Resultado do Pedido de Papel";
+    private static final String roleAppealResultEmailTitle = "Role Appeal Result";
     private static final String roleAppealResultEmailBody = """
-Caro(a) %s,
+Dear %s,
 
-O seu pedido de registo para o papel "%s" foi analisado. O resultado do seu pedido é o seguinte:
+Your registration appeal for the role "%s" has been reviewed. The result of your appeal is as follows:
 
-Resultado: %s
+Result: %s
 
-Se tiver alguma dúvida ou necessitar de assistência adicional, não hesite em contactar a nossa equipa de suporte.
+If you have any questions or require further assistance, please do not hesitate to contact our support team.
 
-Com os melhores cumprimentos,
+Best regards,
 Porto Eventos
 """;
 
