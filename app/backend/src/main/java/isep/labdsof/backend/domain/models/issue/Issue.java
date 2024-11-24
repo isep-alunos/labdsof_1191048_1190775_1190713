@@ -5,6 +5,7 @@ import isep.labdsof.backend.domain.exceptions.IssueInvalidFieldException;
 import isep.labdsof.backend.domain.models.BaseEntity;
 import isep.labdsof.backend.domain.models.event.Event;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
@@ -19,7 +20,9 @@ import java.util.Map;
 public class Issue extends BaseEntity {
 
     private LocalDateTime creationDate;
+    @Getter
     private String title;
+    @Getter
     private String description;
 
     @OneToMany(cascade = CascadeType.PERSIST)

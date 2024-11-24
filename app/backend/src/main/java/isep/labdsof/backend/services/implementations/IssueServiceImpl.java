@@ -2,6 +2,7 @@ package isep.labdsof.backend.services.implementations;
 
 import com.google.gson.Gson;
 import isep.labdsof.backend.domain.dtos.issue.IssueDto;
+import isep.labdsof.backend.domain.models.BaseEntity;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.issue.Issue;
 import isep.labdsof.backend.domain.models.issue.IssueLocation;
@@ -17,7 +18,12 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +31,8 @@ public class IssueServiceImpl implements IssueService {
 
     private final EventService eventService;
     private final IssueRepository issueRepository;
+
+    private static final String ISSUE_CREATED = "Issue Created!";
 
     @Override
     public AnalyzeIssuesResponse create(CreateIssueRequest createIssueRequest) throws Exception {
@@ -51,13 +59,13 @@ public class IssueServiceImpl implements IssueService {
                     .builder()
                     .created(true)
                     .criticality(MessageCriticality.INFO)
-                    .message("Issue Created!")
+                    .message(ISSUE_CREATED)
                     .build();
 
         } else if (!response.isSimilar()) {
             issueRepository.save(issue);
             response.setCreated(true);
-            response.setMessage("Issue Created!");
+            response.setMessage(ISSUE_CREATED);
             response.setCriticality(MessageCriticality.INFO);
         }
 
@@ -98,19 +106,44 @@ public class IssueServiceImpl implements IssueService {
             );
 
             if (response.getStatusCode() == HttpStatus.OK) {
-                String json = response.getBody();
-                Gson gson = new Gson();
+                String issuesStr = response.getBody().replace("'", "");
+                if (issuesStr.trim().isBlank()) {
+                    return null;
+                }
 
-                // Parse the JSON string into a YourObject instance
-                AnalyzeIssuesResponse parsedObject = gson.fromJson(json, AnalyzeIssuesResponse.class);
+                String[] splited = issuesStr.split(",");
 
-                return parsedObject;
-                //return Arrays.asList(Objects.requireNonNull(response.getBody()));
+                List<AnalyzeIssuesResponse.Issue> issuesFoundList = new ArrayList<>();
+                Map<String, Issue> pastIssueMap = pastIssues.stream()
+                        .collect(Collectors.toMap(
+                                t -> t.getId().toString(),
+                                Function.identity()
+                        ));
+
+                for (String foundIssue : splited) {
+                    Issue i = pastIssueMap.get(foundIssue.trim());
+                    if (i != null) {
+                        issuesFoundList
+                                .add(new AnalyzeIssuesResponse.Issue(foundIssue.trim(),
+                                        i.getTitle(),
+                                        i.getDescription()));
+                    }
+                }
+
+                if (issuesFoundList.isEmpty()) return null;
+                AnalyzeIssuesResponse analyzeIssuesResponse = AnalyzeIssuesResponse
+                        .builder()
+                        .issues(issuesFoundList)
+                        .similar(true)
+                        .build();
+
+
+                return analyzeIssuesResponse;
             } else {
-                throw new RuntimeException("Failed to call AI API");
+                return null;
             }
         } catch (Exception e) {
-            throw new RuntimeException("Error communicating with AI API: " + e.getMessage(), e);
+            return null;
         }
 
     }

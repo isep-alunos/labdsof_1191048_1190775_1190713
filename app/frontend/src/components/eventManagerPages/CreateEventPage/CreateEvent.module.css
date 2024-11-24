@@ -69,12 +69,12 @@ button:disabled {
   text-decoration: none;
 }
 
-.CreateEvent form .role_justification label {
+.CreateEvent form  label {
   margin-top: 0px;
   font-size: 15px;
 }
 
-.CreateEvent form .role_justification textarea {
+.CreateEvent form  textarea {
   resize: none;
   width: 100%;
   height: 150px;

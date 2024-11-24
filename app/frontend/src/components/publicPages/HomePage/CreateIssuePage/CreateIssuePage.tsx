@@ -100,37 +100,57 @@ const CreateIssuePage: React.FC = () => {
             <h1>{eventName ? `${eventName}: Report Issue` : "Report Issue"}</h1>
             <form id="create-issue-form" onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="title">Title</label>
-                    <input
-                        type="text"
-                        name="title"
-                        placeholder="Enter issue title"
-                        value={formState.title}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <label htmlFor="title">
+                        Title
+                        <input
+                            type="text"
+                            name="title"
+                            placeholder="Enter issue title"
+                            value={formState.title}
+                            onChange={handleInputChange}
+                            required
+                            maxLength={50}
+                        />
+                        Note: Maximum of 50 characters
+                    </label>
                 </div>
                 <div>
-                    <label htmlFor="description">Description</label>
-                    <textarea
-                        name="description"
-                        placeholder="Enter issue description"
-                        value={formState.description}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <label htmlFor="description">
+                        Description
+                        <textarea
+                            name="description"
+                            placeholder="Enter issue description"
+                            value={formState.description}
+                            onChange={handleInputChange}
+                            required
+                            autoCapitalize="sentences"
+                            autoCorrect="on"
+                            wrap="hard"
+                            maxLength={500}
+                        />
+                        Note: Maximum of 500 characters
+                    </label>
+
+
                 </div>
 
                 <div>
-                    <label htmlFor="location">Location</label>
-                    <input
-                        type="text"
-                        name="location"
-                        placeholder="Enter issue location"
-                        value={formState.location}
-                        onChange={handleInputChange}
-                        required
-                    />
+                    <label htmlFor="location">
+
+                        Location
+                        <input
+                            type="text"
+                            name="location"
+                            placeholder="Enter issue location"
+                            value={formState.location}
+                            onChange={handleInputChange}
+                            required
+                            maxLength={100}
+                        />
+                        Note: Maximum of 100 characters
+
+                    </label>
+
                 </div>
 
                 <button type="submit" className="background_v2" disabled={formState.isSubmitting}>

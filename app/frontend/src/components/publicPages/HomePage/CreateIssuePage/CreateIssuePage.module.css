@@ -69,12 +69,12 @@ button:disabled {
   text-decoration: none;
 }
 
-.CreateIssuePage form .role_justification label {
+.CreateIssuePage form  label {
   margin-top: 0px;
   font-size: 15px;
 }
 
-.CreateIssuePage form .role_justification textarea {
+.CreateIssuePage form  textarea {
   resize: none;
   width: 100%;
   height: 150px;
