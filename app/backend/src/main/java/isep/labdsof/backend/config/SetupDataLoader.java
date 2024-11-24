@@ -12,7 +12,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -43,7 +45,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         final User user = User.builder()
                 .nome("Admin")
                 .email(adminEmail)
-                .roles(Collections.singletonList(Role.ADMIN))
+                .roles(List.of(Role.ADMIN,Role.USER, Role.EVENT_WORKER, Role.EVENT_MANAGER))
                 .isWaitingForApprovalForEventWorker(false)
                 .isWaitingForApprovalForEventManager(false)
                 .build();
