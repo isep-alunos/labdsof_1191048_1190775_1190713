@@ -3,6 +3,7 @@ package isep.labdsof.backend.domain.models.user;
 import isep.labdsof.backend.convertor.StringCryptoConverter;
 import isep.labdsof.backend.domain.models.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -39,8 +40,10 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
 
+    @Builder.Default
     private boolean isWaitingForApprovalForEventWorker = false;
     private String eventWorkerJustification;
+    @Builder.Default
     private boolean isWaitingForApprovalForEventManager = false;
     private String eventManagerJustification;
 

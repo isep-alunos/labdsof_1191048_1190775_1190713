@@ -32,7 +32,7 @@ public class RoleRequestDto {
                     user.getNome(),
                     user.getEmail(),
                     Role.EVENT_MANAGER.getShortRoleDescription(),
-                    user.getEventWorkerJustification()));
+                    user.getEventManagerJustification()));
         }
         return users;
     }
