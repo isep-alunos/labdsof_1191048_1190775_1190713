@@ -73,15 +73,15 @@ const ApproveUsersPage: React.FC = () => {
 
   return (
     <div className={styles.ApproveUsersPage}>
-      <h1>Aprovar Utilizadores</h1>
+      <h1>Approve Users</h1>
       <table className={styles.ApproveUsersTable}>
         <thead>
           <tr>
-            <th>Nome</th>
+            <th>Name</th>
             <th>Email</th>
-            <th>Papel Solicitado</th>
-            <th>Justificação</th>
-            <th>Ação</th>
+            <th>Requested Role</th>
+            <th>Justification</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>

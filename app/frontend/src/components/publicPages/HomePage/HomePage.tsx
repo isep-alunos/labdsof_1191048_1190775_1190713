@@ -38,8 +38,7 @@ class HomePage extends React.Component<MyProps, MyState> {
         <div className={styles.HomePageHelloWord}>
           <h1>PortoEventos.</h1>
           <h2>
-            Todos os eventos do Porto num só lugar.
-            <p>Encontra o teu evento e participa!</p>
+            Issue Reporting
           </h2>
           <FiChevronDown onClick={this.scrollToBody} />
         </div>

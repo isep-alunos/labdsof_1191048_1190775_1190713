@@ -38,7 +38,7 @@ def analyze_issues():
             + '; By similarities I mean you must interpret the information and be smart to find similar issues'
 
             )
-        return jsonify(response)
+        return response
     except Exception as e:
         return make_response(jsonify({'error': str(e)}), 400)
 
