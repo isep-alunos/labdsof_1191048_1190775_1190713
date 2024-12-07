@@ -38,7 +38,7 @@ frontend:
     public: http://localhost:3000
 
 backend:
-  admin-email: labdsof2425.group13@gmail.com
+  admin-email: ${ADMIN_USER:labdsof2425.group13@gmail.com}
 
 crypt:
   password: ThisIsASecretKey

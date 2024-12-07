@@ -1,5 +1,6 @@
 package isep.labdsof.backend.domain.models.userProfile;
 
+import isep.labdsof.backend.domain.dtos.user.UserProfileDto;
 import isep.labdsof.backend.domain.exceptions.AppCustomExceptions;
 import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.BaseEntity;
@@ -9,6 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -38,15 +40,37 @@ public class UserProfile extends BaseEntity {
     @OneToMany(orphanRemoval = true)
     private List<Event> attendedEvents;
 
-    // TODO: When developing gamification, add points here
+    @Builder.Default
+    private int totalPointsAccumulated = 0;
+    @Builder.Default
+    private int pointsAvailable = 0;
 
-    private void setUser(User user) {
-        this.user = user;
+    private void addPoints(final int points) {
+        this.totalPointsAccumulated += points;
+        this.pointsAvailable += points;
+    }
+
+    public boolean removePoints(final int points) {
+        if (this.pointsAvailable < points) {
+            return false;
+        } else {
+            this.pointsAvailable -= points;
+            return true;
+        }
     }
 
     public boolean addAttendedEvent(Event event) throws LabdsofCustomException {
         if (attendedEvents.contains(event))
             throw new LabdsofCustomException(AppCustomExceptions.EVENT_ALREADY_ATTENDED, "This event is already in your attended list");
         return attendedEvents.add(event);
+    }
+
+    public UserProfileDto toDto() {
+        return UserProfileDto.builder()
+                .user(user.toDto())
+                .attendedEvents(attendedEvents.stream().map(Event::toDto).toList())
+                .totalPointsAccumulated(totalPointsAccumulated)
+                .pointsAvailable(pointsAvailable)
+                .build();
     }
 }

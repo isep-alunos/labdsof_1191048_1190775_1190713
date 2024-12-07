@@ -1,8 +1,7 @@
 package isep.labdsof.backend.services.implementations;
 
-import com.google.gson.Gson;
 import isep.labdsof.backend.domain.dtos.issue.IssueDto;
-import isep.labdsof.backend.domain.models.BaseEntity;
+import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.issue.Issue;
 import isep.labdsof.backend.domain.models.issue.IssueLocation;
@@ -14,14 +13,17 @@ import isep.labdsof.backend.repositories.IssueRepository;
 import isep.labdsof.backend.services.EventService;
 import isep.labdsof.backend.services.IssueService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -35,7 +37,7 @@ public class IssueServiceImpl implements IssueService {
     private static final String ISSUE_CREATED = "Issue Created!";
 
     @Override
-    public AnalyzeIssuesResponse create(CreateIssueRequest createIssueRequest) throws Exception {
+    public AnalyzeIssuesResponse create(CreateIssueRequest createIssueRequest) throws LabdsofCustomException {
 
         Event event = eventService.getByName(createIssueRequest.eventName);
         IssueLocation location = new IssueLocation(createIssueRequest.location);
@@ -74,7 +76,7 @@ public class IssueServiceImpl implements IssueService {
     }
 
     @Override
-    public List<IssueDto> getIssuesByEventName(String eventName) throws Exception {
+    public List<IssueDto> getIssuesByEventName(String eventName) throws LabdsofCustomException {
         final Event event = eventService.getByName(eventName);
         final List<Issue> issues = issueRepository.getIssuesByEvent_Name(event.getName());
 

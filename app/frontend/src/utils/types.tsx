@@ -116,6 +116,15 @@ interface issue {
   eventName: string;
 }
 
+type userProfileResponse = {
+  user: {
+    name: string;
+    email: string;
+  };
+  attendedEvents: eventDto[];
+  totalPointsAccumulated: number;
+  pointsAvailable: number;
+};
 
 export {
   httpResponse,
@@ -134,4 +143,5 @@ export {
   issueStatus,
   issueStatusUpdate,
   createIssueDto,
+  userProfileResponse,
 };

@@ -8,6 +8,7 @@ import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.responses.StatusResponse;
 import isep.labdsof.backend.services.EventService;
 import isep.labdsof.backend.services.IssueService;
+import isep.labdsof.backend.services.UserProfileService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,8 @@ public class PrivateControllerTest {
 
     private final EventService eventService = Mockito.mock(EventService.class);
     private final IssueService issueService = Mockito.mock(IssueService.class);
-    private final PrivateController privateController = new PrivateController(eventService, issueService);
+    private final UserProfileService userProfileService = Mockito.mock(UserProfileService.class);
+    private final PrivateController privateController = new PrivateController(eventService, issueService, userProfileService);
 
     @Test
     public void testMarkPresenceAtEvent() throws Exception {
