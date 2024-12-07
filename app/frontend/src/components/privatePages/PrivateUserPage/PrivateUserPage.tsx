@@ -136,6 +136,11 @@ const PrivateUserPage: React.FC = () => {
                 ? "Receive a like: +1 point per like"
                 : "Receber um like: +1 ponto por like"}
             </p>
+            <p>
+              {isEnglish
+                ? "Praise Event Worker: +2 points (only available after the issue is resolved)"
+                : "Elogiar um trabalhador do evento: +2 pontos (apenas disponível após o problema ser resolvido)"}
+            </p>
             <h2>{isEnglish ? "Use Points" : "Usar os pontos"}</h2>
             <p>
               {isEnglish
