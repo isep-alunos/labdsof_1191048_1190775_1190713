@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import styles from "./CreateIssuePage.module.css";
 import HttpService from "../../../../utils/http";
 import {useAlert} from "../../../../utils/alerts/AlertContext";
-import {criticality, createIssueDto} from "../../../../utils/types";
+import {createIssueDto} from "../../../../utils/types";
 import {useNavigate, useParams} from "react-router-dom";
 import {
     Dialog,
@@ -15,8 +15,6 @@ import {
     ListItem,
     ListItemText,
 } from "@mui/material";
-
-type issueWorker = { id: string; name: string; email: string };
 
 const CreateIssuePage: React.FC = () => {
     const [formState, setFormState] = useState({

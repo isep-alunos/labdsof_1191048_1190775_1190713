@@ -1,6 +1,7 @@
 package isep.labdsof.backend.services.implementations;
 
 
+import isep.labdsof.backend.domain.dtos.user.UserProfileDto;
 import isep.labdsof.backend.domain.exceptions.AppCustomExceptions;
 import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.user.Role;
@@ -33,6 +34,4 @@ public class UserServiceImpl implements UserService {
     public List<User> getEventWorkers() {
         return userRepository.findAllByRolesContaining(Role.EVENT_WORKER);
     }
-
-
 }

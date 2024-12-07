@@ -5,6 +5,7 @@ import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
 import isep.labdsof.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
@@ -14,14 +15,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.slf4j.MDC;
 
 @RequiredArgsConstructor
 public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
@@ -43,9 +41,14 @@ public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
         attributes.put("picture", picture);
         final List<Role> roles = new ArrayList<>();
         final Optional<User> user = userRepository.findUserByEmail(email);
+        final String finalName = name;
         user.ifPresent(u -> {
             roles.addAll(u.getRoles());
             MDC.put("userId", u.getId().toString());
+            if(!u.getNome().equals(finalName)){
+                u.setNome(finalName);
+                userRepository.save(u);
+            }
         });
         if (user.isEmpty()) {
             attributes.put("isNewUser", Boolean.TRUE);
