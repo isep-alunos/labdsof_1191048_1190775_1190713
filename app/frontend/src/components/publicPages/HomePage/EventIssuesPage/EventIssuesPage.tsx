@@ -14,7 +14,7 @@ import {
     SelectChangeEvent,
     Box,
 } from "@mui/material";
-import {criticality, issue, issueStatus} from "../../../../utils/types";
+import {criticality, issue} from "../../../../utils/types";
 import HttpService from "../../../../utils/http";
 import {useAlert} from "../../../../utils/alerts/AlertContext";
 
@@ -82,6 +82,27 @@ const EventIssuesPage: React.FC = () => {
     const handleCreateIssueClick = () => {
         if (eventName) {
             navigate(`/events/${encodeURIComponent(eventName)}/report-issue`);
+        }
+    };
+
+    const handleReact = async (issueId: string) => {
+        try {
+            const http = new HttpService();
+            const response = await http.putPrivate<issue>(
+                `/private/eventIssues/react`, {issueId: issueId}
+            );
+            if (response.body) {
+                setIssues((prevIssues) =>
+                    prevIssues.map((issue) =>
+                        issue.id === issueId ? {...issue, ...response.body} : issue
+                    )
+                );
+            }
+        } catch (error) {
+            alert.addAlert({
+                message: "Failed to react to the issue.",
+                criticality: criticality.ERROR,
+            });
         }
     };
 
@@ -163,6 +184,7 @@ const EventIssuesPage: React.FC = () => {
                     <th>Title</th>
                     <th>Status</th>
                     <th>Creation Date</th>
+                    <th>Reactions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -175,6 +197,18 @@ const EventIssuesPage: React.FC = () => {
                         <td>{issue.title}</td>
                         <td>{issue.issueStatusUpdateList[0]?.status}</td>
                         <td>{new Date(issue.creationDate).toLocaleString()}</td>
+                        <td>
+                            {issue.reactions}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleReact(issue.id);
+                                }}
+                                disabled={issue.userReacted || issue.userIsOwner}
+                            >
+                                {issue.userReacted ? "Reacted" : issue.userIsOwner ? "Can't react" : "React"}
+                            </button>
+                        </td>
                     </tr>
                 ))}
                 </tbody>

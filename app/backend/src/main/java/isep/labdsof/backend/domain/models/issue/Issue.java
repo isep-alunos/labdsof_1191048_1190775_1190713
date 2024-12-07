@@ -5,8 +5,10 @@ import isep.labdsof.backend.domain.exceptions.AppCustomExceptions;
 import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.BaseEntity;
 import isep.labdsof.backend.domain.models.event.Event;
+import isep.labdsof.backend.domain.models.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
@@ -17,14 +19,19 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
 @Data
 public class Issue extends BaseEntity {
+
+    @ManyToOne
+    private User userReporter;
 
     private LocalDateTime creationDate;
     @Getter
@@ -38,7 +45,11 @@ public class Issue extends BaseEntity {
     @ManyToOne
     private Event event;
 
-    public Issue(String title, String description, IssueLocation location, Event event) throws LabdsofCustomException {
+    @ManyToMany
+    private Set<User> reactions;
+
+    public Issue(User user, String title, String description, IssueLocation location, Event event) throws LabdsofCustomException {
+        setUserReporter(user);
         LocalDateTime now = LocalDateTime.now();
         this.creationDate = now;
         setTitle(title);
@@ -49,6 +60,14 @@ public class Issue extends BaseEntity {
                 IssueStatus.PENDING);
         newStatusUpdate(initialStatus);
         setEvent(event);
+        setReactions();
+    }
+
+    public void setUserReporter(final User userReporter) throws LabdsofCustomException {
+        if (userReporter == null) {
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Invalid user reporter");
+        }
+        this.userReporter = userReporter;
     }
 
     public void setTitle(String title) throws LabdsofCustomException {
@@ -88,6 +107,15 @@ public class Issue extends BaseEntity {
         this.event = event;
     }
 
+    @SafeVarargs
+    public final void setReactions(final Set<User>... reactions) {
+        if (reactions == null || reactions.length == 0) {
+            this.reactions = new HashSet<>();
+        } else {
+            this.reactions = new HashSet<>(reactions[0]);
+        }
+    }
+
     public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
         map.put("id", getId() != null ? getId().toString() : null);
@@ -96,7 +124,7 @@ public class Issue extends BaseEntity {
         return map;
     }
 
-    public IssueDto toDto() {
+    public IssueDto toDto(final String userEmail) {
         return IssueDto.builder()
                 .id(String.valueOf(getId()))
                 .creationDate(creationDate)
@@ -107,6 +135,19 @@ public class Issue extends BaseEntity {
                         .toList())
                 .location(location.toDto()) // Assuming IssueLocation has a toDto method
                 .eventName(event.getName()) // If you only need the Event ID, otherwise map Event to EventDto
+                .reactions(reactions.size())
+                .userReacted(reactions.stream().anyMatch(u -> u.getEmail().equals(userEmail)))
+                .userIsOwner(userReporter.getEmail().equals(userEmail))
                 .build();
+    }
+
+    public void addReaction(final User user) throws LabdsofCustomException {
+        if (reactions == null) {
+            reactions = new HashSet<>();
+        }
+        if (reactions.contains(user)) {
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "User already reacted to this issue");
+        }
+        reactions.add(user);
     }
 }

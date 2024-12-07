@@ -13,12 +13,13 @@ public enum AppCustomExceptions {
     EVENT_NOT_FOUND("Event not found", MessageCriticality.ERROR, HttpStatus.NOT_FOUND),
     ISSUE_INVALID_FIELD("Invalid field", MessageCriticality.ERROR, HttpStatus.BAD_REQUEST),
     MARK_PRESENCE_NOT_NEAR_EVENT("User is not near the event", MessageCriticality.ERROR, HttpStatus.BAD_REQUEST),
-    USER_NOT_FOUND("User not found", MessageCriticality.ERROR, HttpStatus.NOT_FOUND);
+    USER_NOT_FOUND("User not found", MessageCriticality.ERROR, HttpStatus.NOT_FOUND),
+    ISSUE_NOT_FOUND("Issue not found", MessageCriticality.ERROR, HttpStatus.NOT_FOUND);
 
 
-    private String defaultMessage;
-    private MessageCriticality messageCriticality;
-    private HttpStatus httpStatus;
+    private final String defaultMessage;
+    private final MessageCriticality messageCriticality;
+    private final HttpStatus httpStatus;
 
     AppCustomExceptions(final String defaultMessage, final MessageCriticality messageCriticality, final HttpStatus httpStatus) {
         this.defaultMessage = defaultMessage;

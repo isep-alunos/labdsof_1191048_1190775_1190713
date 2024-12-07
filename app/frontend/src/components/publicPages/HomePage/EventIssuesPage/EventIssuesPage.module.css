@@ -58,6 +58,20 @@
   background-color: #e6f0ff;
 }
 
+.TableRow button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.TableRow button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .DialogContent p {
   margin: 10px 0;
   font-size: 1em;
