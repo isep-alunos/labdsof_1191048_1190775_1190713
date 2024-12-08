@@ -10,7 +10,9 @@ import {
   DialogActions,
   Button,
   TextField,
+  IconButton,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 import Cookies from "universal-cookie";
 
 const EventPage: React.FC = () => {
@@ -20,6 +22,7 @@ const EventPage: React.FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogDescription, setDialogDescription] = useState("");
   const [dialogStatus, setDialogStatus] = useState<issueStatus | null>(null);
+  const [infoDialogOpen, setInfoDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -96,6 +99,16 @@ const EventPage: React.FC = () => {
     setDialogStatus(null);
   };
 
+  const openInfoDialog = (issue: issue) => {
+    setSelectedIssue(issue);
+    setInfoDialogOpen(true);
+  };
+
+  const closeInfoDialog = () => {
+    setInfoDialogOpen(false);
+    setSelectedIssue(null);
+  };
+
   const onDragStart = (
     event: React.DragEvent<HTMLDivElement>,
     issueId: string
@@ -154,6 +167,12 @@ const EventPage: React.FC = () => {
                   <p>
                     Assigned to: {issue.eventWorkerAssigned || "Unassigned"}
                   </p>
+                  <IconButton
+                    aria-label="info"
+                    onClick={() => openInfoDialog(issue)}
+                  >
+                    <InfoIcon />
+                  </IconButton>
                   {!issue.eventWorkerAssigned && (
                     <button onClick={() => handleAssign(issue.id)}>
                       Assign to Me
@@ -215,6 +234,47 @@ const EventPage: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {selectedIssue && (
+        <Dialog
+          open={infoDialogOpen}
+          onClose={closeInfoDialog}
+          fullWidth
+          maxWidth="sm"
+        >
+          <DialogTitle>Issue Details</DialogTitle>
+          <DialogContent>
+            <p>
+              <strong>Title:</strong> {selectedIssue.title}
+            </p>
+            <p>
+              <strong>Description:</strong> {selectedIssue.description}
+            </p>
+            <p>
+              <strong>Location:</strong> {selectedIssue.location.location}
+            </p>
+            <p>
+              <strong>Reactions:</strong> {selectedIssue.reactions}{" "}
+            </p>
+            <p>
+              <strong>Assigned Worker:</strong>{" "}
+              {selectedIssue.eventWorkerAssigned || "Unassigned"}
+            </p>
+            <h4>Status History:</h4>
+            <ul>
+              {selectedIssue.issueStatusUpdateList.map((update) => (
+                <li key={update.updateTime}>
+                  {update.status} - {update.description} (
+                  {new Date(update.updateTime).toLocaleString()})
+                </li>
+              ))}
+            </ul>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeInfoDialog}>Close</Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 };
