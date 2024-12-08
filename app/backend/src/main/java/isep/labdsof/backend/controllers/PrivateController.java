@@ -5,6 +5,7 @@ import isep.labdsof.backend.domain.dtos.user.UserProfileDto;
 import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
 import isep.labdsof.backend.domain.requests.MarkPresenceAtEventRequest;
+import isep.labdsof.backend.domain.requests.ReactToIssueRequest;
 import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.responses.StatusResponse;
 import isep.labdsof.backend.services.EventService;
@@ -46,8 +47,9 @@ public class PrivateController {
 
 
     @PostMapping("/create-issue")
-    public ResponseEntity<AnalyzeIssuesResponse> createIssue(@RequestBody CreateIssueRequest request) throws LabdsofCustomException {
-        AnalyzeIssuesResponse response = issueService.create(request);
+    public ResponseEntity<AnalyzeIssuesResponse> createIssue(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                             @RequestBody CreateIssueRequest request) throws LabdsofCustomException {
+        AnalyzeIssuesResponse response = issueService.create(principal.getAttribute("email"), request);
         if (response.isCreated()) {
             return ResponseEntity.status(201).body(response);
         } else {
@@ -56,8 +58,9 @@ public class PrivateController {
     }
 
     @GetMapping("/eventIssues/{eventName}")
-    public ResponseEntity<List<IssueDto>> getIssuesByEvent(@PathVariable String eventName) throws LabdsofCustomException {
-        final List<IssueDto> result = issueService.getIssuesByEventName(eventName);
+    public ResponseEntity<List<IssueDto>> getIssuesByEvent(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                           @PathVariable String eventName) throws LabdsofCustomException {
+        final List<IssueDto> result = issueService.getIssuesByEventName(principal.getAttribute("email"), eventName);
 
         return ResponseEntity.status(201).body(result);
     }
@@ -66,6 +69,13 @@ public class PrivateController {
     public ResponseEntity<UserProfileDto> getUserProfile(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal) throws LabdsofCustomException {
         final UserProfileDto userProfile = userProfileService.getByUserEmail(principal.getAttribute("email")).toDto();
         return ResponseEntity.ok(userProfile);
+    }
+
+    @PutMapping("/eventIssues/react")
+    public ResponseEntity<IssueDto> reactToIssue(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                 @Valid @RequestBody ReactToIssueRequest request) throws LabdsofCustomException {
+        final IssueDto response = issueService.reactToIssue(request, principal.getAttribute("email"));
+        return ResponseEntity.status(200).body(response);
     }
 
 

@@ -16,4 +16,7 @@ public class IssueDto {
     private List<IssueStatusUpdateDto> issueStatusUpdateList;
     private IssueLocationDto location;
     private String eventName;
+    private int reactions;
+    private boolean userReacted;
+    private boolean userIsOwner;
 }

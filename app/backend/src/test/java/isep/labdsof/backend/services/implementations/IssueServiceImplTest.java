@@ -8,9 +8,12 @@ import isep.labdsof.backend.domain.models.event.EventLocation;
 import isep.labdsof.backend.domain.models.issue.Issue;
 import isep.labdsof.backend.domain.models.issue.IssueLocation;
 import isep.labdsof.backend.domain.models.issue.IssueStatusUpdate;
+import isep.labdsof.backend.domain.models.user.Role;
+import isep.labdsof.backend.domain.models.user.User;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
 import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesResponse;
 import isep.labdsof.backend.repositories.IssueRepository;
+import isep.labdsof.backend.repositories.UserRepository;
 import isep.labdsof.backend.services.EventService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,11 +26,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class IssueServiceImplTest {
@@ -37,6 +50,8 @@ class IssueServiceImplTest {
 
     @Mock
     private IssueRepository issueRepository;
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private IssueServiceImpl issueService;
@@ -57,8 +72,10 @@ class IssueServiceImplTest {
 
         final Event event = new Event();
         when(eventService.getByName(request.eventName)).thenReturn(event);
+        when(userRepository.findUserByEmail("userEmail")).thenReturn(java.util.Optional.of(new User()));
+        when(issueRepository.save(any(Issue.class))).thenReturn(new Issue());
 
-        final AnalyzeIssuesResponse response = issueService.create(request);
+        final AnalyzeIssuesResponse response = issueService.create("userEmail", request);
 
         assertTrue(response.isCreated());
         assertEquals("Issue Created!", response.getMessage());
@@ -70,15 +87,18 @@ class IssueServiceImplTest {
         final String eventName = "Test Event";
         final Event event = new Event();
         event.setName(eventName);
-        event.setLocation(new EventLocation(0.0,0.0, new Address()));
+        event.setLocation(new EventLocation(0.0, 0.0, new Address()));
+        final User user = new User(UUID.randomUUID(), "userEmail", "Test User", List.of(Role.USER));
         final Issue issue = new Issue();
         issue.newStatusUpdate(new IssueStatusUpdate());
         issue.setEvent(event);
         issue.setLocation(new IssueLocation("Test Location"));
+        issue.setReactions(new HashSet<>());
+        issue.setUserReporter(user);
         when(eventService.getByName(eq(eventName))).thenReturn(event);
         when(issueRepository.getIssuesByEvent_Name(eq(eventName))).thenReturn(List.of(issue));
 
-        final List<IssueDto> result = issueService.getIssuesByEventName(eventName);
+        final List<IssueDto> result = issueService.getIssuesByEventName("userEmail", eventName);
 
         assertEquals(1, result.size());
         verify(eventService).getByName(eventName);
@@ -148,8 +168,8 @@ class IssueServiceImplTest {
         assertNotNull(response);
         assertTrue(response.isSimilar());
         assertEquals(1, response.getIssues().size());
-        assertEquals("Past Issue 1", response.getIssues().get(0).getTitle());
-        assertEquals("Description of past issue 1", response.getIssues().get(0).getDescription());
+        assertEquals("Past Issue 1", response.getIssues().getFirst().getTitle());
+        assertEquals("Description of past issue 1", response.getIssues().getFirst().getDescription());
 
         verify(issueRepository, times(1)).getIssueByEvent(mockEvent);
         verify(restTemplate, times(1)).postForEntity(anyString(), any(HttpEntity.class), eq(String.class));

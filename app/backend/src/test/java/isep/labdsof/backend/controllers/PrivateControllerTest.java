@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.server.resource.introspection.OAuth2I
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -47,9 +48,10 @@ public class PrivateControllerTest {
     public void testCreateIssue() throws Exception {
         final CreateIssueRequest request = new CreateIssueRequest();
         final AnalyzeIssuesResponse analyzeIssuesResponse = AnalyzeIssuesResponse.builder().created(true).build();
-        when(issueService.create(request)).thenReturn(analyzeIssuesResponse);
+        when(issueService.create("userEmail", request)).thenReturn(analyzeIssuesResponse);
+        final var principal = new OAuth2IntrospectionAuthenticatedPrincipal("user", Map.of("email", "userEmail"), Collections.emptyList());
 
-        ResponseEntity<AnalyzeIssuesResponse> response = privateController.createIssue(request);
+        ResponseEntity<AnalyzeIssuesResponse> response = privateController.createIssue(principal, request);
 
         assertEquals(201, response.getStatusCode().value());
         assertEquals(analyzeIssuesResponse, response.getBody());
@@ -58,9 +60,11 @@ public class PrivateControllerTest {
     @Test
     public void testGetIssuesByEvent() throws Exception {
         final List<IssueDto> issues = Collections.singletonList(IssueDto.builder().build());
-        when(issueService.getIssuesByEventName("eventName")).thenReturn(issues);
+        when(issueService.getIssuesByEventName("userEmail", "eventName")).thenReturn(issues);
 
-        ResponseEntity<List<IssueDto>> response = privateController.getIssuesByEvent("eventName");
+        final var principal = new OAuth2IntrospectionAuthenticatedPrincipal("user", Map.of("email", "userEmail"), Collections.emptyList());
+
+        ResponseEntity<List<IssueDto>> response = privateController.getIssuesByEvent(principal, "eventName");
 
         assertEquals(201, response.getStatusCode().value());
         assertEquals(issues, response.getBody());

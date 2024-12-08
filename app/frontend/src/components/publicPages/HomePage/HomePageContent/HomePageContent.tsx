@@ -81,7 +81,8 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
   });
 
   return (
-    <div>
+    <div className={styles.HomePageContent}>
+      <h1>Eventos</h1>
       <TableContainer component={Paper} className={styles.tableContainer}>
         <Table className={styles.table}>
           <TableHead className={styles.tableHead}>
@@ -93,18 +94,20 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
                   onClick={() => handleSort("name")}
                   className={styles.tableSortLabel}
                   sx={{
-                    '&.MuiTableSortLabel-root': {
-                        color: 'white',
+                    "&.MuiTableSortLabel-root": {
+                      color: "white",
                     },
-                    '& .MuiTableSortLabel-icon': {
-                        color: 'white !important',
+                    "& .MuiTableSortLabel-icon": {
+                      color: "white !important",
                     },
-                }}
+                  }}
                 >
                   Name
                   {orderBy === "name" && (
                     <span style={visuallyHidden}>
-                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
                     </span>
                   )}
                 </TableSortLabel>
@@ -116,18 +119,20 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
                   onClick={() => handleSort("description")}
                   className={styles.tableSortLabel}
                   sx={{
-                    '&.MuiTableSortLabel-root': {
-                        color: 'white',
+                    "&.MuiTableSortLabel-root": {
+                      color: "white",
                     },
-                    '& .MuiTableSortLabel-icon': {
-                        color: 'white !important',
+                    "& .MuiTableSortLabel-icon": {
+                      color: "white !important",
                     },
-                }}
+                  }}
                 >
                   Description
                   {orderBy === "description" && (
                     <span style={visuallyHidden}>
-                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
                     </span>
                   )}
                 </TableSortLabel>
@@ -139,18 +144,20 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
                   onClick={() => handleSort("startDate")}
                   className={styles.tableSortLabel}
                   sx={{
-                    '&.MuiTableSortLabel-root': {
-                        color: 'white',
+                    "&.MuiTableSortLabel-root": {
+                      color: "white",
                     },
-                    '& .MuiTableSortLabel-icon': {
-                        color: 'white !important',
+                    "& .MuiTableSortLabel-icon": {
+                      color: "white !important",
                     },
-                }}
+                  }}
                 >
                   Start Date
                   {orderBy === "startDate" && (
                     <span style={visuallyHidden}>
-                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
                     </span>
                   )}
                 </TableSortLabel>
@@ -162,18 +169,20 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
                   onClick={() => handleSort("endDate")}
                   className={styles.tableSortLabel}
                   sx={{
-                    '&.MuiTableSortLabel-root': {
-                        color: 'white',
+                    "&.MuiTableSortLabel-root": {
+                      color: "white",
                     },
-                    '& .MuiTableSortLabel-icon': {
-                        color: 'white !important',
+                    "& .MuiTableSortLabel-icon": {
+                      color: "white !important",
                     },
-                }}
+                  }}
                 >
                   End Date
                   {orderBy === "endDate" && (
                     <span style={visuallyHidden}>
-                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
                     </span>
                   )}
                 </TableSortLabel>
@@ -185,18 +194,20 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
                   onClick={() => handleSort("maxParticipants")}
                   className={styles.tableSortLabel}
                   sx={{
-                    '&.MuiTableSortLabel-root': {
-                        color: 'white',
+                    "&.MuiTableSortLabel-root": {
+                      color: "white",
                     },
-                    '& .MuiTableSortLabel-icon': {
-                        color: 'white !important',
+                    "& .MuiTableSortLabel-icon": {
+                      color: "white !important",
                     },
-                }}
+                  }}
                 >
                   Max Participants
                   {orderBy === "maxParticipants" && (
                     <span style={visuallyHidden}>
-                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                      {order === "desc"
+                        ? "sorted descending"
+                        : "sorted ascending"}
                     </span>
                   )}
                 </TableSortLabel>
@@ -204,25 +215,35 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
               <TableCell
                 className={styles.tableHeader}
                 sx={{
-                  '&.MuiTableCell-root': {
-                      color: 'white',
-                  }
-              }}>
-                Location</TableCell>
+                  "&.MuiTableCell-root": {
+                    color: "white",
+                  },
+                }}
+              >
+                Location
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedEvents.map((event, index) => (
-              <TableRow key={event.name} className={styles.tableRow} onClick={() => handleRowClick(event)}>
+            {sortedEvents.map((event, _) => (
+              <TableRow
+                key={event.name}
+                className={styles.tableRow}
+                onClick={() => handleRowClick(event)}
+              >
                 <TableCell className={styles.tableCell}>{event.name}</TableCell>
-                <TableCell className={styles.tableCell}>{event.description}</TableCell>
+                <TableCell className={styles.tableCell}>
+                  {event.description}
+                </TableCell>
                 <TableCell className={styles.tableCell}>
                   {new Date(event.startDate).toLocaleString()}
                 </TableCell>
                 <TableCell className={styles.tableCell}>
                   {new Date(event.endDate).toLocaleString()}
                 </TableCell>
-                <TableCell className={styles.tableCell}>{event.maxParticipants}</TableCell>
+                <TableCell className={styles.tableCell}>
+                  {event.maxParticipants}
+                </TableCell>
                 <TableCell className={styles.tableCell}>
                   {`${event.location.street}, ${event.location.number}, ${event.location.postalCode}`}
                 </TableCell>
@@ -237,7 +258,7 @@ const HomePageContent: React.FC<MyProps> = ({ isLoggedIn }) => {
         onClose={handleCloseDialog}
         isLoggedIn={isLoggedIn}
       />
-      </div>
+    </div>
   );
 };
 

@@ -3,12 +3,14 @@ package isep.labdsof.backend.domain.models.issue;
 
 import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.event.Event;
+import isep.labdsof.backend.domain.models.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IssueTest {
 
@@ -23,7 +25,7 @@ class IssueTest {
 
     @BeforeEach
     void setUp() throws LabdsofCustomException {
-        issue = new Issue(title, description, location, event);
+        issue = new Issue(new User(), title, description, location, event);
     }
 
     @Test

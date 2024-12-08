@@ -65,6 +65,8 @@
   border-style: solid;
   border-width: 3px;
   background-color: #dadce6;
-  min-height: 500px;
   
+  max-width: calc(100% - 40px);
+  margin: 20px auto;
+  margin-top: 0;
 }

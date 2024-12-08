@@ -114,6 +114,9 @@ interface issue {
   issueStatusUpdateList: issueStatusUpdate[];
   location: issueLocation;
   eventName: string;
+  reactions: number;
+  userReacted: boolean;
+  userIsOwner: boolean;
 }
 
 type userProfileResponse = {
