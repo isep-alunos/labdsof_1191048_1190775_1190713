@@ -65,15 +65,16 @@
 }
 
 .IssueCard button {
-  background-color: #007bff;
+  background-color: #00438a;
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
   margin-right: 5px;
+  max-height: 26px;
 }
 
 .IssueCard button:hover {
-  background-color: #0056b3;
+  background-color: #005ec2;
 }
