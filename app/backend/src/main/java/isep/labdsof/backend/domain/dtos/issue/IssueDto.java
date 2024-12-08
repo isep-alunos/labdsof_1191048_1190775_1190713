@@ -19,4 +19,5 @@ public class IssueDto {
     private int reactions;
     private boolean userReacted;
     private boolean userIsOwner;
+    private String eventWorkerAssigned;
 }

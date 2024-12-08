@@ -72,6 +72,15 @@
   cursor: not-allowed;
 }
 
+.StatusButton {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin: 0 5px;
+  border: none;
+  outline: none;
+}
+
 .DialogContent p {
   margin: 10px 0;
   font-size: 1em;

@@ -7,10 +7,14 @@ import isep.labdsof.backend.domain.models.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
+@Data
 public class IssueStatusUpdate extends BaseEntity {
 
     private LocalDateTime updateTime;

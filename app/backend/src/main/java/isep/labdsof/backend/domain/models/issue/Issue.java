@@ -8,12 +8,12 @@ import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -34,19 +34,20 @@ public class Issue extends BaseEntity {
     private User userReporter;
 
     private LocalDateTime creationDate;
-    @Getter
     private String title;
-    @Getter
     private String description;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<IssueStatusUpdate> issueStatusUpdateList;
     private IssueLocation location;
     @ManyToOne
     private Event event;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> reactions;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User eventWorkerAssigned;
 
     public Issue(User user, String title, String description, IssueLocation location, Event event) throws LabdsofCustomException {
         setUserReporter(user);
@@ -138,6 +139,7 @@ public class Issue extends BaseEntity {
                 .reactions(reactions.size())
                 .userReacted(reactions.stream().anyMatch(u -> u.getEmail().equals(userEmail)))
                 .userIsOwner(userReporter.getEmail().equals(userEmail))
+                .eventWorkerAssigned(eventWorkerAssigned != null ? eventWorkerAssigned.getNome() : null)
                 .build();
     }
 
@@ -149,5 +151,15 @@ public class Issue extends BaseEntity {
             throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "User already reacted to this issue");
         }
         reactions.add(user);
+    }
+
+    public void addIssueStatusUpdate(final IssueStatusUpdate issueStatusUpdate) throws LabdsofCustomException {
+        if (issueStatusUpdate == null) {
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Invalid issue status update");
+        }
+        if (issueStatusUpdateList == null) {
+            issueStatusUpdateList = new ArrayList<>();
+        }
+        issueStatusUpdateList.add(issueStatusUpdate);
     }
 }

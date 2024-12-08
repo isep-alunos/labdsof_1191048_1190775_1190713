@@ -9,6 +9,7 @@ import isep.labdsof.backend.domain.models.user.User;
 import lombok.Getter;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,8 +27,9 @@ public class Event extends BaseEntity {
     private LocalDateTime endDate;
     private Integer maxParticipants;
     private String eventWebsite;
+    @Setter
     private EventLocation location;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<User> eventWorkers;
 
     private static final String URL_REGEX = "^(https?://)?" + // Optional HTTP or HTTPS
@@ -35,8 +37,8 @@ public class Event extends BaseEntity {
             "(:\\d+)?(/.*)?$"; // Optional port and path
 
     public Event(final String name, final String description, final LocalDateTime startDate,
-            final LocalDateTime endDate, final Integer maxParticipants, final String eventWebsite,
-            final EventLocation location, final List<User> ewList) throws LabdsofCustomException {
+                 final LocalDateTime endDate, final Integer maxParticipants, final String eventWebsite,
+                 final EventLocation location, final List<User> ewList) throws LabdsofCustomException {
         setName(name);
         setDescription(description);
         setDateRange(startDate, endDate);
@@ -100,10 +102,6 @@ public class Event extends BaseEntity {
         }
 
         this.eventWebsite = url.trim();
-    }
-
-    public void setLocation(EventLocation location) {
-        this.location = location;
     }
 
     private void setEventWorkerList(List<User> ewList) throws LabdsofCustomException {
