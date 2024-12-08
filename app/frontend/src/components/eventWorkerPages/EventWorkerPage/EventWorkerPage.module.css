@@ -133,3 +133,100 @@ button:disabled {
 .EventWorkerPage .buttonGroup {
   margin-bottom: 20px;
 }
+
+.EventSection {
+  margin-bottom: 20px;
+}
+
+.EventSection h2 {
+  cursor: pointer;
+}
+
+.KanbanBoard {
+  display: flex;
+  gap: 20px;
+}
+
+.Column {
+  flex: 1;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.Column h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.IssueCard {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.IssueCard h4 {
+  margin: 0 0 10px 0;
+}
+
+.IssueCard p {
+  margin: 0 0 10px 0;
+}
+
+.IssueCard button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.IssueCard button:hover {
+  background-color: #0056b3;
+}
+
+.EventsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.EventCard {
+  position: relative;
+  flex: 1 1 calc(33.333% - 20px);
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.EventCard:hover {
+  transform: scale(1.05);
+}
+
+.PendingIssuesCount {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.PendingIssuesCountRed {
+  background-color: red;
+}
+
+.PendingIssuesCountGray {
+  background-color: lightgray;
+  color: darkgray;
+}
