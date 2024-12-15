@@ -16,6 +16,7 @@ import CreateEvent from "./components/eventManagerPages/CreateEventPage/CreateEv
 import { ROUTES } from "./routes";
 import EventIssuesPage from "./components/publicPages/HomePage/EventIssuesPage/EventIssuesPage";
 import CreateIssuePage from "./components/publicPages/HomePage/CreateIssuePage/CreateIssuePage";
+import EventPage from "./components/eventWorkerPages/EventPage/EventPage";
 
 export const NON_TOP_NAV_BAR_ID = "non-top-nav-bar-id-12321";
 
@@ -142,6 +143,14 @@ function App() {
             element={
               <div>
                 <EventWorkerPage />
+              </div>
+            }
+          />
+          <Route
+            path={ROUTES.EVENT_WORKER_EVENT_PAGE}
+            element={
+              <div>
+                <EventPage />
               </div>
             }
           />

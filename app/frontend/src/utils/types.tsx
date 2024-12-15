@@ -117,6 +117,7 @@ interface issue {
   reactions: number;
   userReacted: boolean;
   userIsOwner: boolean;
+  eventWorkerAssigned: string | null;
 }
 
 type userProfileResponse = {
@@ -127,6 +128,18 @@ type userProfileResponse = {
   attendedEvents: eventDto[];
   totalPointsAccumulated: number;
   pointsAvailable: number;
+};
+
+type getIssuesWorkerResponse = {
+  event: eventDto;
+  issues: issue[];
+}[];
+
+type updateIssueRequest = {
+  issueId: string;
+  status: issueStatus;
+  description: string;
+  assigned: boolean;
 };
 
 export {
@@ -147,4 +160,6 @@ export {
   issueStatusUpdate,
   createIssueDto,
   userProfileResponse,
+  getIssuesWorkerResponse,
+  updateIssueRequest,
 };

@@ -3,6 +3,7 @@ export const ROUTES = {
     LOGIN: "/login",
     PRIVATE_USER: "/private",
     EVENT_WORKER: "/event-worker",
+    EVENT_WORKER_EVENT_PAGE: "/event-worker/:eventName",
     EVENT_MANAGER: "/event-manager",
     CREATE_EVENT: "/event-manager/create-event",
     ADMIN: "/admin",

@@ -67,6 +67,10 @@ public class UserProfile extends BaseEntity {
         addPoints(2);
     }
 
+    public void addPointsForIssueResolved() {
+        addPoints(3);
+    }
+
     public boolean addAttendedEvent(Event event) throws LabdsofCustomException {
         if (attendedEvents.contains(event))
             throw new LabdsofCustomException(AppCustomExceptions.EVENT_ALREADY_ATTENDED, "This event is already in your attended list");
@@ -81,4 +85,6 @@ public class UserProfile extends BaseEntity {
                 .pointsAvailable(pointsAvailable)
                 .build();
     }
+
+
 }
