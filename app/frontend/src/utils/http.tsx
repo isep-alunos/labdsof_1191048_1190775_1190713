@@ -10,6 +10,11 @@ export default class HttpService {
 
     return responseObject(response);
   }
+  async getPublicImage(path: string): Promise<httpResponse<Blob>> {
+    const response = await fetch(apiUrl + path);
+
+    return { code: response.status, body: await response.blob() };
+  }
 
   async getPrivate<T>(path: string): Promise<httpResponse<T>> {
     await this.checkTokenExpiration();
@@ -20,15 +25,23 @@ export default class HttpService {
     return responseObject(response);
   }
 
-  async postPrivate<T>(path: string, body = {}): Promise<httpResponse<T>> {
+  async postPrivate<T>(
+    path: string,
+    body: any,
+    contentType = "application/json"
+  ): Promise<httpResponse<T>> {
     await this.checkTokenExpiration();
+    const headers: HeadersInit = {
+      Authorization: "Bearer " + cookies.get("token"),
+    };
+    if (contentType !== "multipart/form-data") {
+      headers["Content-Type"] = contentType;
+    }
+
     const response = await fetch(apiUrl + path, {
       method: "POST",
-      headers: {
-        Authorization: "Bearer " + cookies.get("token"),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
+      headers,
+      body: contentType === "application/json" ? JSON.stringify(body) : body,
     });
 
     return responseObject(response);

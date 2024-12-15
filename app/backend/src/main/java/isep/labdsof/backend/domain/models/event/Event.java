@@ -6,17 +6,23 @@ import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.BaseEntity;
 import isep.labdsof.backend.domain.models.user.Role;
 import isep.labdsof.backend.domain.models.user.User;
-import lombok.Getter;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToMany;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Getter
+@Data
 @NoArgsConstructor
 public class Event extends BaseEntity {
 
@@ -27,10 +33,10 @@ public class Event extends BaseEntity {
     private LocalDateTime endDate;
     private Integer maxParticipants;
     private String eventWebsite;
-    @Setter
     private EventLocation location;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<User> eventWorkers;
+    private EventMap eventMap;
 
     private static final String URL_REGEX = "^(https?://)?" + // Optional HTTP or HTTPS
             "([\\w-]+\\.)+[\\w-]+" + // Domain name
@@ -38,7 +44,7 @@ public class Event extends BaseEntity {
 
     public Event(final String name, final String description, final LocalDateTime startDate,
                  final LocalDateTime endDate, final Integer maxParticipants, final String eventWebsite,
-                 final EventLocation location, final List<User> ewList) throws LabdsofCustomException {
+                 final EventLocation location, final List<User> ewList, @Nullable final MultipartFile mapImage) throws LabdsofCustomException {
         setName(name);
         setDescription(description);
         setDateRange(startDate, endDate);
@@ -46,6 +52,15 @@ public class Event extends BaseEntity {
         setEventWebsite(eventWebsite);
         setLocation(location);
         setEventWorkerList(ewList);
+        setEventMap(mapImage);
+    }
+
+    public void setEventMap(@Nullable final MultipartFile mapImage) throws LabdsofCustomException {
+        if (mapImage != null) {
+            this.eventMap = new EventMap(mapImage);
+        } else {
+            this.eventMap = null;
+        }
     }
 
     public void setName(String name) throws LabdsofCustomException {

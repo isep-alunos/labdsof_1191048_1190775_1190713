@@ -4,6 +4,7 @@ export const ROUTES = {
     PRIVATE_USER: "/private",
     EVENT_WORKER: "/event-worker",
     EVENT_WORKER_EVENT_PAGE: "/event-worker/:eventName",
+    EVENT_MANAGER_EVENT_PAGE: "/event-manager/event/:eventName",
     EVENT_MANAGER: "/event-manager",
     CREATE_EVENT: "/event-manager/create-event",
     ADMIN: "/admin",

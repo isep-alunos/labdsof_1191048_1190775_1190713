@@ -1,16 +1,19 @@
 .EventManagerPage {
   font-family: Arial, sans-serif;
   padding: 20px;
-  max-width: 900px;
+  max-width: 70%;
   margin: 0 auto;
   padding-top: 6%;
   text-align: center;
 }
 
-.EventManagerPage div {
+.EventManagerPage div.quickOptions {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.EventManagerPage .divider {
+  margin-top: 20px;
 }
 
 .cardLink {
@@ -40,4 +43,17 @@
 .icon {
   font-size: 40px;
   margin-bottom: 10px;
+}
+
+.EventWidget {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.EventWidget select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
 }

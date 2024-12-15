@@ -133,7 +133,7 @@ const CreateEvent: React.FC = () => {
             .then((data) => {
                 if (data.code === 201) {
                     sendAlert(data.body!);
-                    navigate("/");
+                    navigate(`/event-worker/event/${encodeURIComponent(name)}`);
                 } else {
                     sendAlert(data.body!);
                 }

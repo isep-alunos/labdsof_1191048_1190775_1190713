@@ -22,6 +22,7 @@ import isep.labdsof.backend.services.UserService;
 import isep.labdsof.backend.utils.LocationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,27 +39,27 @@ public class EventServiceImpl implements EventService {
     private final UserProfileRepository userProfileRepository;
 
     @Override
-    public void create(CreateEventRequest createEventRequest) throws LabdsofCustomException {
+    public void create(final CreateEventRequest createEventRequest) throws LabdsofCustomException {
 
-        Address address = new Address(
+        final Address address = new Address(
                 createEventRequest.getStreet(),
                 createEventRequest.getNumber(),
                 createEventRequest.getPostalCode()
         );
 
-        EventLocation location = new EventLocation(
+        final EventLocation location = new EventLocation(
                 createEventRequest.getLatitude(),
                 createEventRequest.getLongitude(),
                 address
         );
 
-        List<User> ewList = new ArrayList<>();
+        final List<User> ewList = new ArrayList<>();
 
-        for (UUID id : createEventRequest.getEventWorkers()) {
+        for (final UUID id : createEventRequest.getEventWorkers()) {
             ewList.add(userService.getById(id));
         }
 
-        Event e = new Event(
+        final Event e = new Event(
                 createEventRequest.getName(),
                 createEventRequest.getDescription(),
                 createEventRequest.getStartDate(),
@@ -66,7 +67,8 @@ public class EventServiceImpl implements EventService {
                 createEventRequest.getMaxParticipants(),
                 createEventRequest.getEventWebsite(),
                 location,
-                ewList
+                ewList,
+                null
         );
 
         eventRepository.save(e);
@@ -116,14 +118,39 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event getEvent(UUID id) throws LabdsofCustomException {
         Optional<Event> eventOpt = eventRepository.findById(id);
-        if (!eventOpt.isPresent()) {
+        if (eventOpt.isEmpty()) {
             throw new LabdsofCustomException(AppCustomExceptions.ENTITY_NOT_FOUND, "Event not found");
         }
         return eventOpt.get();
     }
 
     @Override
-    public Event getByName(String name) throws LabdsofCustomException {
+    public byte[] getEventMap(final String eventName) throws LabdsofCustomException {
+        final Event event = getByName(eventName);
+        if (event.getEventMap() == null) {
+            return null;
+        }
+        return event.getEventMap().getImageBytes();
+    }
+
+    @Override
+    public MessageDto uploadEventMap(final String eventName, final MultipartFile multipartImage) throws LabdsofCustomException {
+        final Event event = eventRepository.findByName(eventName)
+                .orElseThrow(() -> new LabdsofCustomException(AppCustomExceptions.EVENT_NOT_FOUND, "Event with name " + eventName + " not found"));
+
+        event.setEventMap(multipartImage);
+        eventRepository.save(event);
+        return new MessageDto("Event map uploaded successfully");
+    }
+
+    @Override
+    public EventDto getEventByName(final String eventName) throws LabdsofCustomException {
+        final Event event = getByName(eventName);
+        return event.toDto();
+    }
+
+    @Override
+    public Event getByName(final String name) throws LabdsofCustomException {
         final Optional<Event> eventOpt = eventRepository.findByName(name);
         if (eventOpt.isEmpty()) {
             throw new LabdsofCustomException(AppCustomExceptions.EVENT_NOT_FOUND, "Event with name " + name + " not found");

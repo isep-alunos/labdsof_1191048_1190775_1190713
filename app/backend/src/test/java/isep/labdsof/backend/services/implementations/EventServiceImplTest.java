@@ -89,8 +89,8 @@ class EventServiceImplTest {
         final List<EventWorkersDto> result = eventService.getEventWorkers();
 
         assertEquals(1, result.size());
-        assertEquals("Test User", result.get(0).getName());
-        assertEquals("test@example.com", result.get(0).getEmail());
+        assertEquals("Test User", result.getFirst().getName());
+        assertEquals("test@example.com", result.getFirst().getEmail());
         verify(userService).getEventWorkers();
     }
 
@@ -124,7 +124,7 @@ class EventServiceImplTest {
                 LocalDateTime.now().plusDays(2), 10, "http://test.com",
                 new EventLocation(0.0, 0.0, new Address("Test Street", 123, "4100-000")),
                 List.of(new User(UUID.randomUUID(), "email@email.com", "Test User",
-                        List.of(Role.USER, Role.EVENT_WORKER))));
+                        List.of(Role.USER, Role.EVENT_WORKER))), null);
         when(eventRepository.findAll()).thenReturn(List.of(event));
 
         final List<EventDto> result = eventService.getEvents();

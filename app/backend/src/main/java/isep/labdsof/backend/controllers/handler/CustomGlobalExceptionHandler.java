@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +48,11 @@ public class CustomGlobalExceptionHandler {
         return new ResponseEntity<>(new MessageDto(ex.getMessage(),
                 ex.getAppCustomExceptions().getMessageCriticality()),
                 ex.getAppCustomExceptions().getHttpStatus());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<MessageDto> handleMaxSizeException(final MaxUploadSizeExceededException exc) {
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(new MessageDto("File size exceeds the maximum limit! Size limit is 10MB, received: " + exc.getHeaders().getContentLength() / 1000000 + " MegaBytes", MessageCriticality.ERROR));
     }
 
 }

@@ -4,6 +4,7 @@ import AlertComponent from "./AlertComponent";
 
 type AlertContextType = {
   addAlert: (alert: messageDto) => void;
+  removeAlert: (index: number) => void;
 };
 
 export const AlertContext = createContext<AlertContextType | undefined>(
@@ -28,10 +29,14 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }, 30000);
   }, []);
 
+  const removeAlert = useCallback((index: number) => {
+    setAlerts((prevAlerts) => prevAlerts.filter((_, i) => i !== index));
+  }, []);
+
   return (
-    <AlertContext.Provider value={{ addAlert }}>
+    <AlertContext.Provider value={{ addAlert, removeAlert }}>
       {children}
-      <AlertComponent alerts={alerts} />
+      <AlertComponent alerts={alerts} removeAlert={removeAlert} />
     </AlertContext.Provider>
   );
 };
