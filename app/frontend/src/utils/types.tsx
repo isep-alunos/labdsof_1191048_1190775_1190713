@@ -118,6 +118,9 @@ interface issue {
   userReacted: boolean;
   userIsOwner: boolean;
   eventWorkerAssigned: string | null;
+  eventWorkerPraises: number;
+  userPraised: boolean;
+  userIsWorker: boolean;
 }
 
 type userProfileResponse = {

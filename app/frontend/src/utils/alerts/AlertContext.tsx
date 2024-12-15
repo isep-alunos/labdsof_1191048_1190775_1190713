@@ -25,7 +25,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setAlerts((prevAlerts) => [...prevAlerts, alert]);
     setTimeout(() => {
       setAlerts((prevAlerts) => prevAlerts.filter((a) => a !== alert));
-    }, 30000);
+    }, 10000);
   }, []);
 
   return (
