@@ -46,6 +46,9 @@ public class Issue extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<User> reactions;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<User> praises;
+
     @ManyToOne(fetch = FetchType.EAGER)
     private User eventWorkerAssigned;
 
@@ -62,6 +65,7 @@ public class Issue extends BaseEntity {
         newStatusUpdate(initialStatus);
         setEvent(event);
         setReactions();
+        setPraises();
     }
 
     public void setUserReporter(final User userReporter) throws LabdsofCustomException {
@@ -117,6 +121,15 @@ public class Issue extends BaseEntity {
         }
     }
 
+    @SafeVarargs
+    public final void setPraises(final Set<User>... praises) {
+        if (praises == null || praises.length == 0) {
+            this.praises = new HashSet<>();
+        } else {
+            this.praises = new HashSet<>(praises[0]);
+        }
+    }
+
     public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
         map.put("id", getId() != null ? getId().toString() : null);
@@ -140,6 +153,9 @@ public class Issue extends BaseEntity {
                 .userReacted(reactions.stream().anyMatch(u -> u.getEmail().equals(userEmail)))
                 .userIsOwner(userReporter.getEmail().equals(userEmail))
                 .eventWorkerAssigned(eventWorkerAssigned != null ? eventWorkerAssigned.getNome() : null)
+                .eventWorkerPraises(praises.size())
+                .userPraised(praises.stream().anyMatch(u -> u.getEmail().equals(userEmail)))
+                .userIsWorker(eventWorkerAssigned != null && eventWorkerAssigned.getEmail().equals(userEmail))
                 .build();
     }
 
@@ -151,6 +167,16 @@ public class Issue extends BaseEntity {
             throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "User already reacted to this issue");
         }
         reactions.add(user);
+    }
+
+    public void addPraise(final User user) throws LabdsofCustomException {
+        if (praises == null) {
+            praises = new HashSet<>();
+        }
+        if (praises.contains(user)) {
+            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "User already praised to this issue's worker");
+        }
+        praises.add(user);
     }
 
     public void addIssueStatusUpdate(final IssueStatusUpdate issueStatusUpdate) throws LabdsofCustomException {

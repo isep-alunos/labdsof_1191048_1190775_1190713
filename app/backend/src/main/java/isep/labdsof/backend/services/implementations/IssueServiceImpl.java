@@ -119,6 +119,25 @@ public class IssueServiceImpl implements IssueService {
 
         return issue.toDto(email);
     }
+    @Override
+    public IssueDto praiseToIssue(final ReactToIssueRequest request, final String email) throws LabdsofCustomException {
+        final Issue issue = issueRepository.findById(UUID.fromString(request.getIssueId())).orElseThrow(() -> new LabdsofCustomException(ISSUE_NOT_FOUND));
+        final User user = userRepository.findUserByEmail(email).orElseThrow(() -> new LabdsofCustomException(USER_NOT_FOUND));
+
+        issue.addPraise(user);
+
+        try {
+            final UserProfile userReporterProfile = userProfileRepository.findByUserId(issue.getEventWorkerAssigned().getId()).orElseThrow(() -> new LabdsofCustomException(USER_NOT_FOUND));
+            userReporterProfile.addPointsForPraise();
+            userProfileRepository.save(userReporterProfile);
+        } catch (Exception e) {
+            log.error("Error adding points to user reporter", e);
+        }
+
+        issueRepository.save(issue);
+
+        return issue.toDto(email);
+    }
 
     // AI validation
 

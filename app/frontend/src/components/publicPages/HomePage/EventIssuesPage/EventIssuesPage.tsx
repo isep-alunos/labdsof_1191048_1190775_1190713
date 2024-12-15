@@ -17,6 +17,7 @@ import {
 import { criticality, issue } from "../../../../utils/types";
 import HttpService from "../../../../utils/http";
 import { useAlert } from "../../../../utils/alerts/AlertContext";
+import { Info as InfoIcon } from "@mui/icons-material";
 
 const EventIssuesPage: React.FC = () => {
   const { eventName } = useParams<{ eventName: string }>();
@@ -154,6 +155,28 @@ const EventIssuesPage: React.FC = () => {
     }
   };
 
+  const handlePraise = async (issueId: string) => {
+    try {
+      const http = new HttpService();
+      const response = await http.putPrivate<issue>(
+        `/private/eventIssues/praise`,
+        { issueId: issueId }
+      );
+      if (response.body) {
+        setIssues((prevIssues) =>
+          prevIssues.map((issue) =>
+            issue.id === issueId ? { ...issue, ...response.body } : issue
+          )
+        );
+      }
+    } catch (error) {
+      alert.addAlert({
+        message: "Failed to praise the event worker.",
+        criticality: criticality.ERROR,
+      });
+    }
+  };
+
   return (
     <div className={styles.EventIssuesPage}>
       <h1>{eventName ? `${eventName}'s Issues` : "Event Issues"}</h1>
@@ -256,19 +279,23 @@ const EventIssuesPage: React.FC = () => {
       <table className={styles.IssuesTable}>
         <thead>
           <tr>
+            <th></th>
             <th>Title</th>
             <th>Status</th>
             <th>Creation Date</th>
             <th>Reactions</th>
+            <th>Event Worker</th>
           </tr>
         </thead>
         <tbody>
           {sortedIssues.map((issue) => (
-            <tr
-              key={issue.id}
-              onClick={() => handleIssueClick(issue)}
-              className={styles.TableRow}
-            >
+            <tr key={issue.id} className={styles.TableRow}>
+              <td>
+                <InfoIcon
+                  className={styles.InfoIcon}
+                  onClick={() => handleIssueClick(issue)}
+                />
+              </td>
               <td>{issue.title}</td>
               <td>
                 <strong
@@ -311,6 +338,37 @@ const EventIssuesPage: React.FC = () => {
                     : "React"}
                 </button>
               </td>
+              <td>
+                {issue.eventWorkerAssigned ? (
+                  issue.issueStatusUpdateList[
+                    issue.issueStatusUpdateList.length - 1
+                  ]?.status === "RESOLVED" ? (
+                    <>
+                      {issue.eventWorkerAssigned}
+                      <br />
+                      Praises: {issue.eventWorkerPraises ?? 0}
+                      <br />
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePraise(issue.id);
+                        }}
+                        disabled={issue.userPraised || issue.userIsWorker}
+                      >
+                        {issue.userPraised
+                          ? "Praised"
+                          : issue.userIsWorker
+                          ? "Can't praise"
+                          : "Praise"}
+                      </button>
+                    </>
+                  ) : (
+                    issue.eventWorkerAssigned
+                  )
+                ) : (
+                  "Not assigned"
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -341,8 +399,19 @@ const EventIssuesPage: React.FC = () => {
             <h4>Status History:</h4>
             <ul>
               {selectedIssue.issueStatusUpdateList.map((update) => (
-                <li>
-                  {update.status} - {update.description} (
+                <li key={update.updateTime}>
+                  <strong
+                    style={{
+                      color: getStatusLabelStyles(update.status).color,
+                      backgroundColor: getStatusLabelStyles(update.status)
+                        .backgroundColor,
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {update.status}
+                  </strong>{" "}
+                  - {update.description} (
                   {new Date(update.updateTime).toLocaleString()})
                 </li>
               ))}

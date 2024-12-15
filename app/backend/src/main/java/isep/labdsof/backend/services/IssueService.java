@@ -17,4 +17,5 @@ public interface IssueService {
     List<IssueDto> getIssuesByEventName(String userEmail, String eventName) throws LabdsofCustomException;
 
     IssueDto reactToIssue(@Valid ReactToIssueRequest request, String email) throws LabdsofCustomException;
+    IssueDto praiseToIssue(@Valid ReactToIssueRequest request, String email) throws LabdsofCustomException;
 }

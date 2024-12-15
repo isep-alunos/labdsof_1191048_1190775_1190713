@@ -71,6 +71,10 @@ public class UserProfile extends BaseEntity {
         addPoints(3);
     }
 
+    public void addPointsForPraise() {
+        addPoints(2);
+    }
+
     public boolean addAttendedEvent(Event event) throws LabdsofCustomException {
         if (attendedEvents.contains(event))
             throw new LabdsofCustomException(AppCustomExceptions.EVENT_ALREADY_ATTENDED, "This event is already in your attended list");

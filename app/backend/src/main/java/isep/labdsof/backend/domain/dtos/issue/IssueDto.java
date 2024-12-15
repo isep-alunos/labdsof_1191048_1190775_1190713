@@ -20,4 +20,7 @@ public class IssueDto {
     private boolean userReacted;
     private boolean userIsOwner;
     private String eventWorkerAssigned;
+    private int eventWorkerPraises;
+    private boolean userPraised;
+    private boolean userIsWorker;
 }

@@ -37,8 +37,8 @@ public class PrivateController {
     private final UserProfileService userProfileService;
 
     @PutMapping("/markPresence")
-    public ResponseEntity<StatusResponse> markPresenceAtEvent(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal,
-                                                              @Valid @RequestBody MarkPresenceAtEventRequest request) throws LabdsofCustomException {
+    public ResponseEntity<StatusResponse> markPresenceAtEvent(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                              @Valid @RequestBody final MarkPresenceAtEventRequest request) throws LabdsofCustomException {
         final StatusResponse response = eventService.markPresenceAtEvent(request, principal.getAttribute("email"));
         if (response.isSuccess())
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -47,36 +47,41 @@ public class PrivateController {
 
 
     @PostMapping("/create-issue")
-    public ResponseEntity<AnalyzeIssuesResponse> createIssue(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal,
-                                                             @RequestBody CreateIssueRequest request) throws LabdsofCustomException {
+    public ResponseEntity<AnalyzeIssuesResponse> createIssue(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                             @RequestBody final CreateIssueRequest request) throws LabdsofCustomException {
         AnalyzeIssuesResponse response = issueService.create(principal.getAttribute("email"), request);
         if (response.isCreated()) {
             return ResponseEntity.status(201).body(response);
         } else {
-            return ResponseEntity.status(200).body(response);
+            return ResponseEntity.ok(response);
         }
     }
 
     @GetMapping("/eventIssues/{eventName}")
-    public ResponseEntity<List<IssueDto>> getIssuesByEvent(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal,
-                                                           @PathVariable String eventName) throws LabdsofCustomException {
+    public ResponseEntity<List<IssueDto>> getIssuesByEvent(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                           @PathVariable final String eventName) throws LabdsofCustomException {
         final List<IssueDto> result = issueService.getIssuesByEventName(principal.getAttribute("email"), eventName);
 
         return ResponseEntity.status(201).body(result);
     }
 
     @GetMapping("/user/profile")
-    public ResponseEntity<UserProfileDto> getUserProfile(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal) throws LabdsofCustomException {
+    public ResponseEntity<UserProfileDto> getUserProfile(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal) throws LabdsofCustomException {
         final UserProfileDto userProfile = userProfileService.getByUserEmail(principal.getAttribute("email")).toDto();
         return ResponseEntity.ok(userProfile);
     }
 
     @PutMapping("/eventIssues/react")
-    public ResponseEntity<IssueDto> reactToIssue(@AuthenticationPrincipal OAuth2IntrospectionAuthenticatedPrincipal principal,
-                                                 @Valid @RequestBody ReactToIssueRequest request) throws LabdsofCustomException {
+    public ResponseEntity<IssueDto> reactToIssue(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                 @Valid @RequestBody final ReactToIssueRequest request) throws LabdsofCustomException {
         final IssueDto response = issueService.reactToIssue(request, principal.getAttribute("email"));
-        return ResponseEntity.status(200).body(response);
+        return ResponseEntity.ok(response);
     }
 
-
+    @PutMapping("/eventIssues/praise")
+    public ResponseEntity<IssueDto> praiseToIssue(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                  @Valid @RequestBody final ReactToIssueRequest request) throws LabdsofCustomException {
+        final IssueDto response = issueService.praiseToIssue(request, principal.getAttribute("email"));
+        return ResponseEntity.ok(response);
+    }
 }
