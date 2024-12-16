@@ -11,5 +11,6 @@ export const ROUTES = {
     APPROVE_USERS: "/admin/approve-users",
     EVENT_ISSUES: "/events/:eventName/issues",
     CREATE_ISSUE: "/events/:eventName/report-issue",
+    LEADERBOARD: "/leaderboard",
     LOST: "*"
 };

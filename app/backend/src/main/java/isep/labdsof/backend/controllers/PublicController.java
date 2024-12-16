@@ -3,7 +3,9 @@ package isep.labdsof.backend.controllers;
 
 import isep.labdsof.backend.domain.dtos.event.EventDto;
 import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
+import isep.labdsof.backend.domain.responses.LeaderboardResponse;
 import isep.labdsof.backend.services.EventService;
+import isep.labdsof.backend.services.UserProfileService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.core.io.ByteArrayResource;
@@ -21,6 +23,7 @@ import java.util.List;
 public class PublicController {
 
     private final EventService eventService;
+    private final UserProfileService userProfileService;
 
     @GetMapping("/events")
     public ResponseEntity<List<EventDto>> getEvents() {
@@ -41,5 +44,10 @@ public class PublicController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(new ByteArrayResource(result));
+    }
+
+    @GetMapping("/leaderboard")
+    public ResponseEntity<LeaderboardResponse> getLeaderboard() {
+        return ResponseEntity.ok(userProfileService.getLeaderboard());
     }
 }

@@ -1,0 +1,65 @@
+.LeaderboardPage {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 70%;
+    margin: 0 auto;
+    padding-top: 6%;
+    text-align: center;
+  }
+  
+  .LeaderboardPage h1 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .LeaderboardPage div.filterButtons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .LeaderboardPage .tableContainer {
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .LeaderboardPage table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .LeaderboardPage th,
+  .LeaderboardPage td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .LeaderboardPage th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+  
+  .LeaderboardPage td {
+    background-color: #fff;
+  }
+  
+  .LeaderboardPage tr:hover td {
+    background-color: #f9f9f9;
+  }
+  
+  .LeaderboardPage .filterButtons button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .LeaderboardPage .filterButtons button:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
