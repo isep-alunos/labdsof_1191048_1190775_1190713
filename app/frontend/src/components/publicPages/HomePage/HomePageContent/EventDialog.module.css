@@ -1,0 +1,39 @@
+.EventDetails {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.DetailRow {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.Label {
+  flex: 1;
+  font-weight: bold;
+}
+
+.Value {
+  flex: 2;
+  text-align: left;
+}
+
+.LocationMap, .EventMap {
+  margin-top: 20px;
+}
+
+.MapContainer {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.MapImage {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

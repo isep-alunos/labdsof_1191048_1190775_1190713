@@ -1,8 +1,11 @@
 package isep.labdsof.backend.domain.exceptions;
 
+import isep.labdsof.backend.domain.models.event.EventMap;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+
+import java.util.stream.Collectors;
 
 @Getter
 public enum AppCustomExceptions {
@@ -14,7 +17,10 @@ public enum AppCustomExceptions {
     ISSUE_INVALID_FIELD("Invalid field", MessageCriticality.ERROR, HttpStatus.BAD_REQUEST),
     MARK_PRESENCE_NOT_NEAR_EVENT("User is not near the event", MessageCriticality.ERROR, HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND("User not found", MessageCriticality.ERROR, HttpStatus.NOT_FOUND),
-    ISSUE_NOT_FOUND("Issue not found", MessageCriticality.ERROR, HttpStatus.NOT_FOUND);
+    ISSUE_NOT_FOUND("Issue not found", MessageCriticality.ERROR, HttpStatus.NOT_FOUND),
+    ERROR_COMPRESSING_IMAGE("Error compressing image", MessageCriticality.ERROR, HttpStatus.BAD_REQUEST),
+    ERROR_DECOMPRESSING_IMAGE("Error decompressing image", MessageCriticality.ERROR, HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_IMAGE_TYPE("Invalid image type. Image types allowed: " + EventMap.ALLOWED_IMAGE_TYPES.stream().map(s -> s.replace("image/", ".")).collect(Collectors.joining(", ")), MessageCriticality.ERROR, HttpStatus.BAD_REQUEST);
 
 
     private final String defaultMessage;

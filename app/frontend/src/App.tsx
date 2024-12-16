@@ -17,6 +17,7 @@ import { ROUTES } from "./routes";
 import EventIssuesPage from "./components/publicPages/HomePage/EventIssuesPage/EventIssuesPage";
 import CreateIssuePage from "./components/publicPages/HomePage/CreateIssuePage/CreateIssuePage";
 import EventPage from "./components/eventWorkerPages/EventPage/EventPage";
+import EventManagerEventPage from "./components/eventManagerPages/EventPage/EventManagerEventPage";
 
 export const NON_TOP_NAV_BAR_ID = "non-top-nav-bar-id-12321";
 
@@ -29,7 +30,7 @@ function App() {
       zoomLevelWidth < zoomLevelHeight ? zoomLevelHeight : zoomLevelWidth;
   else
     zoomLevel =
-      zoomLevelWidth < zoomLevelHeight ? zoomLevelWidth : zoomLevelHeight;
+      zoomLevelWidth < window.innerHeight ? zoomLevelWidth : zoomLevelHeight;
   document.body.style.setProperty("-moz-transform", `scale(${zoomLevel})`);
   document.body.style.setProperty("zoom", `${zoomLevel * 100}%`);
 
@@ -177,6 +178,14 @@ function App() {
             element={
               <div>
                 <CreateEvent />
+              </div>
+            }
+          />
+          <Route
+            path={ROUTES.EVENT_MANAGER_EVENT_PAGE}
+            element={
+              <div>
+                <EventManagerEventPage />
               </div>
             }
           />
