@@ -63,7 +63,9 @@ public class EventWorkerServiceImpl implements EventWorkerService {
             issue.setEventWorkerAssigned(user);
         } else if (!request.isAssigned() && (issue.getEventWorkerAssigned() != null && issue.getEventWorkerAssigned().getEmail().equals(email))) {
             issue.setEventWorkerAssigned(null);
-            issue.addIssueStatusUpdate(new IssueStatusUpdate(now, "Unsigned by user itself", issue.getIssueStatusUpdateList().getLast().getStatus()));
+            issue.addIssueStatusUpdate(new IssueStatusUpdate(now, "Unsigned by user itself", issue.getIssueStatusUpdateList()
+                    .get(issue.getIssueStatusUpdateList().size() - 1)
+                    .getStatus()));
         }
 
         if (request.isAssigned() && issue.getEventWorkerAssigned() != null && issue.getEventWorkerAssigned().getEmail().equals(email)) {
@@ -79,7 +81,8 @@ public class EventWorkerServiceImpl implements EventWorkerService {
     }
 
     private void addPointsIfIssueIsResolved(final Issue issue) {
-        if (issue.getIssueStatusUpdateList().getLast().getStatus() == IssueStatus.RESOLVED) {
+        List<IssueStatusUpdate> list = issue.getIssueStatusUpdateList();
+        if (list.get(list.size() - 1).getStatus() == IssueStatus.RESOLVED) {
             final Optional<UserProfile> userProfile = userProfileRepository.findByUserId(issue.getUserReporter().getId());
             if (userProfile.isEmpty()) {
                 log.error("User profile not found for user: {}. This user should get 3 points", issue.getUserReporter().getEmail());

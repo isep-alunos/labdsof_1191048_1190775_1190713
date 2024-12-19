@@ -52,6 +52,9 @@ public class Issue extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private User eventWorkerAssigned;
 
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<IssueExtraInfo> issueExtraInfo;
+
     public Issue(User user, String title, String description, IssueLocation location, Event event) throws LabdsofCustomException {
         setUserReporter(user);
         LocalDateTime now = LocalDateTime.now();
@@ -187,5 +190,9 @@ public class Issue extends BaseEntity {
             issueStatusUpdateList = new ArrayList<>();
         }
         issueStatusUpdateList.add(issueStatusUpdate);
+    }
+
+    public void setIssueExtraInfo(List<IssueExtraInfo> issueExtraInfo) {
+        this.issueExtraInfo = issueExtraInfo;
     }
 }

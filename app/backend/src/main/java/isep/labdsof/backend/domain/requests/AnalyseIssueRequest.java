@@ -2,17 +2,12 @@ package isep.labdsof.backend.domain.requests;
 
 import lombok.Data;
 
-import java.util.List;
-import java.util.Map;
-
 @Data
-public class CreateIssueRequest {
+public class AnalyseIssueRequest {
 
     public String title;
     public String description;
     public String location;
     public String eventName;
-    private Map<String, String> extraInfo;
-    private List<String> questions;
 
 }

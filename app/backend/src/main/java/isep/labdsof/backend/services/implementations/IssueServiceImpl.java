@@ -4,35 +4,33 @@ import isep.labdsof.backend.domain.dtos.issue.IssueDto;
 import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
 import isep.labdsof.backend.domain.models.event.Event;
 import isep.labdsof.backend.domain.models.issue.Issue;
+import isep.labdsof.backend.domain.models.issue.IssueExtraInfo;
 import isep.labdsof.backend.domain.models.issue.IssueLocation;
 import isep.labdsof.backend.domain.models.user.User;
 import isep.labdsof.backend.domain.models.userProfile.UserProfile;
+import isep.labdsof.backend.domain.requests.AnalyseIssueRequest;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
 import isep.labdsof.backend.domain.requests.ReactToIssueRequest;
-import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesRequest;
-import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesResponse;
+import isep.labdsof.backend.domain.responses.MessageDto;
+import isep.labdsof.backend.domain.responses.ai.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.responses.MessageCriticality;
+import isep.labdsof.backend.domain.responses.ai.ClarificationResponse;
 import isep.labdsof.backend.repositories.IssueRepository;
 import isep.labdsof.backend.repositories.UserProfileRepository;
 import isep.labdsof.backend.repositories.UserRepository;
 import isep.labdsof.backend.services.EventService;
 import isep.labdsof.backend.services.IssueService;
+import isep.labdsof.backend.services.ai.AiService;
+import isep.labdsof.backend.services.ai.AnalyseIssuesAiRequest;
+import isep.labdsof.backend.services.ai.ClarificationAiRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static isep.labdsof.backend.domain.exceptions.AppCustomExceptions.ISSUE_NOT_FOUND;
 import static isep.labdsof.backend.domain.exceptions.AppCustomExceptions.USER_NOT_FOUND;
@@ -43,6 +41,7 @@ import static isep.labdsof.backend.domain.exceptions.AppCustomExceptions.USER_NO
 public class IssueServiceImpl implements IssueService {
 
     private final EventService eventService;
+    private final AiService aiService;
     private final IssueRepository issueRepository;
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
@@ -50,8 +49,34 @@ public class IssueServiceImpl implements IssueService {
     private static final String ISSUE_CREATED = "Issue Created!";
 
     @Override
-    public AnalyzeIssuesResponse create(final String userEmail, final CreateIssueRequest createIssueRequest) throws LabdsofCustomException {
+    public AnalyzeIssuesResponse analyseIssue(final String userEmail, final AnalyseIssueRequest analyseIssueRequest) throws LabdsofCustomException {
 
+        final User user = userRepository.findUserByEmail(userEmail)
+                .orElseThrow(() -> new LabdsofCustomException(USER_NOT_FOUND));
+
+        Event event = eventService.getByName(analyseIssueRequest.eventName);
+        IssueLocation location = new IssueLocation(analyseIssueRequest.location);
+
+        Issue issue = new Issue(user, analyseIssueRequest.title, analyseIssueRequest.description, location, event);
+
+        AnalyzeIssuesResponse response = validateRepeatedIssue(issue, event, new RestTemplate());
+
+        if (response == null) {
+            new AnalyzeIssuesResponse();
+            response = AnalyzeIssuesResponse.builder().created(true).criticality(MessageCriticality.INFO).message("").build();
+
+        } else if (!response.isSimilar()) {
+            response.setCreated(true);
+            response.setMessage("");
+            response.setCriticality(MessageCriticality.INFO);
+        }
+
+        return response;
+
+    }
+
+    @Override
+    public MessageDto createIssue(String userEmail, CreateIssueRequest createIssueRequest) throws LabdsofCustomException {
         final User user = userRepository.findUserByEmail(userEmail)
                 .orElseThrow(() -> new LabdsofCustomException(USER_NOT_FOUND));
 
@@ -60,36 +85,43 @@ public class IssueServiceImpl implements IssueService {
 
         Issue issue = new Issue(user, createIssueRequest.title, createIssueRequest.description, location, event);
 
-        AnalyzeIssuesResponse response = null;
+        List<IssueExtraInfo> issueExtraInfos = new ArrayList<>();
 
-        if (!createIssueRequest.force) {
-            response = validateRepeatedIssue(issue, event, new RestTemplate());
+        int i = 0;
+        for (String question : createIssueRequest.getQuestions()) {
+            IssueExtraInfo issueExtraInfo = new IssueExtraInfo(question, createIssueRequest.getExtraInfo().get(String.valueOf(i)));
+            issueExtraInfos.add(issueExtraInfo);
+            i++;
         }
 
-        if (response == null) {
-            issueRepository.save(issue);
-            new AnalyzeIssuesResponse();
-            response = AnalyzeIssuesResponse.builder().created(true).criticality(MessageCriticality.INFO).message(ISSUE_CREATED).build();
+        issue.setIssueExtraInfo(issueExtraInfos);
+        issueRepository.save(issue);
 
-        } else if (!response.isSimilar()) {
-            issueRepository.save(issue);
-            response.setCreated(true);
-            response.setMessage(ISSUE_CREATED);
-            response.setCriticality(MessageCriticality.INFO);
+        try {
+            final UserProfile userProfile = userProfileRepository.findByUserId(user.getId()).orElseThrow(() -> new LabdsofCustomException(USER_NOT_FOUND));
+            userProfile.addPointsForReportIssue();
+            userProfileRepository.save(userProfile);
+        } catch (Exception e) {
+            log.error("Error adding points to user", e);
         }
 
-        if (response.isCreated()) {
-            try {
-                final UserProfile userProfile = userProfileRepository.findByUserId(user.getId()).orElseThrow(() -> new LabdsofCustomException(USER_NOT_FOUND));
-                userProfile.addPointsForReportIssue();
-                userProfileRepository.save(userProfile);
-            } catch (Exception e) {
-                log.error("Error adding points to user", e);
-            }
-        }
+        return new MessageDto(ISSUE_CREATED, MessageCriticality.INFO);
 
-        return response;
+    }
 
+    @Override
+    public ClarificationResponse getClarificationQuestions(final String userEmail, AnalyseIssueRequest analyseIssueRequest) throws LabdsofCustomException {
+        final User user = userRepository.findUserByEmail(userEmail)
+                .orElseThrow(() -> new LabdsofCustomException(USER_NOT_FOUND));
+
+        Event event = eventService.getByName(analyseIssueRequest.eventName);
+        IssueLocation location = new IssueLocation(analyseIssueRequest.location);
+
+        Issue issue = new Issue(user, analyseIssueRequest.title, analyseIssueRequest.description, location, event);
+
+        ClarificationAiRequest request = new ClarificationAiRequest(issue);
+        aiService.callAi(request, new RestTemplate());
+        return request.getResponse();
     }
 
     @Override
@@ -119,6 +151,7 @@ public class IssueServiceImpl implements IssueService {
 
         return issue.toDto(email);
     }
+
     @Override
     public IssueDto praiseToIssue(final ReactToIssueRequest request, final String email) throws LabdsofCustomException {
         final Issue issue = issueRepository.findById(UUID.fromString(request.getIssueId())).orElseThrow(() -> new LabdsofCustomException(ISSUE_NOT_FOUND));
@@ -145,46 +178,8 @@ public class IssueServiceImpl implements IssueService {
         List<Issue> pastIssues = issueRepository.getIssueByEvent(event);
         if (pastIssues.isEmpty()) return null;
 
-        String pythonApiUrl = "http://localhost:8081/analyze_issues";
-
-        AnalyzeIssuesRequest requestPayload = new AnalyzeIssuesRequest();
-        requestPayload.setCurrentIssue(issue.toMap());
-        requestPayload.setPastIssues(pastIssues.stream().map(Issue::toMap).toList());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<AnalyzeIssuesRequest> requestEntity = new HttpEntity<>(requestPayload, headers);
-
-        try {
-            ResponseEntity<String> response = restTemplate.postForEntity(pythonApiUrl, requestEntity, String.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                String issuesStr = response.getBody().replace("'", "");
-                if (issuesStr.trim().isBlank()) {
-                    return null;
-                }
-
-                String[] splited = issuesStr.split(",");
-
-                List<AnalyzeIssuesResponse.Issue> issuesFoundList = new ArrayList<>();
-                Map<String, Issue> pastIssueMap = pastIssues.stream().collect(Collectors.toMap(t -> t.getId().toString(), Function.identity()));
-
-                for (String foundIssue : splited) {
-                    Issue i = pastIssueMap.get(foundIssue.trim());
-                    if (i != null) {
-                        issuesFoundList.add(new AnalyzeIssuesResponse.Issue(foundIssue.trim(), i.getTitle(), i.getDescription()));
-                    }
-                }
-
-                if (issuesFoundList.isEmpty()) return null;
-
-                return AnalyzeIssuesResponse.builder().issues(issuesFoundList).similar(true).build();
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-
+        AnalyseIssuesAiRequest request = new AnalyseIssuesAiRequest(issue, pastIssues);
+        aiService.callAi(request, restTemplate);
+        return request.getResponse();
     }
 }

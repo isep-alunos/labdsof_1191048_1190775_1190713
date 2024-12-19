@@ -45,6 +45,10 @@ type createIssueDto = {
   created: boolean;
 };
 
+type clarificationDto = {
+  questions: string[];
+};
+
 type registerResponse = {
   success: boolean;
   messages?: messageDto[];
@@ -165,4 +169,5 @@ export {
   userProfileResponse,
   getIssuesWorkerResponse,
   updateIssueRequest,
+  clarificationDto,
 };

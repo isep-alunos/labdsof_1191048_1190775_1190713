@@ -3,7 +3,7 @@ from itertools import islice
 
 import logging
 
-from service.ai import askAI
+from service.ai import askAI, clarification
 from service.ai import analyseIssues
 
 logging.basicConfig(level=logging.DEBUG)
@@ -32,4 +32,17 @@ def analyze_issues():
         return make_response(jsonify({'error': str(e)}), 400)
 
 
-app.run(port=8081, host='0.0.0.0', debug=True)
+
+@app.route('/generate_clarification', methods=['POST'])
+def generate_clarification():
+    try:
+        data = request.get_json()
+        current_issue = data[next(iter(data))]
+        result = clarification(current_issue)
+        print(result)
+        return result
+    except Exception as e:
+        return make_response(jsonify({'error': str(e)}), 400)
+
+
+app.run(port=8082, host='0.0.0.0', debug=True)

@@ -1,4 +1,4 @@
-package isep.labdsof.backend.domain.requests.ai;
+package isep.labdsof.backend.domain.responses.ai;
 
 import isep.labdsof.backend.domain.responses.MessageCriticality;
 import lombok.AllArgsConstructor;
