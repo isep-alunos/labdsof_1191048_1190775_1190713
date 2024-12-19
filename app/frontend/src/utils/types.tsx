@@ -145,6 +145,16 @@ type updateIssueRequest = {
   assigned: boolean;
 };
 
+type leaderboardEntryDto = {
+  name: string;
+  count: number;
+};
+
+type leaderboardResponse = {
+  leaderboardPointsAccumulated: leaderboardEntryDto[];
+  leaderboardReportedIssuesResolved: leaderboardEntryDto[];
+};
+
 export {
   httpResponse,
   tokenResponse,
@@ -165,4 +175,6 @@ export {
   userProfileResponse,
   getIssuesWorkerResponse,
   updateIssueRequest,
+  leaderboardEntryDto,
+  leaderboardResponse
 };

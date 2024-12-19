@@ -18,6 +18,7 @@ import EventIssuesPage from "./components/publicPages/HomePage/EventIssuesPage/E
 import CreateIssuePage from "./components/publicPages/HomePage/CreateIssuePage/CreateIssuePage";
 import EventPage from "./components/eventWorkerPages/EventPage/EventPage";
 import EventManagerEventPage from "./components/eventManagerPages/EventPage/EventManagerEventPage";
+import LeaderboardPage from "./components/publicPages/LeaderboardPage/LeaderboardPage";
 
 export const NON_TOP_NAV_BAR_ID = "non-top-nav-bar-id-12321";
 
@@ -83,20 +84,32 @@ function App() {
     cookies.set("expireDate", expireDate, { path: "/" });
   };
 
-  //Only not logged in users
   function onlyPublicUserRoutes(): ReactNode {
-    if (!isLoggedIn) {
-      return (
+    return (
+      <>
+        {/* Leaderboard is accessible for all users */}
         <Route
-          path={ROUTES.LOGIN}
+          path={ROUTES.LEADERBOARD}
           element={
             <div>
-              <LoginPage handleLogin={handleLogin} />
+              <LeaderboardPage />
             </div>
           }
         />
-      );
-    }
+  
+        {/* Login is accessible only if not logged in */}
+        {!isLoggedIn && (
+          <Route
+            path={ROUTES.LOGIN}
+            element={
+              <div>
+                <LoginPage handleLogin={handleLogin} />
+              </div>
+            }
+          />
+        )}
+      </>
+    );
   }
 
   //User logged in

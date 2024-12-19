@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
 import styles from "./TopNavBar.module.css";
-import {Link, useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import HttpService from "../../../utils/http";
-import {authUrlResponse} from "../../../utils/types";
+import { authUrlResponse } from "../../../utils/types";
 
 const NAV_MAX_HEIGHT_PX: number = 106;
 const NAV_MIN_HEIGHT_PX = 56;
@@ -72,17 +72,13 @@ const TopNavBar: React.FC<MyProps> = (props) => {
     }, []);
 
     const handleLogin = () => {
-        console.log("Login process started. Setting cookies");
-        console.log("Redirecting to the authURL:", authURL);
         if (authURL) {
             window.location.href = authURL;
         }
     };
 
     const handleLogout = () => {
-        console.log("Logout process started");
         const cookies = new Cookies();
-        console.log("Clearing cookies");
         cookies.remove("token");
         cookies.remove("refreshToken");
         cookies.remove("name");
@@ -96,17 +92,13 @@ const TopNavBar: React.FC<MyProps> = (props) => {
             .getPrivate("/auth/logout?refreshToken=" + cookies.get("refreshToken"))
             .then((data) => {
                 if (data.code === 204) {
-                    console.log("Server logout successful!");
-                } else {
-                    console.log(data.body);
-                }
-                window.location.href = "/";
-            })
-            .catch(async (_) => {
-                await new Promise((r) => {
-                    setTimeout(r, 1500);
                     window.location.href = "/";
-                });
+                }
+            })
+            .catch(() => {
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 1500);
             });
     };
 
@@ -116,6 +108,7 @@ const TopNavBar: React.FC<MyProps> = (props) => {
     let eventWorkerOptions = null;
     let eventManagerOptions = null;
     let adminOptions = null;
+    let leaderboardOption = null;
     let loginOption;
 
     if (!isLoginPage && props.isLoggedIn) {
@@ -146,6 +139,12 @@ const TopNavBar: React.FC<MyProps> = (props) => {
             );
         }
 
+        leaderboardOption = (
+            <Link to="/leaderboard">
+                <div className="color_v1 hover">Leaderboard</div>
+            </Link>
+        );
+
         loginOption = (
             <div className={styles.TopNavBarUserInfo}>
                 <div>
@@ -162,6 +161,12 @@ const TopNavBar: React.FC<MyProps> = (props) => {
             </div>
         );
     } else if (!isLoginPage) {
+        leaderboardOption = (
+            <Link to="/leaderboard">
+                <div className="color_v1 hover">Leaderboard</div>
+            </Link>
+        );
+
         loginOption = (
             <div onClick={handleLogin} className="color_v1 hover">
                 Login
@@ -176,12 +181,12 @@ const TopNavBar: React.FC<MyProps> = (props) => {
                     ? "background_fade_v2_low " + styles.TopNavBar
                     : "background_v2 " + styles.TopNavBar
             }
-            style={{height: dynamicSize + "px"}}
+            style={{ height: dynamicSize + "px" }}
         >
             <Link to="/">
                 <div
                     className={styles.TopNavBarLogo}
-                    style={{height: dynamicSize + "px"}}
+                    style={{ height: dynamicSize + "px" }}
                 >
                     <img
                         src={"../imgs/logo.png"}
@@ -189,8 +194,10 @@ const TopNavBar: React.FC<MyProps> = (props) => {
                         alt="Porto Eventos logo"
                     />
                     <div>
-                        <h2 style={{fontSize: dynamicSize / 4 + "px"}}>PortoEventos.</h2>
-                        <h4 style={{fontSize: dynamicSize / 4 + "px"}}>
+                        <h2 style={{ fontSize: dynamicSize / 4 + "px" }}>
+                            PortoEventos.
+                        </h2>
+                        <h4 style={{ fontSize: dynamicSize / 4 + "px" }}>
                             Issue Reporting
                         </h4>
                     </div>
@@ -199,12 +206,13 @@ const TopNavBar: React.FC<MyProps> = (props) => {
             {!isLoginPage && (
                 <div
                     className={styles.TopNavBarContent}
-                    style={{height: dynamicSize + "px"}}
+                    style={{ height: dynamicSize + "px" }}
                 >
                     {privateOptions}
                     {eventWorkerOptions}
                     {eventManagerOptions}
                     {adminOptions}
+                    {leaderboardOption}
                     {loginOption}
                 </div>
             )}
