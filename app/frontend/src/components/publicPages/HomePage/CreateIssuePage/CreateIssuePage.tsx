@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import styles from "./CreateIssuePage.module.css";
 import HttpService from "../../../../utils/http";
 import {useAlert} from "../../../../utils/alerts/AlertContext";
-import {createIssueDto} from "../../../../utils/types";
+import {createIssueDto, clarificationDto, messageDto} from "../../../../utils/types";
 import {useNavigate, useParams} from "react-router-dom";
 import {
     Dialog,
@@ -24,15 +24,25 @@ const CreateIssuePage: React.FC = () => {
         location: "",
     });
 
+    const [currentPage, setCurrentPage] = useState(1);
     const [openDialog, setOpenDialog] = useState(false);
-    const [similarIssues, setSimilarIssues] = useState<{ id: string; title: string, description: string }[]>([]);
+    const [similarIssues, setSimilarIssues] = useState<{ id: string; title: string; description: string }[]>([]);
+    const [questions, setQuestions] = useState<string[]>([]);
+    const [extraInfo, setExtraInfo] = useState<{ [key: string]: string }>({});
 
     const {eventName} = useParams<{ eventName: string }>();
     const alert = useAlert();
     const navigate = useNavigate();
 
-    const sendAlert = (message: createIssueDto) => {
+    const sendAlert = (message: messageDto) => {
         alert.addAlert({message: message.message, criticality: message.criticality});
+    };
+
+    const handleExtraInfoChange = (index: number, value: string) => {
+        setExtraInfo((prevState) => ({
+            ...prevState,
+            [index]: value,
+        }));
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -48,12 +58,13 @@ const CreateIssuePage: React.FC = () => {
     };
 
     const handleProceedWithForce = () => {
-        handleSubmit(undefined, true); // Pass 'true' to force submission
+        handleClarification();
         handleDialogClose();
     };
 
-    const handleSubmit = (e?: React.FormEvent, force = false) => {
+    const handleSubmit = (e?: React.FormEvent) => {
         if (e) e.preventDefault();
+
 
         const {title, description, location} = formState;
 
@@ -62,7 +73,8 @@ const CreateIssuePage: React.FC = () => {
             description,
             eventName,
             location,
-            ...(force && {force: true}), // Add 'force' flag if requested
+            extraInfo,
+            questions
         };
 
         setFormState((prevState) => ({
@@ -71,14 +83,89 @@ const CreateIssuePage: React.FC = () => {
         }));
 
         const http = new HttpService();
-        http.postPrivate<createIssueDto>("/private/create-issue", issueData)
+        http.postPrivate<messageDto>("/private/create-issue", issueData)
             .then((data) => {
                 if (data.code === 201) {
                     sendAlert(data.body!);
                     navigate(`/events/${eventName}/issues`);
+                } else {
+                    sendAlert(data.body!);
+                }
+            })
+            .finally(() => {
+                setFormState((prevState) => ({
+                    ...prevState,
+                    isSubmitting: false,
+                }));
+            });
+
+    };
+
+    const handleClarification = () => {
+        setCurrentPage(2);
+
+
+        const {title, description, location} = formState;
+
+        const issueData = {
+            title,
+            description,
+            eventName,
+            location
+        };
+
+        setFormState((prevState) => ({
+            ...prevState,
+            isSubmitting: true,
+        }));
+
+        const http = new HttpService();
+        http.postPrivate<clarificationDto>("/private/clarification-questions", issueData)
+            .then((data) => {
+                if (data.code === 200 && data.body?.questions) {
+                    console.log(data.body.questions)
+                    setQuestions(data.body.questions);
+                } else {
+                    // TODO
+                    // sendAlert(data.body!);
+                }
+            })
+            .finally(() => {
+                setFormState((prevState) => ({
+                    ...prevState,
+                    isSubmitting: false,
+                }));
+            });
+
+    }
+
+    const handleNextPage = (e?: React.FormEvent) => {
+
+
+        if (e) e.preventDefault();
+
+        const {title, description, location} = formState;
+
+        const issueData = {
+            title,
+            description,
+            eventName,
+            location
+        };
+
+        setFormState((prevState) => ({
+            ...prevState,
+            isSubmitting: true,
+        }));
+
+        const http = new HttpService();
+        http.postPrivate<createIssueDto>("/private/analyse-issue", issueData)
+            .then((data) => {
+                if (data.code === 201) {
+                    //sendAlert(data.body!);
+                    //navigate(`/events/${eventName}/issues`);
+                    handleClarification();
                 } else if (data.code === 200 && data.body?.similar) {
-                    // Open dialog with similar issues
-                    console.log(data.body.issues)
                     setSimilarIssues(data.body.issues);
                     setOpenDialog(true);
                 } else {
@@ -93,70 +180,96 @@ const CreateIssuePage: React.FC = () => {
             });
     };
 
+
     return (
         <div className={styles.CreateIssuePage}>
             <h1>{eventName ? `${eventName}: Report Issue` : "Report Issue"}</h1>
-            <form id="create-issue-form" onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="title">
-                        Title
-                        <input
-                            type="text"
-                            name="title"
-                            placeholder="Enter issue title"
-                            value={formState.title}
-                            onChange={handleInputChange}
-                            required
-                            maxLength={50}
-                        />
-                        Note: Maximum of 50 characters
-                    </label>
-                </div>
-                <div>
-                    <label htmlFor="description">
-                        Description
-                        <textarea
-                            name="description"
-                            placeholder="Enter issue description"
-                            value={formState.description}
-                            onChange={handleInputChange}
-                            required
-                            autoCapitalize="sentences"
-                            autoCorrect="on"
-                            wrap="hard"
-                            maxLength={500}
-                        />
-                        Note: Maximum of 500 characters
-                    </label>
 
+            {currentPage === 1 && (
+                <form id="create-issue-page-1" onSubmit={handleNextPage}>
+                    <div>
+                        <label htmlFor="title">
+                            Title
+                            <input
+                                type="text"
+                                name="title"
+                                placeholder="Enter issue title"
+                                value={formState.title}
+                                onChange={handleInputChange}
+                                required
+                                maxLength={50}
+                            />
+                            Note: Maximum of 50 characters
+                        </label>
+                    </div>
+                    <div>
+                        <label htmlFor="description">
+                            Description
+                            <textarea
+                                name="description"
+                                placeholder="Enter issue description"
+                                value={formState.description}
+                                onChange={handleInputChange}
+                                required
+                                autoCapitalize="sentences"
+                                autoCorrect="on"
+                                wrap="hard"
+                                maxLength={500}
+                            />
+                            Note: Maximum of 500 characters
+                        </label>
+                    </div>
+                    <div>
+                        <label htmlFor="location">
+                            Location
+                            <input
+                                type="text"
+                                name="location"
+                                placeholder="Enter issue location"
+                                value={formState.location}
+                                onChange={handleInputChange}
+                                required
+                                maxLength={100}
+                            />
+                            Note: Maximum of 100 characters
+                        </label>
+                    </div>
+                    <button type="submit" className="background_v2" disabled={formState.isSubmitting}>
+                        {formState.isSubmitting ? "Next..." : "Next"}
+                    </button>
+                </form>
+            )}
 
-                </div>
+            {currentPage === 2 && (
+                <form id="create-issue-page-2" onSubmit={handleSubmit}>
+                    <div>
+                        {questions.map((q: string, index: number) => (
+                            <label key={index} htmlFor={`extraInfo-${index}`}>
+                                {q}
+                                <textarea
+                                    name={`extraInfo-${index}`}
+                                    placeholder="Optional"
+                                    value={extraInfo[index] || ""} // Default to an empty string if no value exists
+                                    onChange={(e) => handleExtraInfoChange(index, e.target.value)} // Update specific question
+                                    maxLength={300}
+                                />
+                                <p>Note: Maximum of 300 characters</p>
+                            </label>
+                        ))}
 
-                <div>
-                    <label htmlFor="location">
+                        {questions.length === 0 ? "Loading..." : ""}
 
-                        Location
-                        <input
-                            type="text"
-                            name="location"
-                            placeholder="Enter issue location"
-                            value={formState.location}
-                            onChange={handleInputChange}
-                            required
-                            maxLength={100}
-                        />
-                        Note: Maximum of 100 characters
+                    </div>
+                    <div style={{display: "flex", gap: "10px"}}>
+                        {questions.length > 0 && (
+                            <button type="submit" className="background_v2" disabled={formState.isSubmitting}>
+                                {formState.isSubmitting ? "Submitting..." : "Submit"}
+                            </button>)}
 
-                    </label>
+                    </div>
+                </form>
+            )}
 
-                </div>
-
-                <button type="submit" className="background_v2" disabled={formState.isSubmitting}>
-                    {formState.isSubmitting ? "Submitting..." : "Create issue"}
-                </button>
-            </form>
-
-            {/* Material-UI Dialog */}
             <Dialog open={openDialog} onClose={handleDialogClose}>
                 <DialogTitle>Similar Issues Found</DialogTitle>
                 <DialogContent>

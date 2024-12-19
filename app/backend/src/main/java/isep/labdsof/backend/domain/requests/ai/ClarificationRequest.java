@@ -2,12 +2,10 @@ package isep.labdsof.backend.domain.requests.ai;
 
 import lombok.Data;
 
-import java.util.List;
 import java.util.Map;
 
 @Data
-public class AnalyzeIssuesRequest {
+public class ClarificationRequest {
 
     public Map<String, String> currentIssue;
-    public List<Map<String, String>> pastIssues;
 }

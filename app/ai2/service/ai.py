@@ -1,7 +1,7 @@
 import os
 from together import Together
 
-from service.prompt import buildAnalyseIssuesPrompt
+from service.prompt import buildAnalyseIssuesPrompt, buildClarificationPrompt
 
 client = Together()
 
@@ -23,4 +23,8 @@ def askAI(msg):
 
 def analyseIssues(issue, pastIssues):
     prompt = buildAnalyseIssuesPrompt(issue, pastIssues)
+    return askAI(prompt)
+
+def clarification(issue):
+    prompt = buildClarificationPrompt(issue)
     return askAI(prompt)

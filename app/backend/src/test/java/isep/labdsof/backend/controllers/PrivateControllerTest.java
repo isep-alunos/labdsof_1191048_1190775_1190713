@@ -2,9 +2,9 @@
 package isep.labdsof.backend.controllers;
 
 import isep.labdsof.backend.domain.dtos.issue.IssueDto;
-import isep.labdsof.backend.domain.requests.CreateIssueRequest;
+import isep.labdsof.backend.domain.requests.AnalyseIssueRequest;
 import isep.labdsof.backend.domain.requests.MarkPresenceAtEventRequest;
-import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesResponse;
+import isep.labdsof.backend.domain.responses.ai.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.responses.StatusResponse;
 import isep.labdsof.backend.services.EventService;
 import isep.labdsof.backend.services.IssueService;
@@ -46,12 +46,12 @@ public class PrivateControllerTest {
 
     @Test
     public void testCreateIssue() throws Exception {
-        final CreateIssueRequest request = new CreateIssueRequest();
+        final AnalyseIssueRequest request = new AnalyseIssueRequest();
         final AnalyzeIssuesResponse analyzeIssuesResponse = AnalyzeIssuesResponse.builder().created(true).build();
-        when(issueService.create("userEmail", request)).thenReturn(analyzeIssuesResponse);
+        when(issueService.analyseIssue("userEmail", request)).thenReturn(analyzeIssuesResponse);
         final var principal = new OAuth2IntrospectionAuthenticatedPrincipal("user", Map.of("email", "userEmail"), Collections.emptyList());
 
-        ResponseEntity<AnalyzeIssuesResponse> response = privateController.createIssue(principal, request);
+        ResponseEntity<AnalyzeIssuesResponse> response = privateController.analyseIssue(principal, request);
 
         assertEquals(201, response.getStatusCode().value());
         assertEquals(analyzeIssuesResponse, response.getBody());

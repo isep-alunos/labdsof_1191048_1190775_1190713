@@ -41,13 +41,7 @@ public class IssueStatusUpdate extends BaseEntity {
         this.updateTime = updateTime;
     }
 
-    public void setDescription(String description) throws LabdsofCustomException {
-        if (description == null || description.isBlank()) {
-            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Empty status update description");
-        } else if (description.length() > 200) {
-            throw new LabdsofCustomException(AppCustomExceptions.ISSUE_INVALID_FIELD, "Status update description should not" +
-                    " be greater than 200 characters");
-        }
+    public void setDescription(String description) {
         this.description = description;
     }
 

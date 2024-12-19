@@ -3,11 +3,14 @@ package isep.labdsof.backend.controllers;
 import isep.labdsof.backend.domain.dtos.issue.IssueDto;
 import isep.labdsof.backend.domain.dtos.user.UserProfileDto;
 import isep.labdsof.backend.domain.exceptions.LabdsofCustomException;
+import isep.labdsof.backend.domain.requests.AnalyseIssueRequest;
 import isep.labdsof.backend.domain.requests.CreateIssueRequest;
 import isep.labdsof.backend.domain.requests.MarkPresenceAtEventRequest;
 import isep.labdsof.backend.domain.requests.ReactToIssueRequest;
-import isep.labdsof.backend.domain.requests.ai.AnalyzeIssuesResponse;
+import isep.labdsof.backend.domain.responses.MessageDto;
+import isep.labdsof.backend.domain.responses.ai.AnalyzeIssuesResponse;
 import isep.labdsof.backend.domain.responses.StatusResponse;
+import isep.labdsof.backend.domain.responses.ai.ClarificationResponse;
 import isep.labdsof.backend.services.EventService;
 import isep.labdsof.backend.services.IssueService;
 import isep.labdsof.backend.services.UserProfileService;
@@ -45,16 +48,30 @@ public class PrivateController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
-
     @PostMapping("/create-issue")
-    public ResponseEntity<AnalyzeIssuesResponse> createIssue(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
-                                                             @RequestBody final CreateIssueRequest request) throws LabdsofCustomException {
-        AnalyzeIssuesResponse response = issueService.create(principal.getAttribute("email"), request);
+    public ResponseEntity<MessageDto> createIssue(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                  @RequestBody final CreateIssueRequest request) throws LabdsofCustomException {
+        return ResponseEntity.status(201).body(issueService.createIssue(principal.getAttribute("email"), request));
+    }
+
+
+    @PostMapping("/analyse-issue")
+    public ResponseEntity<AnalyzeIssuesResponse> analyseIssue(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                              @RequestBody final AnalyseIssueRequest request) throws LabdsofCustomException {
+        AnalyzeIssuesResponse response = issueService.analyseIssue(principal.getAttribute("email"), request);
         if (response.isCreated()) {
             return ResponseEntity.status(201).body(response);
         } else {
             return ResponseEntity.ok(response);
         }
+    }
+
+    @PostMapping("/clarification-questions")
+    public ResponseEntity<ClarificationResponse> getClarification(@AuthenticationPrincipal final OAuth2IntrospectionAuthenticatedPrincipal principal,
+                                                                  @RequestBody final AnalyseIssueRequest request) throws LabdsofCustomException {
+        ClarificationResponse response = issueService.getClarificationQuestions(principal.getAttribute("email"), request);
+        return ResponseEntity.ok(response);
+
     }
 
     @GetMapping("/eventIssues/{eventName}")
